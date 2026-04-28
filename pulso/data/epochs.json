@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "schema_version": "1.0.0",
+    "last_updated": "2026-04-27T00:00:00Z"
+  },
+  "epochs": {
+    "geih_2006_2020": {
+      "label": "GEIH marco muestral 2005",
+      "label_en": "GEIH 2005 sampling frame",
+      "date_range": ["2006-01", "2020-12"],
+      "merge_keys": {
+        "persona": ["DIRECTORIO", "SECUENCIA_P", "ORDEN"],
+        "hogar": ["DIRECTORIO", "SECUENCIA_P"]
+      },
+      "encoding": "latin-1",
+      "file_format": "csv",
+      "separator": ";",
+      "decimal": ",",
+      "folder_pattern": ["Cabecera/", "Resto/"],
+      "weight_variable": "fex_c_2011",
+      "notes_es": "Operativo continuo mensual desde enero 2006. Marco muestral del Censo 2005. Reemplazó a la Encuesta Continua de Hogares (ECH) que cubría 2000-2005, no incluida en este paquete por discontinuidades metodológicas mayores.",
+      "notes_en": "Continuous monthly operation since January 2006. Sampling frame from 2005 Census. Replaced the ECH (2000-2005), which is not covered here due to major methodological discontinuities.",
+      "methodology_url": "https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo"
+    },
+    "geih_2021_present": {
+      "label": "GEIH rediseñada (post-OIT, marco 2018)",
+      "label_en": "Redesigned GEIH (post-ILO, 2018 frame)",
+      "date_range": ["2021-01", null],
+      "merge_keys": {
+        "persona": ["DIRECTORIO", "SECUENCIA_P", "ORDEN"],
+        "hogar": ["DIRECTORIO", "SECUENCIA_P"]
+      },
+      "encoding": "utf-8",
+      "file_format": "csv",
+      "separator": ";",
+      "decimal": ",",
+      "folder_pattern": ["Cabecera/", "Resto/"],
+      "weight_variable": "FEX_C18",
+      "notes_es": "Rediseño metodológico aplicando recomendaciones de la 19ª CIET (OIT, 2013). Marco muestral del Censo Nacional de Población y Vivienda 2018. Discontinuidad documentada con la GEIH 2006-2020 en variables clave de mercado laboral.",
+      "notes_en": "Methodological redesign applying 19th ICLS (ILO, 2013) recommendations. 2018 Census sampling frame. Documented discontinuity with the 2006-2020 GEIH on key labor market variables.",
+      "methodology_url": "https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo/geih-historicos"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+name: Scrape DANE monthly
+
+on:
+  schedule:
+    # Run on the 5th of each month at 03:00 UTC. Adjust as needed.
+    - cron: "0 3 5 * *"
+  workflow_dispatch:  # allow manual runs
+
+jobs:
+  scrape:
+    name: Scrape and update sources.json
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package with scraper extras
+        run: pip install -e ".[dev,scraper]"
+
+      - name: Run scraper
+        id: scrape
+        run: |
+          python scripts/agent_scraper.py --output pulso/data/sources.json --report scrape_report.md
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat scrape_report.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Validate updated sources.json
+        run: pytest tests/unit/test_schemas.py -v
+
+      - name: Open PR with changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: feat/data-monthly-scrape
+          base: main
+          commit-message: "data: monthly scrape of DANE portal"
+          title: "data: monthly scrape (${{ github.run_id }})"
+          body: |
+            Automated PR from the monthly scraper.
+
+            ## Scrape report
+
+            ${{ steps.scrape.outputs.report }}
+
+            ## Checklist for human reviewer
+
+            - [ ] New entries have plausible URLs
+            - [ ] Checksums are present
+            - [ ] No previously-validated entries got their `validated` flag flipped
+            - [ ] Spot-check one new month by downloading and inspecting the ZIP
+          labels: |
+            data
+            automated

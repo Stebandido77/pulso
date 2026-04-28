@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/variable_map.schema.json",
+  "title": "GEIH Variable Harmonization Map",
+  "description": "Maps canonical variable names to their source variables and transforms across epochs.",
+  "type": "object",
+  "required": ["metadata", "variables"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "harmonization_methodology": {
+          "type": "string",
+          "description": "Path to the doc explaining the harmonization methodology."
+        }
+      }
+    },
+    "variables": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/Variable" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "Variable": {
+      "type": "object",
+      "required": ["type", "level", "module", "mappings"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["numeric", "categorical", "string", "boolean", "date"]
+        },
+        "level": {
+          "type": "string",
+          "enum": ["persona", "hogar", "vivienda"]
+        },
+        "module": {
+          "type": "string",
+          "description": "Canonical module where this variable lives."
+        },
+        "description_es": { "type": "string" },
+        "description_en": { "type": "string" },
+        "categories": {
+          "type": "object",
+          "description": "For categorical variables: map of code -> human-readable label.",
+          "patternProperties": {
+            "^.+$": { "type": "string" }
+          }
+        },
+        "unit": {
+          "type": ["string", "null"],
+          "description": "For numeric variables: 'pesos_corrientes', 'horas_semana', 'años', etc."
+        },
+        "comparability_warning": {
+          "type": ["string", "null"],
+          "description": "Flag for variables with known methodological discontinuities across epochs."
+        },
+        "mappings": {
+          "type": "object",
+          "description": "Per-epoch mapping. Key is epoch name, value is the transform spec.",
+          "patternProperties": {
+            "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/Mapping" }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
+        }
+      }
+    },
+    "Mapping": {
+      "type": "object",
+      "required": ["source_variable", "transform"],
+      "additionalProperties": false,
+      "properties": {
+        "source_variable": {
+          "anyOf": [
+            { "type": "string", "minLength": 1 },
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Multiple source variables, used by transforms like 'coalesce'."
+            }
+          ]
+        },
+        "transform": { "$ref": "#/$defs/Transform" },
+        "source_doc": {
+          "type": ["string", "null"],
+          "description": "Citation: e.g., 'Diccionario GEIH 2024, p.15'."
+        },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "Transform": {
+      "description": "A declarative transformation. Either a string (no-arg) or an object with 'op' and parameters.",
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": ["identity", "rename"]
+        },
+        { "$ref": "#/$defs/RecodeTransform" },
+        { "$ref": "#/$defs/CastTransform" },
+        { "$ref": "#/$defs/ComputeTransform" },
+        { "$ref": "#/$defs/CoalesceTransform" },
+        { "$ref": "#/$defs/CustomTransform" }
+      ]
+    },
+    "RecodeTransform": {
+      "type": "object",
+      "required": ["op", "mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "op": { "const": "recode" },
+        "mapping": {
+          "type": "object",
+          "patternProperties": {
+            "^.+$": { "type": ["string", "number", "null"] }
+          }
+        },
+        "default": { "description": "Value for codes not in mapping." }
+      }
+    },
+    "CastTransform": {
+      "type": "object",
+      "required": ["op", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "op": { "const": "cast" },
+        "to": { "type": "string", "enum": ["int", "float", "str", "category", "bool"] }
+      }
+    },
+    "ComputeTransform": {
+      "type": "object",
+      "required": ["op", "expr"],
+      "additionalProperties": false,
+      "properties": {
+        "op": { "const": "compute" },
+        "expr": {
+          "type": "string",
+          "description": "A safe expression, e.g. 'P6800 * 4'. See harmonizer docs for grammar."
+        }
+      }
+    },
+    "CoalesceTransform": {
+      "type": "object",
+      "required": ["op"],
+      "additionalProperties": false,
+      "properties": {
+        "op": { "const": "coalesce" }
+      }
+    },
+    "CustomTransform": {
+      "type": "object",
+      "required": ["op", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "op": { "const": "custom" },
+        "name": {
+          "type": "string",
+          "description": "Name of a registered Python function in the harmonizer.",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        }
+      }
+    }
+  }
+}

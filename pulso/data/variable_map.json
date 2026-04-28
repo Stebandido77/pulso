@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "schema_version": "1.0.0",
+    "harmonization_methodology": "docs/harmonization.md"
+  },
+  "variables": {
+    "edad": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Edad en años cumplidos.",
+      "description_en": "Age in completed years.",
+      "unit": "años",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6040",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005)"
+        },
+        "geih_2021_present": {
+          "source_variable": "P6040",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018)"
+        }
+      }
+    },
+    "sexo": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Sexo de la persona.",
+      "description_en": "Person's sex.",
+      "categories": {
+        "1": "hombre",
+        "2": "mujer"
+      },
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6020",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005)"
+        },
+        "geih_2021_present": {
+          "source_variable": "P6020",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018)"
+        }
+      }
+    },
+    "ingreso_laboral_mensual": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Ingreso laboral mensual nominal en pesos colombianos corrientes.",
+      "description_en": "Monthly labor income in current Colombian pesos.",
+      "unit": "pesos_corrientes",
+      "comparability_warning": "Existe discontinuidad metodológica entre épocas debido al rediseño de 2021. Ver docs/harmonization.md#ingresos para empalme oficial DANE.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "INGLABO",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). Variable imputada por DANE."
+        },
+        "geih_2021_present": {
+          "source_variable": "INGLABO",
+          "transform": "identity",
+          "source_doc": "Documento técnico de empalme DANE 2021. Variable imputada."
+        }
+      }
+    }
+  }
+}

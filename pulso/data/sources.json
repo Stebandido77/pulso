@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "schema_version": "1.0.0",
+    "data_version": "2026.04",
+    "last_updated": "2026-04-27T00:00:00Z",
+    "scraper_version": null,
+    "covered_range": ["2006-01", "2026-03"]
+  },
+  "modules": {
+    "caracteristicas_generales": {
+      "level": "persona",
+      "description_es": "Características generales: sexo, edad, parentesco, estado civil, etnia, nivel educativo.",
+      "description_en": "General characteristics: sex, age, kinship, marital status, ethnicity, education level.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "ocupados": {
+      "level": "persona",
+      "description_es": "Personas ocupadas: posición ocupacional, rama de actividad, ingresos laborales, formalidad.",
+      "description_en": "Employed persons: occupational position, branch of activity, labor income, formality.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "desocupados": {
+      "level": "persona",
+      "description_es": "Personas desocupadas y fuerza de trabajo: búsqueda de empleo, tiempo desempleado.",
+      "description_en": "Unemployed persons and labor force: job search, unemployment duration.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "inactivos": {
+      "level": "persona",
+      "description_es": "Personas fuera de la fuerza de trabajo: razones, actividades.",
+      "description_en": "Persons outside the labor force: reasons, activities.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "vivienda_hogares": {
+      "level": "hogar",
+      "description_es": "Características de la vivienda y los hogares que la habitan: servicios, tenencia, materiales.",
+      "description_en": "Dwelling and household characteristics: services, tenure, materials.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "otros_ingresos": {
+      "level": "persona",
+      "description_es": "Ingresos no laborales: arriendos, pensiones, transferencias, intereses.",
+      "description_en": "Non-labor income: rents, pensions, transfers, interest.",
+      "available_in": ["geih_2006_2020", "geih_2021_present"]
+    }
+  },
+  "data": {}
+}

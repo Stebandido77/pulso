@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/sources.schema.json",
+  "title": "GEIH Data Sources Registry",
+  "description": "Maps each (year, month) to its DANE source URL, internal ZIP structure, and validation status.",
+  "type": "object",
+  "required": ["metadata", "modules", "data"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version", "data_version"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "data_version": {
+          "type": "string",
+          "pattern": "^\\d{4}\\.\\d{2}$",
+          "description": "Format: YYYY.MM, indicates the cutoff month of data covered."
+        },
+        "last_updated": { "type": "string", "format": "date-time" },
+        "scraper_version": { "type": ["string", "null"] },
+        "covered_range": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" }
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "description": "Canonical module definitions. Keys are canonical module names.",
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/ModuleDefinition" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "data": {
+      "type": "object",
+      "description": "Per-month source records. Keys are 'YYYY-MM'.",
+      "patternProperties": {
+        "^\\d{4}-(0[1-9]|1[0-2])$": { "$ref": "#/$defs/MonthRecord" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "ModuleDefinition": {
+      "type": "object",
+      "required": ["level", "description_es", "available_in"],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["persona", "hogar", "vivienda"]
+        },
+        "description_es": { "type": "string" },
+        "description_en": { "type": "string" },
+        "available_in": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "List of epoch keys where this module exists."
+        }
+      }
+    },
+    "MonthRecord": {
+      "type": "object",
+      "required": [
+        "epoch", "download_url", "checksum_sha256",
+        "modules", "validated"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "epoch": {
+          "type": "string",
+          "description": "Reference to a key in epochs.json"
+        },
+        "download_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Direct URL to the ZIP file."
+        },
+        "landing_page": {
+          "anyOf": [
+            { "type": "string", "format": "uri" },
+            { "type": "null" }
+          ],
+          "description": "URL to the DANE catalog page describing this dataset."
+        },
+        "checksum_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hex digest of the downloaded ZIP."
+        },
+        "size_bytes": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "scraped_at": {
+          "anyOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "validated": {
+          "type": "boolean",
+          "description": "Whether this entry has been verified to load correctly."
+        },
+        "validated_by": {
+          "anyOf": [
+            { "type": "string", "enum": ["manual", "automated", "scraper"] },
+            { "type": "null" }
+          ]
+        },
+        "validated_at": {
+          "anyOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "modules": {
+          "type": "object",
+          "description": "Maps canonical module name to its file paths inside the ZIP.",
+          "patternProperties": {
+            "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/ModuleFiles" }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
+        },
+        "notes": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ],
+          "description": "Free-form notes about this month: pandemic exception, methodology change, etc."
+        }
+      }
+    },
+    "ModuleFiles": {
+      "type": "object",
+      "description": "File paths inside the ZIP for a single module. At least one of cabecera/resto must be present.",
+      "anyOf": [
+        { "required": ["cabecera"] },
+        { "required": ["resto"] }
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "cabecera": {
+          "anyOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "resto": {
+          "anyOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    }
+  }
+}

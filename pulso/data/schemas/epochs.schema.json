@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/epochs.schema.json",
+  "title": "GEIH Epochs Definition",
+  "description": "Defines the methodological epochs of the GEIH that pulso harmonizes across.",
+  "type": "object",
+  "required": ["metadata", "epochs"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "last_updated": { "type": "string", "format": "date-time" }
+      }
+    },
+    "epochs": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/Epoch" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "Epoch": {
+      "type": "object",
+      "required": [
+        "label", "label_en", "date_range",
+        "merge_keys", "encoding", "file_format", "weight_variable"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Human-readable label in Spanish."
+        },
+        "label_en": {
+          "type": "string",
+          "description": "Human-readable label in English."
+        },
+        "date_range": {
+          "type": "array",
+          "description": "Inclusive date range [start, end]. Use null for end if open-ended.",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "anyOf": [
+              { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "merge_keys": {
+          "type": "object",
+          "description": "Columns used to merge across modules, by aggregation level.",
+          "required": ["persona", "hogar"],
+          "additionalProperties": false,
+          "properties": {
+            "persona": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "hogar": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          }
+        },
+        "encoding": {
+          "type": "string",
+          "enum": ["utf-8", "latin-1", "cp1252", "iso-8859-1"]
+        },
+        "file_format": {
+          "type": "string",
+          "enum": ["csv", "sav", "dta"]
+        },
+        "separator": {
+          "anyOf": [
+            { "type": "string", "enum": [",", ";", "\t", "|"] },
+            { "type": "null" }
+          ],
+          "description": "Field separator. Null for non-CSV formats."
+        },
+        "decimal": {
+          "type": "string",
+          "enum": [".", ","],
+          "default": "."
+        },
+        "folder_pattern": {
+          "type": "array",
+          "description": "Subfolder names inside the ZIP for area splits.",
+          "items": { "type": "string" },
+          "default": ["Cabecera/", "Resto/"]
+        },
+        "weight_variable": {
+          "type": "string",
+          "description": "Default expansion weight variable name in this epoch."
+        },
+        "notes_es": { "type": ["string", "null"] },
+        "notes_en": { "type": ["string", "null"] },
+        "methodology_url": {
+          "anyOf": [
+            { "type": "string", "format": "uri" },
+            { "type": "null" }
+          ]
+        }
+      }
+    }
+  }
+}

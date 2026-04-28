@@ -1,0 +1,107 @@
+@'
+# ─── Python ─────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ─── Virtual environments ───────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ─── Testing ────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ─── Linting / type checking ────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+# ─── IDEs ───────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+
+# ─── OS ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ─── Jupyter ────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── DANE microdata (NEVER commit, ever) ───────────────────────
+# Local cache lives in ~/.pulso/, but in case anyone accidentally
+# downloads data into the repo folder, block it here.
+/cache/
+/data_local/
+/microdata/
+*.parquet
+*.zip
+*.sav
+*.dta
+# Exception: synthetic test fixtures are OK
+!tests/fixtures/zips/*.zip
+!tests/fixtures/expected_outputs/*.parquet
+
+# ─── Scraper artifacts ─────────────────────────────────────────
+scripts/.scrape_cache/
+scripts/scrape_report.html
+scrape_report.md
+scrape_report.html
+
+# ─── Docs build ────────────────────────────────────────────────
+docs/_build/
+site/
+
+# ─── Secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets/
+
+# ─── Local notes / scratchpad ──────────────────────────────────
+# Folders you might create to stash local notes without committing
+scratch/
+notes-local/
+TODO-personal.md
+'@ | Set-Content -Path .gitignore -Encoding UTF8
