@@ -1,48 +1,88 @@
 """Cache management for downloaded and processed data.
 
 Layout:
-    ~/.pulso/
-    ├── raw/{year}/{month:02d}/{checksum}.zip       # original DANE ZIP
-    ├── parsed/{year}/{month:02d}/{module}.parquet  # post-parser, pre-harmonizer
+    <cache_root>/
+    ├── raw/{year}/{month:02d}/{checksum_short}.zip
+    ├── parsed/{year}/{month:02d}/{module}.parquet
     └── harmonized/{year}/{month:02d}/{module}.parquet
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+import os
+import shutil
+from pathlib import Path
+from typing import Literal
 
-if TYPE_CHECKING:
-    from pathlib import Path
+import platformdirs
 
 CacheLevel = Literal["raw", "parsed", "harmonized", "all"]
 
+_LEVELS: tuple[str, ...] = ("raw", "parsed", "harmonized")
+
 
 def cache_path() -> Path:
-    """Return the root cache directory.
+    """Return the root cache directory, creating it if needed.
 
-    Defaults to `~/.pulso/` but respects `PULSO_CACHE_DIR` environment variable
-    and platform conventions via platformdirs.
+    Retorna el directorio raíz de caché, creándolo si no existe.
+
+    Respects the ``PULSO_CACHE_DIR`` environment variable. Falls back to
+    the platform default via ``platformdirs.user_cache_dir("pulso")``.
 
     Returns:
         Absolute path to the cache root.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    env_override = os.environ.get("PULSO_CACHE_DIR")
+    root = Path(env_override) if env_override else Path(platformdirs.user_cache_dir("pulso"))
+    root.mkdir(parents=True, exist_ok=True)
+    return root.resolve()
 
 
 def cache_info() -> dict[str, object]:
-    """Return information about the current cache state.
+    """Return a summary of the current cache state.
+
+    Retorna un resumen del estado actual del caché.
 
     Returns:
-        Dict with keys: 'path', 'total_size_bytes', 'n_files',
-        'by_level' (raw/parsed/harmonized).
+        Dict with keys: 'path', 'total_size_bytes', 'n_files', 'by_level'.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    root = cache_path()
+    total_size = 0
+    n_files = 0
+    by_level: dict[str, dict[str, int]] = {
+        lvl: {"size_bytes": 0, "n_files": 0} for lvl in _LEVELS
+    }
+    for lvl in _LEVELS:
+        lvl_dir = root / lvl
+        if lvl_dir.exists():
+            for f in lvl_dir.rglob("*"):
+                if f.is_file():
+                    size = f.stat().st_size
+                    total_size += size
+                    n_files += 1
+                    by_level[lvl]["size_bytes"] += size
+                    by_level[lvl]["n_files"] += 1
+    return {
+        "path": str(root),
+        "total_size_bytes": total_size,
+        "n_files": n_files,
+        "by_level": by_level,
+    }
 
 
 def cache_clear(level: CacheLevel = "all") -> None:
     """Remove cached files at the given level.
 
+    Elimina archivos en caché en el nivel especificado.
+
     Args:
-        level: Which cache layer(s) to clear. 'all' removes everything.
+        level: Which layer to clear. 'all' removes every cached file.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    root = cache_path()
+    if level == "all":
+        shutil.rmtree(root, ignore_errors=True)
+        root.mkdir(parents=True, exist_ok=True)
+    else:
+        target = root / level
+        if target.exists():
+            shutil.rmtree(target)
