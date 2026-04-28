@@ -6,24 +6,84 @@ The rest of the package never reads JSON directly — it goes through here.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+import jsonschema
+
+from pulso._utils.exceptions import ConfigError
 
 if TYPE_CHECKING:
     import pandas as pd
+
+# Module-level singletons — set to None to force a reload (useful in tests).
+_SOURCES: dict[str, Any] | None = None
+_EPOCHS: dict[str, Any] | None = None
+_VARIABLE_MAP: dict[str, Any] | None = None
+
+
+def _data_dir() -> Path:
+    """Return the path to the packaged data directory."""
+    return Path(__file__).resolve().parent.parent / "data"
+
+
+def _load_json_validated(data_path: Path, schema_path: Path) -> dict[str, Any]:
+    with data_path.open(encoding="utf-8") as f:
+        data: dict[str, Any] = json.load(f)
+    with schema_path.open(encoding="utf-8") as f:
+        schema: dict[str, Any] = json.load(f)
+    try:
+        jsonschema.validate(instance=data, schema=schema)
+    except jsonschema.ValidationError as exc:
+        raise ConfigError(exc.message) from exc
+    return data
+
+
+def _load_sources() -> dict[str, Any]:
+    """Load and validate sources.json against its schema, caching the result."""
+    global _SOURCES
+    if _SOURCES is None:
+        d = _data_dir()
+        _SOURCES = _load_json_validated(d / "sources.json", d / "schemas" / "sources.schema.json")
+    return _SOURCES
+
+
+def _load_epochs() -> dict[str, Any]:
+    """Load and validate epochs.json against its schema, caching the result."""
+    global _EPOCHS
+    if _EPOCHS is None:
+        d = _data_dir()
+        _EPOCHS = _load_json_validated(d / "epochs.json", d / "schemas" / "epochs.schema.json")
+    return _EPOCHS
+
+
+def _load_variable_map() -> dict[str, Any]:
+    """Load and validate variable_map.json against its schema, caching the result."""
+    global _VARIABLE_MAP
+    if _VARIABLE_MAP is None:
+        d = _data_dir()
+        _VARIABLE_MAP = _load_json_validated(
+            d / "variable_map.json", d / "schemas" / "variable_map.schema.json"
+        )
+    return _VARIABLE_MAP
 
 
 def data_version() -> str:
     """Return the data_version string from sources.json metadata.
 
+    Retorna la versión de datos desde el metadato de sources.json.
+
     Returns:
         Version string in 'YYYY.MM' format.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    return str(_load_sources()["metadata"]["data_version"])
 
 
 def list_available(year: int | None = None) -> pd.DataFrame:
     """List which (year, month) entries exist in the registry.
+
+    Lista los períodos disponibles en el registro.
 
     Args:
         year: If provided, filter to only that year.
@@ -31,56 +91,104 @@ def list_available(year: int | None = None) -> pd.DataFrame:
     Returns:
         DataFrame with columns: year, month, epoch, validated, modules_available.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    import pandas as pd
+
+    sources = _load_sources()
+    rows = []
+    for key, record in sources["data"].items():
+        y, m = int(key[:4]), int(key[5:7])
+        if year is not None and y != year:
+            continue
+        rows.append(
+            {
+                "year": y,
+                "month": m,
+                "epoch": record["epoch"],
+                "validated": record["validated"],
+                "modules_available": list(record["modules"].keys()),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def list_modules() -> pd.DataFrame:
     """List all canonical modules and their metadata.
 
+    Lista todos los módulos canónicos del GEIH.
+
     Returns:
-        DataFrame with columns: module, level, description_es, description_en,
-        available_in.
+        DataFrame with columns: module, level, description_es, description_en, available_in.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    import pandas as pd
+
+    sources = _load_sources()
+    rows = []
+    for name, meta in sources["modules"].items():
+        rows.append(
+            {
+                "module": name,
+                "level": meta["level"],
+                "description_es": meta["description_es"],
+                "description_en": meta.get("description_en", ""),
+                "available_in": meta["available_in"],
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def list_variables(harmonized: bool = True) -> pd.DataFrame:
     """List harmonized variables defined in variable_map.json.
 
     Args:
-        harmonized: If True, only list variables with at least one mapping
-            in each epoch. If False, list all defined variables.
+        harmonized: If True, only list variables with at least one mapping.
 
     Returns:
-        DataFrame with columns: variable, type, level, module, description_es,
-        comparability_warning.
+        DataFrame with variable metadata.
     """
-    raise NotImplementedError("Phase 2: Claude Code")
+    raise NotImplementedError("Phase 2")
 
 
-def describe(module: str, year: int | None = None) -> dict[str, object]:
+def describe(module: str, year: int | None = None) -> dict[str, Any]:
     """Describe a module's structure and availability.
+
+    Describe la estructura y disponibilidad de un módulo.
 
     Args:
         module: Canonical module name.
-        year: If provided, describe in the context of that year's epoch.
+        year: If provided, include epoch context for that year.
 
     Returns:
         Dict with module metadata.
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    sources = _load_sources()
+    modules = sources["modules"]
+    if module not in modules:
+        raise ConfigError(f"Module {module!r} not found in registry.")
+    result: dict[str, Any] = dict(modules[module])
+    result["module"] = module
+    if year is not None:
+        from pulso._config.epochs import epoch_for_month
+
+        epoch = epoch_for_month(year, 1)
+        result["epoch_context"] = {
+            "key": epoch.key,
+            "label": epoch.label,
+            "encoding": epoch.encoding,
+            "file_format": epoch.file_format,
+        }
+    return result
 
 
-def describe_variable(name: str) -> dict[str, object]:
+def describe_variable(name: str) -> dict[str, Any]:
     """Describe a harmonized variable: its type, mappings, source docs.
 
     Args:
-        name: Canonical variable name (key in variable_map.json).
+        name: Canonical variable name.
 
     Returns:
         Dict with full variable metadata.
     """
-    raise NotImplementedError("Phase 2: Claude Code")
+    raise NotImplementedError("Phase 2")
 
 
 def describe_harmonization(variable: str) -> pd.DataFrame:
@@ -91,29 +199,5 @@ def describe_harmonization(variable: str) -> pd.DataFrame:
 
     Returns:
         DataFrame with columns: epoch, source_variable, transform, source_doc.
-        Useful for transparency in publications.
     """
-    raise NotImplementedError("Phase 2: Claude Code")
-
-
-# ─── Internal API (used by other pulso modules) ──────────────────────
-
-
-def _load_sources() -> dict[str, object]:
-    """Load and validate sources.json against its schema."""
-    raise NotImplementedError("Phase 0: validation only at this stage")
-
-
-def _load_epochs() -> dict[str, object]:
-    """Load and validate epochs.json against its schema."""
-    raise NotImplementedError("Phase 0: validation only at this stage")
-
-
-def _load_variable_map() -> dict[str, object]:
-    """Load and validate variable_map.json against its schema."""
-    raise NotImplementedError("Phase 0: validation only at this stage")
-
-
-def _data_dir() -> Path:
-    """Return the path to the packaged data directory."""
-    return Path(__file__).resolve().parent.parent / "data"
+    raise NotImplementedError("Phase 2")
