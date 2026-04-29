@@ -4,6 +4,31 @@
     "harmonization_methodology": "docs/harmonization.md"
   },
   "variables": {
+    "sexo": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Sexo de la persona.",
+      "description_en": "Person's sex.",
+      "categories": {
+        "1": "hombre",
+        "2": "mujer"
+      },
+      "comparability_warning": "El código de variable cambió de P6020 (marco 2005) a P3271 (marco 2018). La Phase 1 Curator reportó P6016 como sexo en GEIH-2, pero los datos del June 2024 muestran P6016 con 17+ valores. P3271 (binario 1/2, cubre 70.020 personas) es el candidato confirmado; requiere verificación humana contra el cuestionario DANE.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6020",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales."
+        },
+        "geih_2021_present": {
+          "source_variable": "P3271",
+          "transform": "identity",
+          "source_doc": "DANE Ficha Técnica GEIH 2024, módulo Características generales.",
+          "notes": "P3271 identificado por inspección directa del ZIP June 2024: binario (1=hombre, 2=mujer), cubre las 70.020 filas. P6016 (reportado en Phase 1) tiene valores 1-17 y no es la variable de sexo."
+        }
+      }
+    },
     "edad": {
       "type": "numeric",
       "level": "persona",
@@ -16,57 +41,700 @@
         "geih_2006_2020": {
           "source_variable": "P6040",
           "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2005)"
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales."
         },
         "geih_2021_present": {
           "source_variable": "P6040",
           "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2018)"
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado en June 2024 (rango 0-108)."
         }
       }
     },
-    "sexo": {
+    "grupo_edad": {
       "type": "categorical",
       "level": "persona",
       "module": "caracteristicas_generales",
-      "description_es": "Sexo de la persona.",
-      "description_en": "Person's sex.",
+      "description_es": "Grupo de edad en rangos quinquenales.",
+      "description_en": "Age group in five-year ranges.",
       "categories": {
-        "1": "hombre",
-        "2": "mujer"
+        "0-4": "0 a 4 años",
+        "5-9": "5 a 9 años",
+        "10-14": "10 a 14 años",
+        "15-19": "15 a 19 años",
+        "20-24": "20 a 24 años",
+        "25-29": "25 a 29 años",
+        "30-34": "30 a 34 años",
+        "35-39": "35 a 39 años",
+        "40-44": "40 a 44 años",
+        "45-49": "45 a 49 años",
+        "50-54": "50 a 54 años",
+        "55-59": "55 a 59 años",
+        "60-64": "60 a 64 años",
+        "65+": "65 años o más"
       },
       "comparability_warning": null,
       "mappings": {
         "geih_2006_2020": {
-          "source_variable": "P6020",
-          "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2005)"
+          "source_variable": "P6040",
+          "transform": {"op": "custom", "name": "bin_edad_quinquenal"},
+          "source_doc": "DANE Ficha Técnica GEIH — calculado a partir de P6040 (edad)."
         },
         "geih_2021_present": {
-          "source_variable": "P6020",
-          "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2018)"
+          "source_variable": "P6040",
+          "transform": {"op": "custom", "name": "bin_edad_quinquenal"},
+          "source_doc": "DANE Ficha Técnica GEIH 2024 — calculado a partir de P6040 (edad)."
         }
       }
     },
-    "ingreso_laboral_mensual": {
+    "parentesco_jefe": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Parentesco o relación con el jefe o jefa del hogar.",
+      "description_en": "Relationship to the household head.",
+      "categories": {
+        "1": "Jefe o jefa del hogar",
+        "2": "Pareja o cónyuge",
+        "3": "Hijo o hija",
+        "4": "Nieto o nieta",
+        "5": "Otro pariente",
+        "6": "Empleado del hogar",
+        "7": "Pensionista",
+        "8": "Trabajador del hogar sin remuneración",
+        "9": "Otro no pariente",
+        "10": "Sin información"
+      },
+      "comparability_warning": "El código de la pregunta puede variar entre P6050 y P6051 según el año de la encuesta. Verificar con diccionario del año correspondiente.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6051",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales.",
+          "notes": "P6051 reportado en especificación Phase 2. Podría ser P6050 en algunos años de GEIH-1. Requiere verificación con datos reales."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6050",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado P6050 en June 2024."
+        }
+      }
+    },
+    "estado_civil": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Estado civil o conyugal de la persona.",
+      "description_en": "Marital or partnership status.",
+      "categories": {
+        "1": "Casado/a",
+        "2": "Unión libre (más de 2 años)",
+        "3": "Unión libre (menos de 2 años)",
+        "4": "Separado/a o divorciado/a",
+        "5": "Viudo/a",
+        "6": "Soltero/a"
+      },
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6070",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6070",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado en June 2024 (valores 1-6 + NaN)."
+        }
+      }
+    },
+    "grupo_etnico": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Grupo étnico o racial de autorreconocimiento.",
+      "description_en": "Ethnic or racial self-identification group.",
+      "categories": {
+        "1": "Indígena",
+        "2": "Rom (gitano/a)",
+        "3": "Raizal del archipiélago de San Andrés y Providencia",
+        "4": "Palenquero de San Basilio",
+        "5": "Negro/a, mulato/a, afrocolombiano/a o afrodescendiente",
+        "6": "Ninguno de los anteriores"
+      },
+      "comparability_warning": "Variable puede no estar disponible en todos los meses de GEIH-1. Las categorías fueron revisadas en el rediseño de 2021.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6080",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales.",
+          "notes": "No siempre incluida en todos los meses de GEIH-1. Verificar disponibilidad por año-mes."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6080",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado en June 2024 (valores 1-6)."
+        }
+      }
+    },
+    "area": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Área geográfica: cabecera municipal, centro poblado o rural disperso.",
+      "description_en": "Geographic area: urban head municipality, populated center, or dispersed rural.",
+      "categories": {
+        "cabecera": "Cabecera municipal (área urbana)",
+        "centro_poblado": "Centro poblado",
+        "rural_disperso": "Rural disperso"
+      },
+      "comparability_warning": "En GEIH-1 (2006-2020), el área se determinaba por archivo separado (Cabecera/ o Resto/); la columna CLASE puede ser constante o ausente dentro de cada archivo. En GEIH-2 (2021+), un único archivo nacional usa CLASE para distinguir área.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "CLASE",
+          "transform": {
+            "op": "recode",
+            "mapping": {"1": "cabecera", "2": "centro_poblado", "3": "rural_disperso"}
+          },
+          "source_doc": "Diccionario GEIH (marco 2005). Archivos Cabecera/ → CLASE=1; archivos Resto/ → CLASE=2 o 3.",
+          "notes": "En GEIH-1, la columna CLASE puede no existir en todos los archivos. Si ausente, inferir del nombre del directorio (Cabecera/→cabecera, Resto/→resto)."
+        },
+        "geih_2021_present": {
+          "source_variable": "CLASE",
+          "transform": {
+            "op": "recode",
+            "mapping": {"1": "cabecera", "2": "centro_poblado", "3": "rural_disperso"}
+          },
+          "source_doc": "Diccionario GEIH (marco 2018). CLASE: 1=cabecera municipal, 2=centro poblado, 3=rural disperso. Confirmado en June 2024."
+        }
+      }
+    },
+    "departamento": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Código DANE del departamento de residencia (2 dígitos).",
+      "description_en": "DANE department code of residence (2-digit).",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "DPTO",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). Códigos DANE de 2 dígitos para 33 departamentos."
+        },
+        "geih_2021_present": {
+          "source_variable": "DPTO",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024."
+        }
+      }
+    },
+    "educ_max": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Nivel educativo más alto alcanzado y aprobado.",
+      "description_en": "Highest educational level attained and approved.",
+      "categories": {
+        "1": "Ninguno/Preescolar",
+        "2": "Básica primaria",
+        "3": "Básica secundaria",
+        "4": "Media (bachillerato)",
+        "5": "Técnica profesional o tecnológica",
+        "6": "Universitaria",
+        "7": "Especialización",
+        "8": "Maestría",
+        "9": "Doctorado"
+      },
+      "comparability_warning": "Código cambia de P6210 (marco 2005) a P3042 (marco 2018). Las categorías fueron ampliadas en el rediseño de 2021 (de 9 a 13 opciones observadas). Requiere tabla de equivalencias para comparación entre épocas.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6210",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales."
+        },
+        "geih_2021_present": {
+          "source_variable": "P3042",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado en June 2024 (valores 1-13).",
+          "notes": "P3042 reemplaza P6210 en el rediseño GEIH-2. Las categorías no son directamente equivalentes. Verificar tabla de correspondencia en documentación técnica DANE 2021."
+        }
+      }
+    },
+    "anios_educ": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Grado, semestre o año aprobado en el nivel educativo más alto.",
+      "description_en": "Grade, semester or year approved at the highest educational level.",
+      "unit": "años",
+      "comparability_warning": "Código cambia de P6210S1 (marco 2005) a P3042S1 (marco 2018). Nombre canónico 'anios_educ' (sin tilde) por restricción del esquema de validación (patrón ^[a-z][a-z0-9_]*$).",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6210S1",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Características generales."
+        },
+        "geih_2021_present": {
+          "source_variable": "P3042S1",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Características generales. Confirmado en June 2024 (valores 0-15)."
+        }
+      }
+    },
+    "asiste_educ": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "¿Asiste actualmente a algún establecimiento educativo?",
+      "description_en": "Currently attending an educational institution?",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6170",
+          "transform": {"op": "compute", "expr": "P6170 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P6170: 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6170",
+          "transform": {"op": "compute", "expr": "P6170 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
+        }
+      }
+    },
+    "alfabetiza": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "¿Sabe leer y escribir?",
+      "description_en": "Can read and write?",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6160",
+          "transform": {"op": "compute", "expr": "P6160 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P6160: 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6160",
+          "transform": {"op": "compute", "expr": "P6160 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
+        }
+      }
+    },
+    "condicion_actividad": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Condición de actividad laboral: ocupado, desocupado o inactivo.",
+      "description_en": "Labor force status: employed, unemployed, or inactive.",
+      "categories": {
+        "1": "Ocupado",
+        "2": "Desocupado",
+        "3": "Inactivo"
+      },
+      "comparability_warning": "En GEIH-1, OCI es una variable unificada por persona. En GEIH-2, no existe un indicador OCI único para toda la población: OCI=1 aparece en ocupados.CSV; para no ocupados, DSI en no_ocupados.CSV distingue desocupados (1) de inactivos (NaN). Se requiere join entre módulos.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "OCI",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). OCI: 1=Ocupado, 2=Desocupado, 3=Inactivo.",
+          "notes": "En GEIH-1, OCI probablemente disponible en módulo Fuerza de trabajo o Características generales. Requiere verificación con datos reales de algún año 2006-2020."
+        },
+        "geih_2021_present": {
+          "source_variable": ["OCI", "DSI"],
+          "transform": {"op": "custom", "name": "merge_labor_status"},
+          "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en ocupados.CSV (todos = 1); DSI en no_ocupados.CSV (1=desocupado, NaN=inactivo).",
+          "notes": "Función merge_labor_status: para registros en ocupados → condicion=1; para registros en no_ocupados con DSI=1 → condicion=2; DSI=NaN → condicion=3."
+        }
+      }
+    },
+    "tipo_desocupacion": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "desocupados",
+      "description_es": "Tipo de desocupación: cesante (tuvo trabajo antes) o aspirante (busca primer empleo).",
+      "description_en": "Unemployment type: cesante (previously employed) or aspirante (first-time job seeker).",
+      "categories": {
+        "1": "Cesante",
+        "2": "Aspirante"
+      },
+      "comparability_warning": "Variable renombrada entre épocas. En GEIH-2, DSCY en no_ocupados.CSV reemplaza a P7240. P7240 existe en ocupados.CSV de GEIH-2 pero no captura la distinción cesante/aspirante.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P7240",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Desocupados.",
+          "notes": "P7240 en GEIH-1 captura la distinción cesante/aspirante. Verificar codificación exacta con diccionario año correspondiente."
+        },
+        "geih_2021_present": {
+          "source_variable": "DSCY",
+          "transform": "identity",
+          "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados (no_ocupados.CSV). DSCY: 1=cesante, 2=aspirante.",
+          "notes": "Confirmado en June 2024: DSCY con valores 1 y 2 para desocupados. NaN para inactivos."
+        }
+      }
+    },
+    "tipo_inactividad": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "inactivos",
+      "description_es": "Razón principal por la que la persona no buscó trabajo la semana de referencia.",
+      "description_en": "Main reason the person did not search for work during the reference week.",
+      "categories": {
+        "1": "No le llama la atención o no quiere trabajar",
+        "2": "Se cansa o no puede trabajar",
+        "3": "Está estudiando",
+        "4": "Está pensionado/a o jubilado/a",
+        "5": "Está incapacitado/a permanentemente",
+        "6": "Está atendiendo obligaciones familiares",
+        "7": "Cree que no hay trabajo disponible",
+        "8": "Espera respuesta de empleador o inicio de trabajo",
+        "9": "Otro"
+      },
+      "comparability_warning": "Variable renombrada entre épocas (P7160 en GEIH-1, P7430 tentativo en GEIH-2). Las categorías pueden no ser directamente comparables.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P7160",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Inactivos.",
+          "notes": "P7160 para razón de inactividad en GEIH-1. Requiere verificación de codificación exacta."
+        },
+        "geih_2021_present": {
+          "source_variable": "P7430",
+          "transform": "identity",
+          "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados. P7430 presente para los 25.605 no-ocupados.",
+          "notes": "P7430 tiene valores 1 y 2 para todos los no_ocupados en June 2024. Podría ser 'razón principal de inactividad' o 'desea trabajar'. P7160 no encontrado en GEIH-2. Verificar contra cuestionario DANE."
+        }
+      }
+    },
+    "busco_trabajo": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "desocupados",
+      "description_es": "¿Realizó alguna diligencia para conseguir trabajo la semana de referencia?",
+      "description_en": "Took steps to find work during the reference week?",
+      "comparability_warning": "En GEIH-1, P6240 es la pregunta directa de búsqueda activa. En GEIH-2, se infiere del indicador DSI (desocupado implica búsqueda activa).",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6240",
+          "transform": {"op": "compute", "expr": "P6240 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P6240: ¿Buscó trabajo la semana pasada? 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "DSI",
+          "transform": {"op": "compute", "expr": "DSI == 1"},
+          "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados. DSI=1 indica desocupado (buscó trabajo activamente).",
+          "notes": "DSI es indicador derivado en no_ocupados.CSV. Valor 1=desocupado (búsqueda activa confirmada). No se encontró pregunta binaria directa equivalente a P6240 en no_ocupados de June 2024."
+        }
+      }
+    },
+    "disponible": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "desocupados",
+      "description_es": "¿Está disponible para comenzar a trabajar de inmediato?",
+      "description_en": "Available to start working immediately?",
+      "comparability_warning": "Código cambia entre épocas: P7290 (marco 2005) vs P7280 (marco 2018 observado). P7290 no encontrado en GEIH-2 June 2024.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P7290",
+          "transform": {"op": "compute", "expr": "P7290 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P7290: ¿Estaría disponible para trabajar? 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "P7280",
+          "transform": {"op": "compute", "expr": "P7280 == 1"},
+          "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados.",
+          "notes": "P7290 (especificado en Phase 2) no encontrado en no_ocupados.CSV de June 2024. P7280 es la variable de disponibilidad más próxima observada. Requiere verificación contra cuestionario DANE."
+        }
+      }
+    },
+    "posicion_ocupacional": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Posición ocupacional en el trabajo principal.",
+      "description_en": "Occupational position in main job.",
+      "categories": {
+        "1": "Obrero o empleado de empresa particular",
+        "2": "Obrero o empleado del gobierno",
+        "3": "Empleado doméstico",
+        "4": "Trabajador por cuenta propia",
+        "5": "Patrón o empleador",
+        "6": "Trabajador familiar sin remuneración",
+        "7": "Trabajador sin remuneración en otras empresas",
+        "8": "Jornalero o peón",
+        "9": "Otro"
+      },
+      "comparability_warning": "La especificación Phase 2 indicaba P6435, pero ese código no existe en GEIH-2 June 2024. P6430 es la variable estándar de posición ocupacional en ambas épocas.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6430",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados. P6430: posición ocupacional.",
+          "notes": "Especificación Phase 2 indica P6435. Se usa P6430 por ser el código estándar. Verificar si P6435 existe como subvariable en GEIH-1."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6430",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. Confirmado en June 2024."
+        }
+      }
+    },
+    "rama_actividad": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Rama de actividad económica a 2 dígitos CIIU.",
+      "description_en": "Branch of economic activity at 2-digit ISIC level.",
+      "comparability_warning": "Código variable cambia entre épocas: RAMA2D (CIIU Rev.3, GEIH-1) a RAMA2D_R4 (CIIU Rev.4, GEIH-2). Las categorías CIIU cambian entre revisiones.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "RAMA2D",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados. CIIU Revisión 3."
+        },
+        "geih_2021_present": {
+          "source_variable": "RAMA2D_R4",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. CIIU Revisión 4. Confirmado en June 2024."
+        }
+      }
+    },
+    "ocupacion": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Código de ocupación a 4 dígitos CIUO.",
+      "description_en": "Occupation code at 4-digit ISCO level.",
+      "comparability_warning": "Código variable cambia entre épocas: OFICIO (GEIH-1) a OFICIO_C8 (GEIH-2). Clasificaciones CIUO-88 vs CIUO-08.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "OFICIO",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados. CIUO-88 adaptado.",
+          "notes": "En GEIH-1 la variable puede llamarse OFICIO o P6420 según el año. Se usa OFICIO como estándar."
+        },
+        "geih_2021_present": {
+          "source_variable": "OFICIO_C8",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. CIUO-08 adaptado. Confirmado en June 2024."
+        }
+      }
+    },
+    "horas_trabajadas_sem": {
       "type": "numeric",
       "level": "persona",
       "module": "ocupados",
-      "description_es": "Ingreso laboral mensual nominal en pesos colombianos corrientes.",
-      "description_en": "Monthly labor income in current Colombian pesos.",
+      "description_es": "Horas trabajadas en la semana de referencia (trabajo principal).",
+      "description_en": "Hours worked in the reference week (main job).",
+      "unit": "horas_semana",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6800",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6800",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. Confirmado en June 2024."
+        }
+      }
+    },
+    "ingreso_laboral": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Ingreso laboral mensual nominal en pesos colombianos corrientes (trabajo principal, imputado por DANE).",
+      "description_en": "Monthly nominal labor income in current COP (main job, DANE-imputed).",
       "unit": "pesos_corrientes",
-      "comparability_warning": "Existe discontinuidad metodológica entre épocas debido al rediseño de 2021. Ver docs/harmonization.md#ingresos para empalme oficial DANE.",
+      "comparability_warning": "Discontinuidad metodológica entre épocas por rediseño 2021. DANE publica documento técnico de empalme. Ver docs/harmonization.md.",
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "INGLABO",
           "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2005). Variable imputada por DANE."
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados. Variable imputada por DANE."
         },
         "geih_2021_present": {
           "source_variable": "INGLABO",
           "transform": "identity",
-          "source_doc": "Documento técnico de empalme DANE 2021. Variable imputada."
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. Confirmado en June 2024. Variable imputada."
+        }
+      }
+    },
+    "tiene_contrato": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "¿Tiene contrato escrito en su trabajo principal?",
+      "description_en": "Has a written contract in main job?",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6440",
+          "transform": {"op": "compute", "expr": "P6440 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P6440: ¿Tiene contrato escrito? 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6440",
+          "transform": {"op": "compute", "expr": "P6440 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
+        }
+      }
+    },
+    "tipo_contrato": {
+      "type": "categorical",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "Tipo de contrato escrito en el trabajo principal.",
+      "description_en": "Type of written contract in main job.",
+      "categories": {
+        "1": "A término fijo",
+        "2": "A término indefinido",
+        "3": "Obra o labor contratada",
+        "4": "Otro tipo de contrato"
+      },
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6450",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005), módulo Ocupados."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6450",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Ocupados. Confirmado en June 2024."
+        }
+      }
+    },
+    "cotiza_pension": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "ocupados",
+      "description_es": "¿Cotiza actualmente al sistema general de pensiones?",
+      "description_en": "Currently contributing to the general pension system?",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P6920",
+          "transform": {"op": "compute", "expr": "P6920 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2005). P6920: ¿Cotiza a pensión? 1=Sí, 2=No."
+        },
+        "geih_2021_present": {
+          "source_variable": "P6920",
+          "transform": {"op": "compute", "expr": "P6920 == 1"},
+          "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
+        }
+      }
+    },
+    "ingreso_total": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "otros_ingresos",
+      "description_es": "Ingreso total mensual por persona (laboral + no laboral), en pesos corrientes.",
+      "description_en": "Total monthly income per person (labor + non-labor), in current COP.",
+      "unit": "pesos_corrientes",
+      "comparability_warning": "En GEIH-1, INGTOT es un agregado precomputado por DANE disponible en los microdatos. En GEIH-2, INGTOT no existe como variable en los archivos mensuales; debe construirse sumando componentes de otros_ingresos más INGLABO de ocupados.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "INGTOT",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). Variable agregada precomputada por DANE.",
+          "notes": "Verificar disponibilidad de INGTOT en archivos mensuales de GEIH-1; puede no estar en todos los meses."
+        },
+        "geih_2021_present": {
+          "source_variable": ["INGLABO", "P7500S1A1", "P7500S2A1", "P7500S3A1", "P750S1A1", "P750S2A1", "P750S3A1"],
+          "transform": {"op": "custom", "name": "compute_ingreso_total"},
+          "source_doc": "DANE Ficha Técnica GEIH 2024. INGTOT no precomputado en microdatos GEIH-2. Construir desde módulos otros_ingresos y ocupados.",
+          "notes": "Variables de ingresos no laborales observadas en June 2024: P7500S*A1 (arriendos, pensiones), P750S*A1 (otras rentas). Lista orientativa; verificar con documentación técnica DANE para lista completa de componentes."
+        }
+      }
+    },
+    "hogar_id": {
+      "type": "string",
+      "level": "hogar",
+      "module": "caracteristicas_generales",
+      "description_es": "Identificador único del hogar construido concatenando las claves de empalme.",
+      "description_en": "Unique household identifier constructed by concatenating merge keys.",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": ["DIRECTORIO", "SECUENCIA_P", "HOGAR"],
+          "transform": {"op": "compute", "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"},
+          "source_doc": "Diccionario GEIH (marco 2005). Claves de empalme hogar: DIRECTORIO + SECUENCIA_P; HOGAR distingue hogares múltiples en una vivienda.",
+          "notes": "Si HOGAR no existe en algún archivo GEIH-1, usar solo DIRECTORIO + SECUENCIA_P."
+        },
+        "geih_2021_present": {
+          "source_variable": ["DIRECTORIO", "SECUENCIA_P", "HOGAR"],
+          "transform": {"op": "compute", "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"},
+          "source_doc": "Diccionario GEIH (marco 2018). DIRECTORIO, SECUENCIA_P y HOGAR confirmados en June 2024 en todos los módulos."
+        }
+      }
+    },
+    "vivienda_propia": {
+      "type": "boolean",
+      "level": "vivienda",
+      "module": "vivienda_hogares",
+      "description_es": "¿La vivienda es propia (totalmente pagada o en proceso de pago)?",
+      "description_en": "Is the dwelling owner-occupied (paid off or being paid for)?",
+      "comparability_warning": null,
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "P5090",
+          "transform": {"op": "compute", "expr": "P5090 <= 2"},
+          "source_doc": "Diccionario GEIH (marco 2005). P5090: tenencia de vivienda. 1=propia totalmente pagada, 2=propia pagando, 3+=otras formas de tenencia."
+        },
+        "geih_2021_present": {
+          "source_variable": "P5090",
+          "transform": {"op": "compute", "expr": "P5090 <= 2"},
+          "source_doc": "Diccionario GEIH (marco 2018), módulo Datos del hogar y la vivienda. Confirmado en June 2024. P5090: 1=propia pagada, 2=propia pagando, 3=arriendo, 4=usufructo, 5=posesión sin título, 6=propiedad colectiva, 7=otra."
+        }
+      }
+    },
+    "peso_expansion": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Factor de expansión para estimaciones de totales poblacionales.",
+      "description_en": "Expansion factor for population total estimates.",
+      "unit": null,
+      "comparability_warning": "Nombre de variable cambia entre épocas: fex_c_2011 (marco 2005) a FEX_C18 (marco 2018). Los factores no son comparables directamente por cambio de marco muestral (2005 → 2018).",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "fex_c_2011",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). Factor de expansión ajustado con proyecciones 2011."
+        },
+        "geih_2021_present": {
+          "source_variable": "FEX_C18",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018). Factor de expansión marco muestral 2018. Confirmado en June 2024."
+        }
+      }
+    },
+    "peso_expansion_persona": {
+      "type": "numeric",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Factor de expansión a nivel de persona. En la mayoría de módulos es igual a peso_expansion; se mantiene separado para compatibilidad con épocas donde pueden diferir.",
+      "description_en": "Person-level expansion factor. In most modules equal to peso_expansion; kept separate for compatibility with epochs where they may differ.",
+      "unit": null,
+      "comparability_warning": "En GEIH-2, FEX_C18 es el factor único para todos los módulos persona. En GEIH-1, algunos módulos podrían tener factores diferenciados.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": "fex_c_2011",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2005). Factor de expansión estándar por persona.",
+          "notes": "En GEIH-1, verificar si existen factores de expansión alternativos por módulo (ej. fex_dpto, fex_c). fex_c_2011 es el factor principal recomendado por DANE."
+        },
+        "geih_2021_present": {
+          "source_variable": "FEX_C18",
+          "transform": "identity",
+          "source_doc": "Diccionario GEIH (marco 2018). Idéntico a peso_expansion en GEIH-2. Confirmado en June 2024.",
+          "notes": "FEX_C18 presente en todos los módulos de June 2024 con mismo valor. Se mantiene como variable separada por consistencia con el diseño para GEIH-1."
         }
       }
     }
