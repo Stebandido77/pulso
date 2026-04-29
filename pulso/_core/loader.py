@@ -26,36 +26,92 @@ def load(
 ) -> pd.DataFrame:
     """Load GEIH microdata for a given module.
 
+    Carga microdatos del GEIH para el módulo indicado.
+
     Args:
         year: Single year, range, or iterable of years.
         month: Single month (1-12), list of months, or None for all 12.
         module: Canonical module name (e.g., 'ocupados').
-        area: 'cabecera' (urban), 'resto' (rural), or 'total' (concatenated).
-        harmonize: If True, apply variable_map.json to standardize column names
-            and codings across epochs.
-        columns: Optional list of canonical column names to keep. Filters at
-            parse time, reducing memory.
-        cache: If True, use the local cache in ~/.pulso/.
+        area: 'cabecera' (urban), 'resto' (rural), or 'total'.
+        harmonize: If True, apply variable_map.json transforms (Phase 2+).
+        columns: Optional column names to keep (reduces memory).
+        cache: If True, use the local cache.
         show_progress: If True, display a tqdm progress bar.
-        allow_unvalidated: If True, allow loading entries marked as
-            `validated=false` in sources.json. Default False.
+        allow_unvalidated: If True, allow entries marked validated=false.
 
     Returns:
-        A pandas DataFrame with one row per observation. If multiple
-        (year, month) requested, includes columns 'year' and 'month'.
+        DataFrame with one row per observation. Multiple periods add 'year'
+        and 'month' columns.
 
     Raises:
         DataNotAvailableError: Requested period not in registry.
         ModuleNotAvailableError: Module not present for the period's epoch.
         DownloadError: Network or checksum failure.
         ParseError: ZIP contents not parseable.
-
-    Examples:
-        >>> df = pulso.load(2024, 6, "ocupados")
-        >>> df = pulso.load(year=range(2018, 2025), month=6, module="ocupados")
-        >>> df = pulso.load(2024, [3, 6, 9, 12], "caracteristicas_generales")
+        NotImplementedError: If harmonize=True (Phase 2).
     """
-    raise NotImplementedError("Phase 1: Claude Code")
+    import pandas as pd
+
+    from pulso._config.epochs import epoch_for_month
+    from pulso._config.registry import _load_sources
+    from pulso._core.downloader import download_zip
+    from pulso._core.parser import parse_module
+    from pulso._utils.validation import validate_area, validate_module, validate_year_month
+
+    if harmonize:
+        raise NotImplementedError("Phase 2")
+
+    validated_area = validate_area(area)
+    periods = validate_year_month(year, month)
+
+    sources = _load_sources()
+    all_modules = list(sources["modules"].keys())
+    validate_module(module, all_modules)
+
+    frames: list[pd.DataFrame] = []
+    multi = len(periods) > 1
+
+    for y, m in periods:
+        epoch = epoch_for_month(y, m)
+        key = f"{y}-{m:02d}"
+
+        # Validate the module is available for this specific (year, month) record.
+        record = sources["data"].get(key)
+        if record is None:
+            from pulso._utils.exceptions import DataNotAvailableError
+
+            raise DataNotAvailableError(
+                y,
+                m,
+                hint="Use pulso.list_available() to see which months are in the registry.",
+            )
+
+        if module not in record["modules"]:
+            from pulso._utils.exceptions import ModuleNotAvailableError
+
+            raise ModuleNotAvailableError(
+                f"Module {module!r} is not available for {key}. "
+                f"Available: {list(record['modules'].keys())}."
+            )
+
+        zip_path = download_zip(
+            y, m, cache=cache, show_progress=show_progress, allow_unvalidated=allow_unvalidated
+        )
+        df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
+
+        if multi:
+            df["year"] = y
+            df["month"] = m
+
+        frames.append(df)
+
+    if not frames:
+        return pd.DataFrame()
+
+    if len(frames) == 1:
+        return frames[0]
+
+    return pd.concat(frames, ignore_index=True)
 
 
 def load_merged(
@@ -71,22 +127,9 @@ def load_merged(
 ) -> pd.DataFrame:
     """Load multiple modules and merge them on epoch-appropriate keys.
 
-    Args:
-        year: Same as `load`.
-        month: Same as `load`.
-        modules: List of canonical module names to merge.
-        area: Same as `load`.
-        harmonize: If True, harmonize before merging (recommended).
-        columns: Optional dict {module: [columns]} to filter per module.
-        cache: Same as `load`.
-        show_progress: Same as `load`.
-        allow_unvalidated: Same as `load`.
-
-    Returns:
-        A merged DataFrame. Person-level modules merge on persona keys;
-        if a household-level module is included, it's broadcast to persons.
+    Carga múltiples módulos y los combina por las claves de la época.
 
     Raises:
-        MergeError: If modules cannot be merged (e.g., missing keys).
+        NotImplementedError: Phase 2.
     """
-    raise NotImplementedError("Phase 2: Claude Code")
+    raise NotImplementedError("Phase 2")
