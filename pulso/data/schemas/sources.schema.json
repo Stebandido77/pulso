@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/sources.schema.json",
   "title": "GEIH Data Sources Registry",
-  "description": "Maps each (year, month) to its DANE source URL, internal ZIP structure, and validation status.",
+  "description": "Maps each (year, month) to its DANE source URL, internal ZIP structure, and validation status. Schema v1.1.0 adds polymorphic ModuleFiles to support both GEIH-1 (Cabecera/Resto split files) and GEIH-2 (unified files with row-level area filtering).",
   "type": "object",
   "required": ["metadata", "modules", "data"],
   "additionalProperties": false,
@@ -123,7 +123,7 @@
         },
         "modules": {
           "type": "object",
-          "description": "Maps canonical module name to its file paths inside the ZIP.",
+          "description": "Maps canonical module name to its file paths inside the ZIP. Each entry must match either ModuleFilesSplit (Cabecera/Resto-style, when epoch.area_filter is null) or ModuleFilesUnified (single file, when epoch.area_filter is set).",
           "patternProperties": {
             "^[a-z][a-z0-9_]*$": { "$ref": "#/$defs/ModuleFiles" }
           },
@@ -140,8 +140,15 @@
       }
     },
     "ModuleFiles": {
+      "description": "Polymorphic: either split (GEIH-1 style) or unified (GEIH-2 style). The MonthRecord's epoch determines which shape is valid.",
+      "oneOf": [
+        { "$ref": "#/$defs/ModuleFilesSplit" },
+        { "$ref": "#/$defs/ModuleFilesUnified" }
+      ]
+    },
+    "ModuleFilesSplit": {
       "type": "object",
-      "description": "File paths inside the ZIP for a single module. At least one of cabecera/resto must be present.",
+      "description": "Cabecera/Resto are physically separate files. Used when epoch.area_filter is null (GEIH-1).",
       "anyOf": [
         { "required": ["cabecera"] },
         { "required": ["resto"] }
@@ -159,6 +166,43 @@
             { "type": "string", "minLength": 1 },
             { "type": "null" }
           ]
+        }
+      }
+    },
+    "ModuleFilesUnified": {
+      "type": "object",
+      "description": "Single nationwide file. Urban/rural split is applied via epoch.area_filter at row level. Used when epoch.area_filter is set (GEIH-2).",
+      "required": ["file"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path of the single CSV inside the ZIP."
+        },
+        "row_filter": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/RowFilter" }
+          ],
+          "description": "Optional row filter when this canonical module shares a file with another canonical module (e.g., desocupados and inactivos in 'No ocupados.CSV')."
+        }
+      }
+    },
+    "RowFilter": {
+      "type": "object",
+      "required": ["column", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string",
+          "description": "Column name in the CSV used to select rows."
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": ["integer", "string"] },
+          "minItems": 1,
+          "description": "Rows where df[column] is in `values` are kept."
         }
       }
     }

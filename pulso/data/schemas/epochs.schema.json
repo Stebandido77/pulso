@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/epochs.schema.json",
   "title": "GEIH Epochs Definition",
-  "description": "Defines the methodological epochs of the GEIH that pulso harmonizes across.",
+  "description": "Defines the methodological epochs of the GEIH that pulso harmonizes across. Schema v1.1.0 adds area_filter to support GEIH-2 unified-file delivery.",
   "type": "object",
   "required": ["metadata", "epochs"],
   "additionalProperties": false,
@@ -30,7 +30,8 @@
       "type": "object",
       "required": [
         "label", "label_en", "date_range",
-        "merge_keys", "encoding", "file_format", "weight_variable"
+        "merge_keys", "encoding", "file_format", "weight_variable",
+        "area_filter"
       ],
       "additionalProperties": false,
       "properties": {
@@ -94,13 +95,20 @@
         },
         "folder_pattern": {
           "type": "array",
-          "description": "Subfolder names inside the ZIP for area splits.",
+          "description": "Subfolder names inside the ZIP for area splits. Only meaningful when area_filter is null.",
           "items": { "type": "string" },
           "default": ["Cabecera/", "Resto/"]
         },
         "weight_variable": {
           "type": "string",
           "description": "Default expansion weight variable name in this epoch."
+        },
+        "area_filter": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/AreaFilter" }
+          ],
+          "description": "How urban/rural splits are encoded. Null = files are physically separated (Cabecera/Resto folders, GEIH-1 style). Object = single nationwide file with a column that distinguishes areas (GEIH-2 style)."
         },
         "notes_es": { "type": ["string", "null"] },
         "notes_en": { "type": ["string", "null"] },
@@ -109,6 +117,29 @@
             { "type": "string", "format": "uri" },
             { "type": "null" }
           ]
+        }
+      }
+    },
+    "AreaFilter": {
+      "type": "object",
+      "required": ["column", "cabecera_values", "resto_values"],
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string",
+          "description": "Name of the column in the CSV that encodes area (e.g., 'CLASE')."
+        },
+        "cabecera_values": {
+          "type": "array",
+          "items": { "type": ["integer", "string"] },
+          "minItems": 1,
+          "description": "Values of `column` that count as cabecera (urban)."
+        },
+        "resto_values": {
+          "type": "array",
+          "items": { "type": ["integer", "string"] },
+          "minItems": 1,
+          "description": "Values of `column` that count as resto (rural)."
         }
       }
     }
