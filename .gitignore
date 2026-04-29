@@ -1,5 +1,4 @@
-@'
-# ─── Python ─────────────────────────────────────────────────────
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -24,14 +23,14 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# ─── Virtual environments ───────────────────────────────────────
+# Virtual environments
 .venv/
 venv/
 env/
 ENV/
 .python-version
 
-# ─── Testing ────────────────────────────────────────────────────
+# Testing
 .pytest_cache/
 .coverage
 .coverage.*
@@ -42,19 +41,19 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# ─── Linting / type checking ────────────────────────────────────
+# Linting / type checking
 .mypy_cache/
 .ruff_cache/
 .pyre/
 
-# ─── IDEs ───────────────────────────────────────────────────────
+# IDEs
 .idea/
 .vscode/
 *.swp
 *.swo
 *.swn
 
-# ─── OS ─────────────────────────────────────────────────────────
+# OS
 .DS_Store
 Thumbs.db
 ehthumbs.db
@@ -62,13 +61,11 @@ Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
-# ─── Jupyter ────────────────────────────────────────────────────
+# Jupyter
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# ─── DANE microdata (NEVER commit, ever) ───────────────────────
-# Local cache lives in ~/.pulso/, but in case anyone accidentally
-# downloads data into the repo folder, block it here.
+# DANE microdata (NEVER commit, ever)
 /cache/
 /data_local/
 /microdata/
@@ -76,21 +73,20 @@ $RECYCLE.BIN/
 *.zip
 *.sav
 *.dta
-# Exception: synthetic test fixtures are OK
 !tests/fixtures/zips/*.zip
 !tests/fixtures/expected_outputs/*.parquet
 
-# ─── Scraper artifacts ─────────────────────────────────────────
+# Scraper artifacts
 scripts/.scrape_cache/
 scripts/scrape_report.html
 scrape_report.md
 scrape_report.html
 
-# ─── Docs build ────────────────────────────────────────────────
+# Docs build
 docs/_build/
 site/
 
-# ─── Secrets ───────────────────────────────────────────────────
+# Secrets
 .env
 .env.local
 .env.*.local
@@ -99,11 +95,14 @@ site/
 *.p12
 secrets/
 
-# ─── Local notes / scratchpad ──────────────────────────────────
-# Folders you might create to stash local notes without committing
+# Local notes / scratchpad
 scratch/
 notes-local/
 TODO-personal.md
-'@ | Set-Content -Path .gitignore -Encoding UTF8
+
+# Curator workspace (never commit downloaded ZIPs)
+_workspace/
+_curator_workspace/
+
 # Claude Code session state
 .claude/

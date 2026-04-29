@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "schema_version": "1.0.0",
-    "last_updated": "2026-04-27T00:00:00Z"
+    "schema_version": "1.1.0",
+    "last_updated": "2026-04-28T00:00:00Z"
   },
   "epochs": {
     "geih_2006_2020": {
@@ -18,8 +18,9 @@
       "decimal": ",",
       "folder_pattern": ["Cabecera/", "Resto/"],
       "weight_variable": "fex_c_2011",
-      "notes_es": "Operativo continuo mensual desde enero 2006. Marco muestral del Censo 2005. Reemplazó a la Encuesta Continua de Hogares (ECH) que cubría 2000-2005, no incluida en este paquete por discontinuidades metodológicas mayores.",
-      "notes_en": "Continuous monthly operation since January 2006. Sampling frame from 2005 Census. Replaced the ECH (2000-2005), which is not covered here due to major methodological discontinuities.",
+      "area_filter": null,
+      "notes_es": "Operativo continuo mensual desde enero 2006. Marco muestral del Censo 2005. Reemplazó a la Encuesta Continua de Hogares (ECH) que cubría 2000-2005, no incluida en este paquete por discontinuidades metodológicas mayores. Cada módulo se entrega como dos archivos separados (Cabecera/ y Resto/).",
+      "notes_en": "Continuous monthly operation since January 2006. Sampling frame from 2005 Census. Replaced the ECH (2000-2005), which is not covered here due to major methodological discontinuities. Each module is delivered as two separate files (Cabecera/ and Resto/).",
       "methodology_url": "https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo"
     },
     "geih_2021_present": {
@@ -34,10 +35,15 @@
       "file_format": "csv",
       "separator": ";",
       "decimal": ",",
-      "folder_pattern": ["Cabecera/", "Resto/"],
+      "folder_pattern": ["CSV/"],
       "weight_variable": "FEX_C18",
-      "notes_es": "Rediseño metodológico aplicando recomendaciones de la 19ª CIET (OIT, 2013). Marco muestral del Censo Nacional de Población y Vivienda 2018. Discontinuidad documentada con la GEIH 2006-2020 en variables clave de mercado laboral.",
-      "notes_en": "Methodological redesign applying 19th ICLS (ILO, 2013) recommendations. 2018 Census sampling frame. Documented discontinuity with the 2006-2020 GEIH on key labor market variables.",
+      "area_filter": {
+        "column": "CLASE",
+        "cabecera_values": [1],
+        "resto_values": [2, 3]
+      },
+      "notes_es": "Rediseño metodológico aplicando recomendaciones de la 19ª CIET (OIT, 2013). Marco muestral del Censo Nacional de Población y Vivienda 2018. Discontinuidad documentada con la GEIH 2006-2020 en variables clave de mercado laboral. Cada módulo se entrega como un único archivo nacional; el split urbano/rural se hace filtrando la columna CLASE (1=cabecera, 2=centro poblado, 3=rural disperso).",
+      "notes_en": "Methodological redesign applying 19th ICLS (ILO, 2013) recommendations. 2018 Census sampling frame. Documented discontinuity with the 2006-2020 GEIH on key labor market variables. Each module is delivered as a single nationwide file; urban/rural split is applied by filtering the CLASE column (1=cabecera, 2=centro poblado, 3=rural disperso).",
       "methodology_url": "https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo/geih-historicos"
     }
   }

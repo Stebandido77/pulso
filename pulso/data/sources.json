@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "schema_version": "1.0.0",
+    "schema_version": "1.1.0",
     "data_version": "2026.04",
-    "last_updated": "2026-04-27T00:00:00Z",
+    "last_updated": "2026-04-28T00:00:00Z",
     "scraper_version": null,
-    "covered_range": ["2006-01", "2026-03"]
+    "covered_range": ["2024-06", "2024-06"]
   },
   "modules": {
     "caracteristicas_generales": {
@@ -42,7 +42,58 @@
       "description_es": "Ingresos no laborales: arriendos, pensiones, transferencias, intereses.",
       "description_en": "Non-labor income: rents, pensions, transfers, interest.",
       "available_in": ["geih_2006_2020", "geih_2021_present"]
+    },
+    "migracion": {
+      "level": "persona",
+      "description_es": "Historial migratorio de las personas: lugar de nacimiento, residencia anterior, motivos de migración. Módulo introducido en GEIH-2 (2021).",
+      "description_en": "Migration history: birthplace, previous residence, migration reasons. Module introduced in GEIH-2 (2021).",
+      "available_in": ["geih_2021_present"]
+    },
+    "otras_formas_trabajo": {
+      "level": "persona",
+      "description_es": "Trabajo informal, autoempleo, trabajo de subsistencia y otras formas no clasificadas como ocupación principal. Módulo introducido en GEIH-2 (2021) para captar formas alternativas de trabajo recomendadas por la 19ª CIET de la OIT.",
+      "description_en": "Informal, self-employment, subsistence work and other forms not classified as main occupation. Module introduced in GEIH-2 (2021) to capture alternative work forms recommended by the ILO 19th ICLS.",
+      "available_in": ["geih_2021_present"]
     }
   },
-  "data": {}
+  "data": {
+    "2024-06": {
+      "epoch": "geih_2021_present",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23625",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": "c5799177604b0e0890212fbde8d0623e62ec64cca7c301d0e794ba06af44706b",
+      "size_bytes": 66911109,
+      "scraped_at": "2026-04-28T00:00:00Z",
+      "validated": true,
+      "validated_by": "manual",
+      "validated_at": "2026-04-28T00:00:00Z",
+      "modules": {
+        "caracteristicas_generales": {
+          "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
+        },
+        "ocupados": {
+          "file": "CSV/Ocupados.CSV"
+        },
+        "desocupados": {
+          "file": "CSV/No ocupados.CSV"
+        },
+        "inactivos": {
+          "file": "CSV/No ocupados.CSV"
+        },
+        "vivienda_hogares": {
+          "file": "CSV/Vivienda y Hogares.CSV"
+        },
+        "otros_ingresos": {
+          "file": "CSV/Otros ingresos e impuestos.CSV"
+        },
+        "migracion": {
+          "file": "CSV/Migración.CSV"
+        },
+        "otras_formas_trabajo": {
+          "file": "CSV/Otras formas de trabajo.CSV"
+        }
+      },
+      "notes": "Phase 1 first validated entry. desocupados and inactivos both map to 'No ocupados.CSV' without row_filter; the column distinguishing them is to be confirmed in Phase 2 (likely OCI). Until row_filter is added, loading desocupados or inactivos returns the full no-ocupados population."
+    }
+  }
 }
