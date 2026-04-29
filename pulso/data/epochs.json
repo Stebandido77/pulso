@@ -31,7 +31,7 @@
         "persona": ["DIRECTORIO", "SECUENCIA_P", "ORDEN"],
         "hogar": ["DIRECTORIO", "SECUENCIA_P"]
       },
-      "encoding": "utf-8",
+      "encoding": "latin-1",
       "file_format": "csv",
       "separator": ";",
       "decimal": ",",
