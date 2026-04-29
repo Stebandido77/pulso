@@ -94,3 +94,14 @@ def test_load_missing_period_raises(registry_with_fixture: None) -> None:
 
     with pytest.raises(DataNotAvailableError):
         pulso.load(year=2024, month=7, module="ocupados", harmonize=False)
+
+
+@pytest.mark.integration
+def test_load_ocupados_unified_cabecera(registry_with_unified_fixture: None) -> None:
+    """Shape B: load(2024, 6, ocupados, cabecera) applies area_filter (CLASE==1)."""
+    import pulso
+
+    df = pulso.load(year=2024, month=6, module="ocupados", area="cabecera", harmonize=False)
+    assert df.shape[0] > 0
+    assert "DIRECTORIO" in df.columns
+    assert (df["CLASE"] == 1).all()
