@@ -105,3 +105,5 @@ scratch/
 notes-local/
 TODO-personal.md
 '@ | Set-Content -Path .gitignore -Encoding UTF8
+# Claude Code session state
+.claude/
