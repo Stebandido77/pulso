@@ -11,7 +11,7 @@ def test_get_epoch_geih_2021_present() -> None:
     e = get_epoch("geih_2021_present")
     assert isinstance(e, Epoch)
     assert e.key == "geih_2021_present"
-    assert e.encoding == "utf-8"
+    assert e.encoding == "latin-1"
     assert e.file_format == "csv"
     assert e.separator == ";"
     assert e.decimal == ","
