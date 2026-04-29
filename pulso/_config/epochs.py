@@ -11,6 +11,21 @@ from pulso._utils.exceptions import ConfigError
 
 
 @dataclass(frozen=True)
+class AreaFilter:
+    """How an epoch splits urban/rural via a column filter (GEIH-2 only).
+
+    Attributes:
+        column: Column name used to distinguish area (e.g. 'CLASE').
+        cabecera_values: Integer values that map to cabecera (urban head).
+        resto_values: Integer values that map to resto (populated centre + rural).
+    """
+
+    column: str
+    cabecera_values: tuple[int, ...]
+    resto_values: tuple[int, ...]
+
+
+@dataclass(frozen=True)
 class Epoch:
     """Frozen representation of an epoch's parsing rules.
 
@@ -27,6 +42,7 @@ class Epoch:
         decimal: Decimal mark.
         folder_pattern: Subfolder names inside the ZIP.
         weight_variable: Default expansion weight.
+        area_filter: Column-based area filter (GEIH-2); None for GEIH-1 (physical split).
         notes_es: Spanish methodological notes.
         methodology_url: Link to DANE methodology docs.
     """
@@ -43,8 +59,17 @@ class Epoch:
     decimal: str
     folder_pattern: tuple[str, ...]
     weight_variable: str
+    area_filter: AreaFilter | None
     notes_es: str | None
     methodology_url: str | None
+
+
+def _area_filter_from_raw(raw: dict[str, Any]) -> AreaFilter:
+    return AreaFilter(
+        column=str(raw["column"]),
+        cabecera_values=tuple(int(v) for v in raw["cabecera_values"]),
+        resto_values=tuple(int(v) for v in raw["resto_values"]),
+    )
 
 
 def _epoch_from_raw(key: str, raw: dict[str, Any]) -> Epoch:
@@ -54,6 +79,8 @@ def _epoch_from_raw(key: str, raw: dict[str, Any]) -> Epoch:
     sep = raw.get("separator")
     mu = raw.get("methodology_url")
     ne = raw.get("notes_es")
+    af_raw = raw.get("area_filter")
+    area_filter = _area_filter_from_raw(af_raw) if af_raw is not None else None
     return Epoch(
         key=key,
         label=str(raw["label"]),
@@ -67,6 +94,7 @@ def _epoch_from_raw(key: str, raw: dict[str, Any]) -> Epoch:
         decimal=str(raw.get("decimal", ".")),
         folder_pattern=tuple(str(p) for p in fp),
         weight_variable=str(raw["weight_variable"]),
+        area_filter=area_filter,
         notes_es=str(ne) if ne is not None else None,
         methodology_url=str(mu) if mu is not None else None,
     )

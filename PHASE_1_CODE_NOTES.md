@@ -18,7 +18,9 @@
 
 ### B. Epoch system (`pulso/_config/epochs.py`)
 
-- `_epoch_from_raw()` — converts raw JSON dict to frozen `Epoch` dataclass.
+- `AreaFilter` frozen dataclass — holds `column`, `cabecera_values`, `resto_values`; present on GEIH-2 epochs, `None` on GEIH-1.
+- `Epoch` frozen dataclass — gained `area_filter: AreaFilter | None` in schema 1.1.0 alignment (PR #5 + test-fix commit). `None` means files are physically split (Shape A); set means a single nationwide file filtered by column (Shape B).
+- `_epoch_from_raw()` — converts raw JSON dict to frozen `Epoch` dataclass; parses `area_filter` if present.
 - `get_epoch(key)` — raises `ConfigError` on unknown key.
 - `epoch_for_month(year, month)` — handles open-ended epochs (`end_date=null`) correctly. Raises `ConfigError` for dates before 2006-01.
 - `list_epochs()` — returns all epochs from `epochs.json`.
@@ -43,7 +45,7 @@
 ### F. Parser (`pulso/_core/parser.py`)
 
 - `_parse_csv()` — streams from ZIP via `zf.open()` with a single `with` statement. Passes encoding, separator, decimal from the epoch.
-- `parse_module()` — looks up file paths from `_load_sources()["data"][key]["modules"][module]`. Handles `area="total"` by concatenating cabecera + resto with an `_area` column.
+- `parse_module()` — looks up file paths from `_load_sources()["data"][key]["modules"][module]`. Currently handles **Shape A only** (`cabecera`/`resto` keys). The integration fixture (conftest) injects Shape A entries so integration tests pass. Proper Shape B dispatch (single `file` key + `area_filter` column filtering) is deferred to Phase 2, when the parser will check `epoch.area_filter` and branch accordingly.
 - Added `year` and `month` parameters to `parse_module()` for registry lookup (not in the original stub). **Rationale:** the file paths are per `(year, month)` in `sources.json`, not per epoch. Without year/month the parser has no way to find the right paths.
 
 ### G. Loader (`pulso/_core/loader.py`)
@@ -96,8 +98,8 @@ Integration test approach: `registry_with_fixture` conftest fixture redirects `P
 
 ## What's deferred
 
-- **Phase 2**: `harmonize=True`, `load_merged()`, `list_variables()`, `describe_variable()`, `describe_harmonization()`.
-- **Phase 4**: `.sav`/`.dta` parsing (`_parse_sav`, `_parse_dta`).
+- **Phase 2**: `harmonize=True`, `load_merged()`, `list_variables()`, `describe_variable()`, `describe_harmonization()`; Shape B parser dispatch (`epoch.area_filter` column filtering for GEIH-2 real ZIPs); `row_filter` for `desocupados`/`inactivos` separation inside `No ocupados.CSV`.
+- **Phase 4**: `.sav`/`.dta` parsing (`_parse_sav`, `_parse_dta`); GEIH-1 Shape A coverage against real ZIPs.
 - **Phase 5**: `scripts/agent_scraper.py`.
 - **Phase 6**: `expand()`, examples, release prep.
 

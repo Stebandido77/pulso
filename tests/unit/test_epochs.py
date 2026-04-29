@@ -49,12 +49,27 @@ def test_epoch_merge_keys() -> None:
     assert "SECUENCIA_P" in e.merge_keys_hogar
 
 
-def test_epoch_folder_pattern() -> None:
+def test_epoch_folder_pattern_geih1() -> None:
+    """GEIH-1 (2006-2020) uses physical Cabecera/Resto folders."""
+    from pulso._config.epochs import get_epoch
+
+    e = get_epoch("geih_2006_2020")
+    assert "Cabecera/" in e.folder_pattern
+    assert "Resto/" in e.folder_pattern
+    assert e.area_filter is None
+
+
+def test_epoch_folder_pattern_geih2() -> None:
+    """GEIH-2 (2021-present) uses unified files; area split via CLASE column."""
     from pulso._config.epochs import get_epoch
 
     e = get_epoch("geih_2021_present")
-    assert "Cabecera/" in e.folder_pattern
-    assert "Resto/" in e.folder_pattern
+    assert "CSV/" in e.folder_pattern
+    assert e.area_filter is not None
+    assert e.area_filter.column == "CLASE"
+    assert 1 in e.area_filter.cabecera_values
+    assert 2 in e.area_filter.resto_values
+    assert 3 in e.area_filter.resto_values
 
 
 def test_epoch_for_month_2024_06_is_geih2021() -> None:

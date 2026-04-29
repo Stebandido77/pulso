@@ -92,7 +92,11 @@ def test_list_available_empty_by_default() -> None:
     df = list_available()
     assert isinstance(df, pd.DataFrame)
     # Real data section is empty; fixture tests handle non-empty case.
-    assert set(df.columns) >= {"year", "month", "epoch", "validated", "modules_available"} if len(df) > 0 else True
+    assert (
+        set(df.columns) >= {"year", "month", "epoch", "validated", "modules_available"}
+        if len(df) > 0
+        else True
+    )
 
 
 def test_list_available_has_correct_columns_when_populated(
@@ -169,16 +173,37 @@ def test_list_available_year_filter(monkeypatch: pytest.MonkeyPatch) -> None:
     assert df.iloc[0]["year"] == 2024
 
 
-def test_list_modules_returns_six_modules() -> None:
+def test_list_modules_returns_canonical_modules() -> None:
+    """Schema 1.1.0 has 8 canonical modules (added migracion, otras_formas_trabajo)."""
     import pandas as pd
 
     from pulso._config.registry import list_modules
 
     df = list_modules()
     assert isinstance(df, pd.DataFrame)
-    assert len(df) == 6
-    assert "ocupados" in df["module"].values
-    assert "caracteristicas_generales" in df["module"].values
+    assert len(df) == 8
+
+    expected = {
+        "caracteristicas_generales",
+        "ocupados",
+        "desocupados",
+        "inactivos",
+        "vivienda_hogares",
+        "otros_ingresos",
+        "migracion",
+        "otras_formas_trabajo",
+    }
+    assert set(df["module"]) == expected
+
+
+def test_list_modules_geih2_only_modules_marked_correctly() -> None:
+    """migracion and otras_formas_trabajo only exist in geih_2021_present."""
+    from pulso._config.registry import list_modules
+
+    df = list_modules()
+    geih2_only = df[df["module"].isin(["migracion", "otras_formas_trabajo"])]
+    for _, row in geih2_only.iterrows():
+        assert row["available_in"] == ["geih_2021_present"]
 
 
 def test_list_modules_columns() -> None:
