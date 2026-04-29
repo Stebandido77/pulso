@@ -77,8 +77,7 @@ def download_zip(
 
     if not record["validated"] and not allow_unvalidated:
         raise DataNotValidatedError(
-            f"Entry {key!r} has validated=false. "
-            "Pass allow_unvalidated=True to load it anyway."
+            f"Entry {key!r} has validated=false. Pass allow_unvalidated=True to load it anyway."
         )
 
     checksum: str = record["checksum_sha256"]
@@ -103,9 +102,7 @@ def download_zip(
         if show_progress:
             from tqdm import tqdm
 
-            with tmp.open("wb") as f, tqdm(
-                total=total, unit="B", unit_scale=True, desc=key
-            ) as bar:
+            with tmp.open("wb") as f, tqdm(total=total, unit="B", unit_scale=True, desc=key) as bar:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
                     bar.update(len(chunk))

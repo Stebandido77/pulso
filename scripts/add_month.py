@@ -81,13 +81,19 @@ def _propose_modules(names: list[str]) -> dict[str, dict[str, str | None]]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--year", type=int, required=True)
     parser.add_argument("--month", type=int, required=True, choices=range(1, 13), metavar="MONTH")
     parser.add_argument("--url", type=str, required=True, help="Direct URL to the ZIP.")
     parser.add_argument("--landing-page", type=str, default=None)
-    parser.add_argument("--epoch", type=str, default=None, help="Epoch key. Inferred from year if omitted.")
-    parser.add_argument("--auto", action="store_true", help="Don't prompt; accept inferred module mappings.")
+    parser.add_argument(
+        "--epoch", type=str, default=None, help="Epoch key. Inferred from year if omitted."
+    )
+    parser.add_argument(
+        "--auto", action="store_true", help="Don't prompt; accept inferred module mappings."
+    )
     args = parser.parse_args()
 
     year: int = args.year

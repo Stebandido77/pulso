@@ -47,13 +47,9 @@ def _parse_csv(
                 low_memory=False,
             )
     except KeyError as exc:
-        raise ParseError(
-            f"File {inner_path!r} not found inside {zip_path.name}."
-        ) from exc
+        raise ParseError(f"File {inner_path!r} not found inside {zip_path.name}.") from exc
     except Exception as exc:
-        raise ParseError(
-            f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}"
-        ) from exc
+        raise ParseError(f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}") from exc
     return df
 
 

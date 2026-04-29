@@ -34,9 +34,7 @@ INNER_PATHS: dict[str, dict[str, str]] = {
         "ocupados": "Cabecera/Cabecera - Ocupados.CSV",
     },
     "Resto": {
-        "caracteristicas_generales": (
-            "Resto/Resto - Caracteristicas generales (Personas).CSV"
-        ),
+        "caracteristicas_generales": ("Resto/Resto - Caracteristicas generales (Personas).CSV"),
         "ocupados": "Resto/Resto - Ocupados.CSV",
     },
 }
@@ -64,9 +62,7 @@ def _make_caracteristicas(rng: random.Random, n: int) -> pd.DataFrame:
 
 def _make_ocupados(rng: random.Random, carac: pd.DataFrame) -> pd.DataFrame:
     """Build a synthetic ocupados table covering ~60 % of carac rows."""
-    mask = pd.Series(
-        [rng.random() < 0.60 for _ in range(len(carac))], index=carac.index
-    )
+    mask = pd.Series([rng.random() < 0.60 for _ in range(len(carac))], index=carac.index)
     subset = carac[mask][["DIRECTORIO", "SECUENCIA_P", "ORDEN", "FEX_C18"]].copy()
     subset["INGLABO"] = [round(rng.uniform(0.0, 10_000_000.0), 2) for _ in range(len(subset))]
     subset["P6800"] = [rng.randint(1, 60) for _ in range(len(subset))]

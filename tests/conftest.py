@@ -152,9 +152,7 @@ def _make_fixture_sources(sha256: str) -> dict[str, Any]:
                         "cabecera": (
                             "Cabecera/Cabecera - Caracteristicas generales (Personas).CSV"
                         ),
-                        "resto": (
-                            "Resto/Resto - Caracteristicas generales (Personas).CSV"
-                        ),
+                        "resto": ("Resto/Resto - Caracteristicas generales (Personas).CSV"),
                     },
                 },
                 "validated": True,

@@ -15,7 +15,9 @@ import sys
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--year", type=int, default=None)
     parser.add_argument("--month", type=int, default=None)
     args = parser.parse_args()

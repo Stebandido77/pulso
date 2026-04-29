@@ -94,7 +94,9 @@ def load(
                 f"Available: {list(record['modules'].keys())}."
             )
 
-        zip_path = download_zip(y, m, cache=cache, show_progress=show_progress, allow_unvalidated=allow_unvalidated)
+        zip_path = download_zip(
+            y, m, cache=cache, show_progress=show_progress, allow_unvalidated=allow_unvalidated
+        )
         df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
 
         if multi:

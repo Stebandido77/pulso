@@ -69,9 +69,7 @@ def validate_area(area: str) -> Area:
         PulsoError: If the area is not one of 'cabecera', 'resto', 'total'.
     """
     if area not in VALID_AREAS:
-        raise PulsoError(
-            f"Invalid area {area!r}. Must be one of: {', '.join(VALID_AREAS)}."
-        )
+        raise PulsoError(f"Invalid area {area!r}. Must be one of: {', '.join(VALID_AREAS)}.")
     return area  # type: ignore[return-value]
 
 
@@ -86,7 +84,6 @@ def validate_module(module: str, available_modules: Iterable[str]) -> str:
     available = list(available_modules)
     if module not in available:
         raise ModuleNotAvailableError(
-            f"Module {module!r} is not available. "
-            f"Available modules: {available}."
+            f"Module {module!r} is not available. Available modules: {available}."
         )
     return module

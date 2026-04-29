@@ -49,9 +49,7 @@ def cache_info() -> dict[str, object]:
     root = cache_path()
     total_size = 0
     n_files = 0
-    by_level: dict[str, dict[str, int]] = {
-        lvl: {"size_bytes": 0, "n_files": 0} for lvl in _LEVELS
-    }
+    by_level: dict[str, dict[str, int]] = {lvl: {"size_bytes": 0, "n_files": 0} for lvl in _LEVELS}
     for lvl in _LEVELS:
         lvl_dir = root / lvl
         if lvl_dir.exists():

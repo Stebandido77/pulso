@@ -129,9 +129,7 @@ def test_parse_module_resto(fixture_sources_2024_06: Any, geih2_epoch: Any) -> N
     assert len(df) > 0
 
 
-def test_parse_module_total_concatenates(
-    fixture_sources_2024_06: Any, geih2_epoch: Any
-) -> None:
+def test_parse_module_total_concatenates(fixture_sources_2024_06: Any, geih2_epoch: Any) -> None:
     """area='total' concatenates cabecera + resto and adds _area column."""
     if not FIXTURE_ZIP.exists():
         pytest.skip("Fixture ZIP not found")
