@@ -40,11 +40,16 @@ class ParseError(PulsoError):
 
 
 class HarmonizationError(PulsoError):
-    """Raised when a transform in variable_map.json fails to apply."""
+    """Raised when applying a variable_map transform fails on actual data.
+
+    Distinct from ConfigError (config-level) and ParseError (file-level).
+    Examples: missing source columns, unmapped recode values, failed casts,
+    out-of-domain categorical values, custom function failures.
+    """
 
 
 class MergeError(PulsoError):
-    """Raised when modules cannot be merged due to incompatible keys."""
+    """Raised when merging multiple modules fails (e.g., missing merge keys, dtype mismatches)."""
 
 
 class CacheError(PulsoError):
