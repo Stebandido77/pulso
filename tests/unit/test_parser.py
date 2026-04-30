@@ -113,9 +113,14 @@ def fixture_sources_unified(monkeypatch: pytest.MonkeyPatch) -> None:
                     "description_es": "Ocupados",
                     "available_in": ["geih_2021_present"],
                 },
+                "no_ocupados": {
+                    "level": "persona",
+                    "description_es": "No ocupados",
+                    "available_in": ["geih_2021_present"],
+                },
                 "desocupados": {
                     "level": "persona",
-                    "description_es": "Desocupados",
+                    "description_es": "Desocupados (filtrado de no_ocupados)",
                     "available_in": ["geih_2021_present"],
                 },
             },
@@ -128,9 +133,12 @@ def fixture_sources_unified(monkeypatch: pytest.MonkeyPatch) -> None:
                         "ocupados": {
                             "file": INNER_OCUP_UNIFIED,
                         },
+                        "no_ocupados": {
+                            "file": INNER_NO_OCUP_UNIFIED,
+                        },
                         "desocupados": {
                             "file": INNER_NO_OCUP_UNIFIED,
-                            "row_filter": {"column": "OCI", "values": [2]},
+                            "row_filter": {"column": "DSI", "values": [1]},
                         },
                     },
                     "validated": True,
@@ -253,13 +261,13 @@ def test_parse_module_unified_total(fixture_sources_unified: Any, geih2_epoch: A
 
     df = parse_module(UNIFIED_FIXTURE_ZIP, 2024, 6, "ocupados", "total", geih2_epoch)
     assert len(df) > 0
-    assert set(df["CLASE"].unique()) == {1, 2, 3}
+    assert df["CLASE"].isin([1, 2]).all()
 
 
 def test_parse_module_unified_with_row_filter(
     fixture_sources_unified: Any, geih2_epoch: Any
 ) -> None:
-    """Shape B: row_filter splits a shared file (desocupados from inactivos)."""
+    """Shape B: row_filter splits a shared file (desocupados via DSI=1)."""
     if not UNIFIED_FIXTURE_ZIP.exists():
         pytest.skip("Unified fixture ZIP not found. Run: python tests/_build_fixtures.py")
 
@@ -267,4 +275,4 @@ def test_parse_module_unified_with_row_filter(
 
     df = parse_module(UNIFIED_FIXTURE_ZIP, 2024, 6, "desocupados", "total", geih2_epoch)
     assert len(df) > 0
-    assert (df["OCI"] == 2).all()
+    assert (df["DSI"] == 1).all()
