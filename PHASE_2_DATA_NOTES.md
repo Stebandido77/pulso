@@ -220,3 +220,55 @@ the actual source file. Verify with real GEIH-1 data.
 - [ ] Human verification of P3271 as sex variable in GEIH-2 (requires DANE questionnaire PDF)
 - [ ] Human verification of P7430 as tipo_inactividad in GEIH-2
 - [ ] Verification of GEIH-1 column codes against real data (P6051, OCI location, INGTOT availability)
+
+---
+
+## Phase 2 debt — domain fixes (branch `feat/data-domain-fixes`, 2026-04-29)
+
+End-to-end testing against real DANE 2024-06 data revealed three domain gaps in `variable_map.json`
+that were not visible during Phase 2 code review. Fixed in PR #11/#13.
+
+### Fix 1: `educ_max` — replaced GEIH-1 categories with official GEIH-2 categories
+
+**Problem:** The Phase 2 Curator populated `educ_max.categories` with 9 codes that reflect the
+GEIH-1 (P6210) codification. Real June 2024 data shows values 1–13 for P3042, not 1–9.
+
+**Fix:** Replaced all 9 categories with the 13 official DANE GEIH-2 categories plus code 99
+("No sabe, no informa"), as verified against **DANE catálogo 819, variable F63 (P3042)**:
+`https://microdatos.dane.gov.co/index.php/catalog/819/variable/F63/V4044?name=P3042`
+
+**Comparability note:** The GEIH-1 codification (P6210, 9 codes) collapses levels that GEIH-2 (P3042)
+distinguishes separately (e.g., code 1 = "Ninguno/Preescolar" in GEIH-1 corresponds to codes 1 and 2
+in GEIH-2; code 5 = "Técnica/Tecnológica" in GEIH-1 corresponds to codes 8 and 9 in GEIH-2). A
+crosswalk table is required for any longitudinal comparison across epochs. Documented in
+`comparability_warning`.
+
+### Fix 2: `parentesco_jefe` — added codes 11, 12, 13
+
+**Problem:** Variable map declared 10 categories (1–10). Real June 2024 data shows values 11
+(10 persons), 12 (4 persons), and 13 (780 persons, significant) that were missing from the domain.
+
+**Fix:** Extended `categories` to include:
+- `"11"`: `"Suegro/a (padre/madre del cónyuge)"` — best-guess label
+- `"12"`: `"Yerno/Nuera (cónyuge del hijo/a)"` — best-guess label
+- `"13"`: `"Hermano/a"` — best-guess label (780 persons make this category non-trivial)
+
+**Open uncertainty:** The exact DANE labels for codes 11, 12, 13 could not be confirmed against the
+GEIH-2 questionnaire PDF or DANE microdata catalog. The labels are conservative guesses based on
+typical family-relationship expansions in the 2021 redesign. **REQUIRES HUMAN VERIFICATION** against
+the official DANE GEIH-2 questionnaire or the microdatos catalog before using these codes in
+published analysis. Documented in `comparability_warning`.
+
+### Fix 3: `tipo_contrato` — added code 9 (No sabe / No informa)
+
+**Problem:** Variable map declared categories 1–4. Real data contains value 9 (7 persons).
+
+**Fix:** Added `"9"`: `"No sabe / No informa"`. Standard DANE convention for categorical variables;
+no special verification required.
+
+### Variables intentionally NOT touched
+
+- **`vivienda_propia`** and **`ingreso_total`**: Their `module` field is correct in `variable_map.json`.
+  The issue is that `load_merged` does not auto-include the required modules (`vivienda_hogares`,
+  `otros_ingresos`) when these variables are requested. This is a Builder/code problem, tracked as
+  **Issue #14** (Builder territory). No changes to `variable_map.json` needed for these variables.

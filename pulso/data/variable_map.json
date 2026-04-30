@@ -102,9 +102,12 @@
         "7": "Pensionista",
         "8": "Trabajador del hogar sin remuneración",
         "9": "Otro no pariente",
-        "10": "Sin información"
+        "10": "Sin información",
+        "11": "Suegro/a (padre/madre del cónyuge)",
+        "12": "Yerno/Nuera (cónyuge del hijo/a)",
+        "13": "Hermano/a"
       },
-      "comparability_warning": "El código de la pregunta puede variar entre P6050 y P6051 según el año de la encuesta. Verificar con diccionario del año correspondiente.",
+      "comparability_warning": "El código de la pregunta puede variar entre P6050 y P6051 según el año de la encuesta. Verificar con diccionario del año correspondiente. ADVERTENCIA: Los códigos 11, 12 y 13 se observan en los datos reales de June 2024 (10, 4 y 780 personas respectivamente) pero sus etiquetas son ESTIMACIONES CONSERVADORAS basadas en patrones típicos del rediseño GEIH-2 de 2021. REQUIEREN VERIFICACIÓN HUMANA contra el cuestionario PDF o el catálogo de microdatos DANE GEIH-2.",
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6051",
@@ -235,17 +238,22 @@
       "description_es": "Nivel educativo más alto alcanzado y aprobado.",
       "description_en": "Highest educational level attained and approved.",
       "categories": {
-        "1": "Ninguno/Preescolar",
-        "2": "Básica primaria",
-        "3": "Básica secundaria",
-        "4": "Media (bachillerato)",
-        "5": "Técnica profesional o tecnológica",
-        "6": "Universitaria",
-        "7": "Especialización",
-        "8": "Maestría",
-        "9": "Doctorado"
+        "1": "Ninguno",
+        "2": "Preescolar",
+        "3": "Básica primaria (1o - 5o)",
+        "4": "Básica secundaria (6o - 9o)",
+        "5": "Media académica (Bachillerato clásico)",
+        "6": "Media técnica (Bachillerato técnico)",
+        "7": "Normalista",
+        "8": "Técnica profesional",
+        "9": "Tecnológica",
+        "10": "Universitaria",
+        "11": "Especialización",
+        "12": "Maestría",
+        "13": "Doctorado",
+        "99": "No sabe, no informa"
       },
-      "comparability_warning": "Código cambia de P6210 (marco 2005) a P3042 (marco 2018). Las categorías fueron ampliadas en el rediseño de 2021 (de 9 a 13 opciones observadas). Requiere tabla de equivalencias para comparación entre épocas.",
+      "comparability_warning": "Código cambia de P6210 (marco 2005) a P3042 (marco 2018). GEIH-1 (P6210) usa 9 categorías con codificación diferente (1=Ninguno/Preescolar, 2=Primaria, 3=Secundaria, 4=Media, 5=Técnica/Tecnológica, 6=Universitaria, 7=Especialización, 8=Maestría, 9=Doctorado). GEIH-2 (P3042) usa 13 categorías con mayor granularidad según DANE catálogo 819, variable F63 (P3042). Las categorías NO son directamente comparables entre épocas: requiere tabla de equivalencias GEIH-1→GEIH-2 para análisis longitudinal.",
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6210",
@@ -594,7 +602,8 @@
         "1": "A término fijo",
         "2": "A término indefinido",
         "3": "Obra o labor contratada",
-        "4": "Otro tipo de contrato"
+        "4": "Otro tipo de contrato",
+        "9": "No sabe / No informa"
       },
       "comparability_warning": null,
       "mappings": {
