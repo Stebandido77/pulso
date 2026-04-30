@@ -56,10 +56,12 @@ def test_bin_edad_quinquenal_handles_nulls() -> None:
 
 def test_merge_labor_status_three_categories() -> None:
     """OCI=1 → ocupado, DSI=1 → desocupado, both NA → inactivo."""
-    df = pd.DataFrame({
-        "OCI": pd.array([1, None, None], dtype="Int64"),
-        "DSI": pd.array([None, 1, None], dtype="Int64"),
-    })
+    df = pd.DataFrame(
+        {
+            "OCI": pd.array([1, None, None], dtype="Int64"),
+            "DSI": pd.array([None, 1, None], dtype="Int64"),
+        }
+    )
     result = merge_labor_status(df, ["OCI", "DSI"], {}, _epoch())
     assert result.iloc[0] == "1"
     assert result.iloc[1] == "2"
@@ -84,11 +86,13 @@ def test_merge_labor_status_raises_on_non_list_source() -> None:
 
 
 def test_compute_ingreso_total_sums_components() -> None:
-    df = pd.DataFrame({
-        "INGLABO": [1_000_000, 2_000_000],
-        "P7500S1A1": [100_000, 200_000],
-        "P7500S2A1": [50_000, 0],
-    })
+    df = pd.DataFrame(
+        {
+            "INGLABO": [1_000_000, 2_000_000],
+            "P7500S1A1": [100_000, 200_000],
+            "P7500S2A1": [50_000, 0],
+        }
+    )
     cols = ["INGLABO", "P7500S1A1", "P7500S2A1"]
     result = compute_ingreso_total(df, cols, {}, _epoch())
     assert result.iloc[0] == pytest.approx(1_150_000)
@@ -97,9 +101,11 @@ def test_compute_ingreso_total_sums_components() -> None:
 
 def test_compute_ingreso_total_handles_partial_columns() -> None:
     """When only some declared columns exist, sums those; does not raise."""
-    df = pd.DataFrame({
-        "INGLABO": [500_000, 1_000_000],
-    })
+    df = pd.DataFrame(
+        {
+            "INGLABO": [500_000, 1_000_000],
+        }
+    )
     cols = ["INGLABO", "P7500S1A1", "P750S1A1"]
     result = compute_ingreso_total(df, cols, {}, _epoch())
     assert result.iloc[0] == pytest.approx(500_000)

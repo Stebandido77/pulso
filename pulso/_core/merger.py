@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-import pandas as pd
-
 from pulso._utils.exceptions import MergeError
 
 if TYPE_CHECKING:
+    import pandas as pd
+
     from pulso._config.epochs import Epoch
 
 

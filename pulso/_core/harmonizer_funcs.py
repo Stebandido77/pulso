@@ -9,7 +9,7 @@ Signature for all custom functions:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -17,6 +17,8 @@ import pandas as pd
 from pulso._utils.exceptions import ConfigError, HarmonizationError
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pulso._config.epochs import Epoch
 
 CUSTOM_FUNCTIONS: dict[str, Callable[..., pd.Series]] = {}
@@ -45,22 +47,32 @@ def get_custom(name: str) -> Callable[..., pd.Series]:
 def bin_edad_quinquenal(
     df: pd.DataFrame,
     source_var: str | list[str],
-    variable_entry: dict,
-    epoch: Epoch,
+    _variable_entry: dict,
+    _epoch: Epoch,
 ) -> pd.Series:
     """Cut edad (P6040) into 14 quinquennial bins matching grupo_edad.categories."""
     col = source_var[0] if isinstance(source_var, list) else source_var
 
     if col not in df.columns:
-        raise HarmonizationError(
-            f"bin_edad_quinquenal: column {col!r} not found in DataFrame."
-        )
+        raise HarmonizationError(f"bin_edad_quinquenal: column {col!r} not found in DataFrame.")
 
     age = df[col]
     bins = [-0.001, 4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, np.inf]
     labels = [
-        "0-4", "5-9", "10-14", "15-19", "20-24", "25-29",
-        "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65+",
+        "0-4",
+        "5-9",
+        "10-14",
+        "15-19",
+        "20-24",
+        "25-29",
+        "30-34",
+        "35-39",
+        "40-44",
+        "45-49",
+        "50-54",
+        "55-59",
+        "60-64",
+        "65+",
     ]
 
     result = pd.cut(age, bins=bins, labels=labels, right=True, include_lowest=True)
@@ -71,8 +83,8 @@ def bin_edad_quinquenal(
 def merge_labor_status(
     df: pd.DataFrame,
     source_var: str | list[str],
-    variable_entry: dict,
-    epoch: Epoch,
+    _variable_entry: dict,
+    _epoch: Epoch,
 ) -> pd.Series:
     """Combine OCI (ocupados) and DSI (no_ocupados) into condicion_actividad code.
 
@@ -85,9 +97,7 @@ def merge_labor_status(
         "3" = inactivo   (OCI is NA, DSI is NA)  — heuristic, see PHASE_2_CODE_NOTES.md
     """
     if not isinstance(source_var, list) or len(source_var) < 2:
-        raise ConfigError(
-            "merge_labor_status requires source_variable as a list ['OCI', 'DSI']."
-        )
+        raise ConfigError("merge_labor_status requires source_variable as a list ['OCI', 'DSI'].")
 
     oci_col, dsi_col = source_var[0], source_var[1]
 
@@ -102,9 +112,9 @@ def merge_labor_status(
     dsi = df[dsi_col]
 
     result = pd.Series(pd.NA, index=df.index, dtype="string")
-    result[oci.eq(1)] = "1"                            # ocupado
-    result[oci.isna() & dsi.eq(1)] = "2"               # desocupado
-    result[oci.isna() & dsi.isna()] = "3"              # inactivo (heuristic)
+    result[oci.eq(1)] = "1"  # ocupado
+    result[oci.isna() & dsi.eq(1)] = "2"  # desocupado
+    result[oci.isna() & dsi.isna()] = "3"  # inactivo (heuristic)
 
     return result
 
@@ -113,8 +123,8 @@ def merge_labor_status(
 def compute_ingreso_total(
     df: pd.DataFrame,
     source_var: str | list[str],
-    variable_entry: dict,
-    epoch: Epoch,
+    _variable_entry: dict,
+    _epoch: Epoch,
 ) -> pd.Series:
     """Sum INGLABO + non-labor income components to construct ingreso_total.
 
@@ -122,10 +132,7 @@ def compute_ingreso_total(
     it by summing all available income sub-components. Missing components are
     treated as 0 (fillna=0) before summing.
     """
-    if isinstance(source_var, str):
-        source_cols = [source_var]
-    else:
-        source_cols = list(source_var)
+    source_cols = [source_var] if isinstance(source_var, str) else list(source_var)
 
     available = [c for c in source_cols if c in df.columns]
     if not available:

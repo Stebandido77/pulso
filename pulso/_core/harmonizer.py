@@ -68,12 +68,7 @@ def _apply_recode(
                 f"{unmapped_values}. Extend mapping in variable_map.json or set 'default'."
             )
         return str_source.map(mapping)
-    else:
-        return (
-            str_source.map(mapping)
-            .fillna(default)
-            .where(str_source.notna(), other=pd.NA)
-        )
+    return str_source.map(mapping).fillna(default).where(str_source.notna(), other=pd.NA)
 
 
 def _apply_cast(source: pd.Series, to: str, canonical_name: str) -> pd.Series:
@@ -99,7 +94,7 @@ def _apply_cast(source: pd.Series, to: str, canonical_name: str) -> pd.Series:
 def _apply_compute_string_concat(
     df: pd.DataFrame,
     expr: str,
-    source_vars: list[str],
+    _source_vars: list[str],
     canonical_name: str,
 ) -> pd.Series:
     """Manually evaluate string-concatenation expressions that use .astype(str).
@@ -137,10 +132,7 @@ def _apply_compute_string_concat(
             else:
                 result = piece.astype("string")
         else:
-            if isinstance(piece, str):
-                result = result + piece
-            else:
-                result = result + piece.astype("string")
+            result = result + piece if isinstance(piece, str) else result + piece.astype("string")
 
     return result if result is not None else pd.Series(dtype="string")
 
@@ -227,9 +219,7 @@ def harmonize_variable(
     """
     mappings = variable_entry.get("mappings", {})
     if epoch.key not in mappings:
-        raise ConfigError(
-            f"Variable {canonical_name!r} has no mapping for epoch {epoch.key!r}."
-        )
+        raise ConfigError(f"Variable {canonical_name!r} has no mapping for epoch {epoch.key!r}.")
 
     mapping = mappings[epoch.key]
     source_var: str | list[str] = mapping["source_variable"]
@@ -294,9 +284,7 @@ def harmonize_variable(
             result = fn(df, source_var, variable_entry, epoch)
 
         else:
-            raise ConfigError(
-                f"Variable {canonical_name!r}: unknown transform op {op!r}."
-            )
+            raise ConfigError(f"Variable {canonical_name!r}: unknown transform op {op!r}.")
 
     else:
         raise ConfigError(
@@ -316,8 +304,7 @@ def harmonize_variable(
     if variable_entry.get("type") == "categorical":
         _validate_categorical_domain(result, variable_entry, canonical_name)
 
-    result = result.rename(canonical_name)
-    return result
+    return result.rename(canonical_name)
 
 
 def harmonize_dataframe(

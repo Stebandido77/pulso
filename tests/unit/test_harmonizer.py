@@ -9,16 +9,10 @@ import pandas as pd
 import pytest
 
 from pulso._core.harmonizer import (
-    _apply_cast,
-    _apply_coalesce,
-    _apply_compute,
-    _apply_recode,
-    _validate_categorical_domain,
     harmonize_dataframe,
     harmonize_variable,
 )
 from pulso._utils.exceptions import ConfigError, HarmonizationError
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -203,21 +197,25 @@ def test_cast_raises_on_uncastable_value() -> None:
 
 
 def test_coalesce_left_to_right() -> None:
-    df = pd.DataFrame({
-        "A": [1, None, None],
-        "B": [None, 2, None],
-        "C": [None, None, 3],
-    })
+    df = pd.DataFrame(
+        {
+            "A": [1, None, None],
+            "B": [None, 2, None],
+            "C": [None, None, 3],
+        }
+    )
     entry = _var_entry(source=["A", "B", "C"], transform={"op": "coalesce"})
     s = harmonize_variable(df, "myvar", entry, _epoch())
     assert list(s.fillna(-1)) == [1, 2, 3]
 
 
 def test_coalesce_all_null_returns_null() -> None:
-    df = pd.DataFrame({
-        "A": [None, None],
-        "B": [None, None],
-    })
+    df = pd.DataFrame(
+        {
+            "A": [None, None],
+            "B": [None, None],
+        }
+    )
     entry = _var_entry(source=["A", "B"], transform={"op": "coalesce"})
     s = harmonize_variable(df, "myvar", entry, _epoch())
     assert s.isna().all()

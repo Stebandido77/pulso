@@ -2,9 +2,9 @@
 
 The `registry_with_unified_fixture` conftest fixture supplies a Shape B (GEIH-2)
 ZIP with three modules sharing overlapping DIRECTORIO/SECUENCIA_P/ORDEN keys:
-  - caracteristicas_generales: 50 persons (DIRECTORIOs "00001"–"00050")
-  - ocupados: persons 1–30 (OCI=1)
-  - no_ocupados: persons 31–50 (DSI=1 for 6 desocupados, NaN for 14 inactivos)
+  - caracteristicas_generales: 50 persons (DIRECTORIOs "00001"-"00050")
+  - ocupados: persons 1-30 (OCI=1)
+  - no_ocupados: persons 31-50 (DSI=1 for 6 desocupados, NaN for 14 inactivos)
 
 Run with:
     pytest --run-integration tests/integration/

@@ -19,12 +19,14 @@ def _epoch(persona_keys=("DIRECTORIO", "SECUENCIA_P", "ORDEN")) -> MagicMock:
 
 
 def _carac(n: int = 5) -> pd.DataFrame:
-    return pd.DataFrame({
-        "DIRECTORIO": [f"{i:04d}" for i in range(1, n + 1)],
-        "SECUENCIA_P": [1] * n,
-        "ORDEN": [1] * n,
-        "EDAD": list(range(20, 20 + n)),
-    })
+    return pd.DataFrame(
+        {
+            "DIRECTORIO": [f"{i:04d}" for i in range(1, n + 1)],
+            "SECUENCIA_P": [1] * n,
+            "ORDEN": [1] * n,
+            "EDAD": list(range(20, 20 + n)),
+        }
+    )
 
 
 def _ocupados(carac: pd.DataFrame, frac: float = 0.6) -> pd.DataFrame:
@@ -78,11 +80,13 @@ def test_merge_raises_on_missing_keys() -> None:
 
 def test_merge_hogar_level_drops_orden() -> None:
     carac = _carac(5)
-    hogar_df = pd.DataFrame({
-        "DIRECTORIO": [f"{i:04d}" for i in range(1, 6)],
-        "SECUENCIA_P": [1] * 5,
-        "TENENCIA": ["propia"] * 5,
-    })
+    hogar_df = pd.DataFrame(
+        {
+            "DIRECTORIO": [f"{i:04d}" for i in range(1, 6)],
+            "SECUENCIA_P": [1] * 5,
+            "TENENCIA": ["propia"] * 5,
+        }
+    )
     result = merge_modules({"carac": carac, "hogar": hogar_df}, _epoch(), level="hogar")
     assert "TENENCIA" in result.columns
     assert len(result) == 5

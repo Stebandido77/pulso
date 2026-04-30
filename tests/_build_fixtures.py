@@ -112,7 +112,7 @@ def _clase_value(rng: random.Random) -> int:
 def _make_unified_caracteristicas(rng: random.Random, n: int) -> pd.DataFrame:
     """Build unified caracteristicas_generales with n persons.
 
-    DIRECTORIOs are zero-padded 5-digit strings ("00001"–"00050") shared
+    DIRECTORIOs are zero-padded 5-digit strings ("00001"-"00050") shared
     across all modules to enable outer joins on [DIRECTORIO, SECUENCIA_P, ORDEN].
     """
     rows = []
@@ -138,8 +138,9 @@ def _make_unified_ocupados(rng: random.Random, carac_subset: pd.DataFrame) -> pd
 
     All rows have OCI=1 (by definition: everyone in ocupados is employed).
     """
-    sub = carac_subset[["DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR", "MES", "CLASE",
-                         "FEX_C18"]].copy()
+    sub = carac_subset[
+        ["DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR", "MES", "CLASE", "FEX_C18"]
+    ].copy()
     sub["OCI"] = 1
     sub["INGLABO"] = [round(rng.uniform(0.0, 10_000_000.0), 2) for _ in range(len(sub))]
     sub["P6800"] = [rng.randint(1, 60) for _ in range(len(sub))]
@@ -155,8 +156,9 @@ def _make_unified_no_ocupados(rng: random.Random, carac_subset: pd.DataFrame) ->
     n = len(carac_subset)
     n_desoc = max(1, round(n * 0.30))
 
-    sub = carac_subset[["DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR", "MES", "CLASE",
-                         "FEX_C18"]].copy()
+    sub = carac_subset[
+        ["DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR", "MES", "CLASE", "FEX_C18"]
+    ].copy()
 
     dsi_values = [1] * n_desoc + [None] * (n - n_desoc)
     dscy_values = [1] * n_desoc + [None] * (n - n_desoc)
