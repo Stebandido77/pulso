@@ -76,9 +76,9 @@ def test_load_merged_condicion_actividad_classifies_correctly(
     ca = df["condicion_actividad"].dropna()
 
     # All values must be in {"1", "2", "3"}
-    assert set(ca.unique()).issubset(
-        {"1", "2", "3"}
-    ), f"Unexpected condicion_actividad values: {set(ca.unique())}"
+    assert set(ca.unique()).issubset({"1", "2", "3"}), (
+        f"Unexpected condicion_actividad values: {set(ca.unique())}"
+    )
 
     # Fixture has 30 ocupados (OCI=1), 6 desocupados (DSI=1), 14 inactivos (DSI=NaN)
     counts = ca.value_counts()
@@ -166,6 +166,6 @@ def test_load_merged_auto_includes_required_modules_with_real_data() -> None:
         harmonize=True,
     )
 
-    assert (
-        "vivienda_propia" in df.columns
-    ), "vivienda_propia missing — vivienda_hogares was not auto-included"
+    assert "vivienda_propia" in df.columns, (
+        "vivienda_propia missing — vivienda_hogares was not auto-included"
+    )
