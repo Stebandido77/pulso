@@ -214,7 +214,11 @@ def _make_fixture_sources(sha256: str) -> dict[str, Any]:
 
 
 def _make_unified_fixture_sources(sha256: str) -> dict[str, Any]:
-    """Return a sources dict (Shape B) for the unified fixture."""
+    """Return a sources dict (Shape B) for the unified fixture.
+
+    Includes all three Phase-2 modules (caracteristicas_generales, ocupados,
+    no_ocupados) sharing the same ZIP file with overlapping DIRECTORIO keys.
+    """
     return {
         "metadata": {
             "schema_version": "1.1.0",
@@ -230,10 +234,16 @@ def _make_unified_fixture_sources(sha256: str) -> dict[str, Any]:
                 "description_en": "Employed persons",
                 "available_in": ["geih_2021_present"],
             },
-            "desocupados": {
+            "no_ocupados": {
                 "level": "persona",
-                "description_es": "Personas desocupadas",
-                "description_en": "Unemployed persons",
+                "description_es": "Personas no ocupadas (desocupados e inactivos)",
+                "description_en": "Non-employed persons (unemployed and inactive)",
+                "available_in": ["geih_2021_present"],
+            },
+            "caracteristicas_generales": {
+                "level": "persona",
+                "description_es": "Características generales",
+                "description_en": "General characteristics",
                 "available_in": ["geih_2021_present"],
             },
         },
@@ -246,9 +256,13 @@ def _make_unified_fixture_sources(sha256: str) -> dict[str, Any]:
                     "ocupados": {
                         "file": "CSV/Ocupados.CSV",
                     },
-                    "desocupados": {
+                    "no_ocupados": {
                         "file": "CSV/No ocupados.CSV",
-                        "row_filter": {"column": "OCI", "values": [2]},
+                    },
+                    "caracteristicas_generales": {
+                        "file": (
+                            "CSV/Características generales, seguridad social en salud y educación.CSV"
+                        ),
                     },
                 },
                 "validated": True,
@@ -257,7 +271,7 @@ def _make_unified_fixture_sources(sha256: str) -> dict[str, Any]:
                 "scraped_at": None,
                 "landing_page": None,
                 "size_bytes": None,
-                "notes": "Synthetic Shape B (unified) fixture for integration tests",
+                "notes": "Synthetic Shape B (unified) fixture for Phase 2 integration tests",
             }
         },
     }

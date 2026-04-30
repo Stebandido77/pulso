@@ -71,11 +71,19 @@ def test_load_caracteristicas_generales(registry_with_fixture: None) -> None:
 
 
 @pytest.mark.integration
-def test_load_harmonize_true_raises(registry_with_fixture: None) -> None:
+def test_load_harmonize_true_returns_dataframe(registry_with_fixture: None) -> None:
+    """Phase 2: harmonize=True now works; no longer raises NotImplementedError.
+
+    The test_shape_a epoch has no variable_map mappings, so all variables are
+    silently skipped and the raw DataFrame is returned unchanged.
+    """
+    import pandas as pd
+
     import pulso
 
-    with pytest.raises(NotImplementedError, match="Phase 2"):
-        pulso.load(year=2024, month=6, module="ocupados", harmonize=True)
+    df = pulso.load(year=2024, month=6, module="ocupados", harmonize=True)
+    assert isinstance(df, pd.DataFrame)
+    assert df.shape[0] > 0
 
 
 @pytest.mark.integration
