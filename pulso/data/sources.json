@@ -81,7 +81,7 @@
           "file": "CSV/No ocupados.CSV"
         },
         "vivienda_hogares": {
-          "file": "CSV/Vivienda y Hogares.CSV"
+          "file": "CSV/Datos del hogar y la vivienda.CSV"
         },
         "otros_ingresos": {
           "file": "CSV/Otros ingresos e impuestos.CSV"
