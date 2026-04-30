@@ -12,7 +12,15 @@ Run with:
 
 from __future__ import annotations
 
+import hashlib
+import io
+import zipfile
+from typing import TYPE_CHECKING, Any
+
 import pytest
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.mark.integration
@@ -169,3 +177,157 @@ def test_load_merged_auto_includes_required_modules_with_real_data() -> None:
     assert "vivienda_propia" in df.columns, (
         "vivienda_propia missing — vivienda_hogares was not auto-included"
     )
+
+
+# ─── Multi-level merge integration ───────────────────────────────────
+
+
+_SEP = ";"
+_DECIMAL = ","
+_N = 10
+
+
+def _df_to_bytes_local(df: Any) -> bytes:
+    import pandas as pd
+
+    buf = io.BytesIO()
+    pd.DataFrame(df).to_csv(buf, index=False, sep=_SEP, decimal=_DECIMAL, encoding="utf-8")
+    return buf.getvalue()
+
+
+def _build_multilevel_zip() -> tuple[bytes, str]:
+    """Build an in-memory ZIP with persona (caracteristicas_generales) and hogar (vivienda_hogares).
+
+    Returns (zip_bytes, sha256_hex).
+    """
+    import pandas as pd
+
+    carac = pd.DataFrame(
+        {
+            "DIRECTORIO": [f"{i:05d}" for i in range(1, _N + 1)],
+            "SECUENCIA_P": [1] * _N,
+            "ORDEN": [1] * _N,
+            "HOGAR": [1] * _N,
+            "CLASE": [1] * _N,
+            "P6040": list(range(20, 20 + _N)),
+            "FEX_C18": [1000.0] * _N,
+        }
+    )
+
+    vivienda = pd.DataFrame(
+        {
+            "DIRECTORIO": [f"{i:05d}" for i in range(1, _N + 1)],
+            "SECUENCIA_P": [1] * _N,
+            "HOGAR": [1] * _N,
+            "P5090": list(range(1, _N + 1)),
+        }
+    )
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(
+            "CSV/Características generales, seguridad social en salud y educación.CSV",
+            _df_to_bytes_local(carac),
+        )
+        zf.writestr("CSV/Vivienda y hogares.CSV", _df_to_bytes_local(vivienda))
+
+    zip_bytes = buf.getvalue()
+    sha256 = hashlib.sha256(zip_bytes).hexdigest()
+    return zip_bytes, sha256
+
+
+def _make_multilevel_sources(sha256: str) -> dict[str, Any]:
+    return {
+        "metadata": {
+            "schema_version": "1.1.0",
+            "data_version": "2026.04",
+            "last_updated": "2026-04-30T00:00:00Z",
+            "scraper_version": None,
+            "covered_range": ["2024-06", "2024-06"],
+        },
+        "modules": {
+            "caracteristicas_generales": {
+                "level": "persona",
+                "description_es": "Características generales",
+                "description_en": "General characteristics",
+                "available_in": ["geih_2021_present"],
+            },
+            "vivienda_hogares": {
+                "level": "hogar",
+                "description_es": "Vivienda y hogares",
+                "description_en": "Dwelling and households",
+                "available_in": ["geih_2021_present"],
+            },
+        },
+        "data": {
+            "2024-06": {
+                "epoch": "geih_2021_present",
+                "download_url": "https://example.com/fake_multilevel.zip",
+                "checksum_sha256": sha256,
+                "modules": {
+                    "caracteristicas_generales": {
+                        "file": (
+                            "CSV/Características generales, "
+                            "seguridad social en salud y educación.CSV"
+                        ),
+                    },
+                    "vivienda_hogares": {
+                        "file": "CSV/Vivienda y hogares.CSV",
+                    },
+                },
+                "validated": True,
+                "validated_by": "manual",
+                "validated_at": None,
+                "scraped_at": None,
+                "landing_page": None,
+                "size_bytes": None,
+                "notes": "Synthetic multi-level fixture for hogar merge tests",
+            }
+        },
+    }
+
+
+@pytest.fixture
+def registry_with_multilevel_fixture(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Inject a registry with persona + hogar modules sharing the same ZIP."""
+    import pulso._config.registry as reg
+
+    zip_bytes, sha256 = _build_multilevel_zip()
+
+    cache_root = tmp_path / "cache"
+    short = sha256[:16]
+    dest = cache_root / "raw" / "2024" / "06" / f"{short}.zip"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(zip_bytes)
+
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(cache_root))
+    monkeypatch.setattr(reg, "_SOURCES", _make_multilevel_sources(sha256))
+
+
+@pytest.mark.integration
+def test_load_merged_hogar_module_propagates_info(
+    registry_with_multilevel_fixture: None,
+) -> None:
+    """vivienda_hogares (hogar-level) is merged with persona-level modules without error.
+
+    Hogar info (P5090) must be propagated to all persons in that household.
+    """
+    import pulso
+
+    df = pulso.load_merged(
+        year=2024,
+        month=6,
+        modules=["caracteristicas_generales", "vivienda_hogares"],
+        area="total",
+        harmonize=False,
+    )
+
+    assert df.shape[0] == _N, f"Expected {_N} rows, got {df.shape[0]}"
+    assert "DIRECTORIO" in df.columns
+    assert "ORDEN" in df.columns, "Persona key must be present"
+    assert "P6040" in df.columns, "Persona-level variable must be present"
+    assert "P5090" in df.columns, "Hogar-level variable must be propagated to all persons"
+    assert df["P5090"].notna().all(), "Every person must receive hogar info (left join)"

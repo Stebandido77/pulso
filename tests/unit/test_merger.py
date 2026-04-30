@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 import pandas as pd
 import pytest
 
-from pulso._core.merger import merge_modules
+from pulso._core.merger import _detect_module_level, merge_modules
 from pulso._utils.exceptions import MergeError
 
 
@@ -142,3 +142,58 @@ def test_merge_drops_duplicate_non_key_columns() -> None:
     assert "MOD1_VAR" in result.columns
     assert "MOD2_VAR" in result.columns
     assert "MOD3_VAR" in result.columns
+
+
+# ─── Multi-level merge tests ───────────────────────────────────────────
+
+
+def test_detect_persona_level() -> None:
+    df = pd.DataFrame({"DIRECTORIO": [1], "SECUENCIA_P": [1], "ORDEN": [1], "P3271": [1]})
+    assert _detect_module_level(df, _epoch()) == "persona"
+
+
+def test_detect_hogar_level() -> None:
+    df = pd.DataFrame({"DIRECTORIO": [1], "SECUENCIA_P": [1], "HOGAR": [1], "P5090": [1]})
+    assert _detect_module_level(df, _epoch()) == "hogar"
+
+
+def test_merge_persona_and_hogar_propagates_hogar_info() -> None:
+    """Hogar-level info is left-joined into all persons sharing that household."""
+    persona_df = pd.DataFrame(
+        {
+            "DIRECTORIO": [1, 1, 2],
+            "SECUENCIA_P": [1, 1, 1],
+            "ORDEN": [1, 2, 1],
+            "HOGAR": [1, 1, 1],
+            "P3271": [1, 2, 1],
+        }
+    )
+    hogar_df = pd.DataFrame(
+        {
+            "DIRECTORIO": [1, 2],
+            "SECUENCIA_P": [1, 1],
+            "HOGAR": [1, 1],
+            "P5090": [1, 3],
+        }
+    )
+    result = merge_modules({"persona": persona_df, "hogar": hogar_df}, _epoch(), level="persona")
+
+    assert len(result) == 3
+    assert "P5090" in result.columns
+    assert result.iloc[0]["P5090"] == 1
+    assert result.iloc[1]["P5090"] == 1
+    assert result.iloc[2]["P5090"] == 3
+
+
+def test_existing_persona_only_merge_still_works() -> None:
+    """Backward compatibility: persona-only merges produce identical results."""
+    df1 = pd.DataFrame(
+        {"DIRECTORIO": [1, 2], "SECUENCIA_P": [1, 1], "ORDEN": [1, 1], "X": [10, 20]}
+    )
+    df2 = pd.DataFrame(
+        {"DIRECTORIO": [1, 2], "SECUENCIA_P": [1, 1], "ORDEN": [1, 1], "Y": [30, 40]}
+    )
+    result = merge_modules({"a": df1, "b": df2}, _epoch(), level="persona")
+    assert len(result) == 2
+    assert "X" in result.columns
+    assert "Y" in result.columns
