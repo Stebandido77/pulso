@@ -76,9 +76,9 @@ def test_load_merged_condicion_actividad_classifies_correctly(
     ca = df["condicion_actividad"].dropna()
 
     # All values must be in {"1", "2", "3"}
-    assert set(ca.unique()).issubset({"1", "2", "3"}), (
-        f"Unexpected condicion_actividad values: {set(ca.unique())}"
-    )
+    assert set(ca.unique()).issubset(
+        {"1", "2", "3"}
+    ), f"Unexpected condicion_actividad values: {set(ca.unique())}"
 
     # Fixture has 30 ocupados (OCI=1), 6 desocupados (DSI=1), 14 inactivos (DSI=NaN)
     counts = ca.value_counts()
@@ -129,3 +129,43 @@ def test_load_merged_returns_persona_level_unique_keys(
         f"Expected {df.shape[0]} unique persona keys, got {n_unique}. "
         "The merge produced duplicate rows."
     )
+
+
+@pytest.mark.integration
+def test_load_merged_raises_on_invalid_module(
+    registry_with_unified_fixture: None,
+) -> None:
+    """ModuleNotAvailableError is raised for an invalid module name, not silently skipped."""
+    import pulso
+    from pulso._utils.exceptions import ModuleNotAvailableError
+
+    with pytest.raises(ModuleNotAvailableError):
+        pulso.load_merged(
+            year=2024,
+            month=6,
+            modules=["caracteristicas_generales", "ocupados", "no_ocupados", "nonexistent_module"],
+            harmonize=False,
+        )
+
+
+@pytest.mark.integration
+def test_load_merged_auto_includes_required_modules_with_real_data() -> None:
+    """Auto-inclusion works against real DANE data: vivienda_hogares is added for vivienda_propia.
+
+    Requires the 2024-06 DANE ZIP to be cached locally (--run-integration).
+    """
+    import pulso
+
+    # User specifies only person-level modules; vivienda_hogares is NOT in the list.
+    # When harmonize=True, vivienda_hogares should be auto-included so that
+    # vivienda_propia is harmonized instead of silently skipped.
+    df = pulso.load_merged(
+        year=2024,
+        month=6,
+        modules=["caracteristicas_generales", "ocupados", "desocupados", "inactivos"],
+        harmonize=True,
+    )
+
+    assert (
+        "vivienda_propia" in df.columns
+    ), "vivienda_propia missing — vivienda_hogares was not auto-included"
