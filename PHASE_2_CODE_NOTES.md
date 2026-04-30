@@ -229,3 +229,40 @@ auto-inclusion). The `modules=None` case is unchanged: it falls back to
 for that period.
 
 ### Closes Issue #12
+
+---
+
+## Phase 2 Debt — Multi-level Merger
+
+### Bug
+`merge_modules()` previously assumed all modules were persona-level. Including a hogar-level
+module like `vivienda_hogares` triggered `MergeError: missing merge keys ['ORDEN']`.
+
+### Fix
+Merger now auto-detects each module's level by inspecting which merge_keys it has.
+
+- **`_detect_module_level(df, epoch)`**: returns `"persona"` if ORDEN is present; `"hogar"` if
+  HOGAR is present (without ORDEN); raises `MergeError` otherwise.
+- **`_merge_within_level(dfs_dict, keys, how)`**: extracted helper that merges a dict of same-level
+  DataFrames on the given keys, deduplicating shared non-key columns (same logic as before).
+
+When `level="persona"` (default):
+1. Auto-detect each module as persona or hogar
+2. Merge all persona-level modules together (outer join on DIRECTORIO, SECUENCIA_P, ORDEN)
+3. Merge all hogar-level modules together (outer join on DIRECTORIO, SECUENCIA_P, HOGAR)
+4. LEFT JOIN persona ⟕ hogar on [DIRECTORIO, SECUENCIA_P, HOGAR]
+
+This propagates hogar/vivienda info to each person in that household.
+
+When `level="hogar"` (legacy): all modules are forced to merge on hogar keys (no ORDEN required);
+backward-compatible with existing callers.
+
+### Backward Compatibility
+Persona-only merges produce identical results — all modules detected as "persona", merged as
+before. The `level="hogar"` path is unchanged (legacy behavior preserved so existing tests pass).
+
+### Tests Added
+- `test_detect_persona_level`, `test_detect_hogar_level`: unit tests for the detector
+- `test_merge_persona_and_hogar_propagates_hogar_info`: verifies hogar info propagates to persons
+- `test_existing_persona_only_merge_still_works`: backward compat guard
+- `test_load_merged_hogar_module_propagates_info`: integration test with synthetic fixture
