@@ -29,7 +29,10 @@ def merge_modules(
              no_ocupados).
 
     Returns:
-        Merged DataFrame. Column name conflicts get `_{module_name}` suffixes.
+        Merged DataFrame. Columns that already exist in the running merged
+        DataFrame are dropped from each incoming module before the join so that
+        shared identifier columns (CLASE, DPTO, FEX_C18, MES, HOGAR, PERIODO)
+        appear exactly once rather than getting suffixed variants.
 
     Raises:
         MergeError: If module_dfs is empty or a DataFrame is missing merge keys.
@@ -53,15 +56,18 @@ def merge_modules(
             )
 
     items = list(module_dfs.items())
-    merged_name, merged = items[0]
+    _, merged = items[0]
+    merged = merged.copy()
 
-    for name, df in items[1:]:
-        merged = merged.merge(
-            df,
-            on=keys,
-            how=how,
-            suffixes=(f"_{merged_name}", f"_{name}"),
-        )
-        merged_name = f"{merged_name}+{name}"
+    for _name, df in items[1:]:
+        # Drop columns from the incoming module that already exist in merged
+        # (except merge keys, which are required for the join itself).
+        # This prevents suffix-polluted columns for shared identifiers like
+        # CLASE, DPTO, FEX_C18, MES that carry the same value in every module.
+        existing_non_key = set(merged.columns) - set(keys)
+        cols_to_drop = [c for c in df.columns if c in existing_non_key]
+        df_to_merge = df.drop(columns=cols_to_drop) if cols_to_drop else df
+
+        merged = merged.merge(df_to_merge, on=keys, how=how)
 
     return merged

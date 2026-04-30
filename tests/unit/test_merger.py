@@ -104,14 +104,41 @@ def test_merge_empty_dict_raises() -> None:
         merge_modules({}, _epoch())
 
 
-def test_merge_handles_column_name_collision_with_suffix() -> None:
-    """Shared non-key columns get suffixed to avoid ambiguity."""
+def test_merge_deduplicates_shared_non_key_columns() -> None:
+    """Shared non-key columns keep only the first module's version (no suffix)."""
     carac = _carac(5)
     ocup = _ocupados(carac, frac=1.0)
-    ocup["EDAD"] = [99] * 5
+    ocup["EDAD"] = [99] * 5  # EDAD also in carac (values 20-24)
 
     result = merge_modules({"carac": carac, "ocup": ocup}, _epoch())
-    cols = list(result.columns)
-    # EDAD appears in both; merger must suffix one or both
-    edad_cols = [c for c in cols if "EDAD" in c]
-    assert len(edad_cols) >= 1
+
+    # EDAD should appear exactly once — from carac (the first module)
+    edad_cols = [c for c in result.columns if "EDAD" in c]
+    assert len(edad_cols) == 1
+    assert "EDAD" in result.columns
+    assert list(result["EDAD"]) == list(range(20, 25))  # carac values, not ocup's 99
+
+
+def test_merge_drops_duplicate_non_key_columns() -> None:
+    """CLASE in 3 modules should appear exactly once after merge (no suffix variants)."""
+    epoch = _epoch()
+    keys = list(epoch.merge_keys_persona)
+
+    df1 = pd.DataFrame(
+        {**{k: [1, 2, 3] for k in keys}, "CLASE": [1, 1, 1], "MOD1_VAR": [10, 20, 30]}
+    )
+    df2 = pd.DataFrame(
+        {**{k: [1, 2, 3] for k in keys}, "CLASE": [1, 1, 1], "MOD2_VAR": [40, 50, 60]}
+    )
+    df3 = pd.DataFrame(
+        {**{k: [1, 2, 3] for k in keys}, "CLASE": [1, 1, 1], "MOD3_VAR": [70, 80, 90]}
+    )
+
+    result = merge_modules({"m1": df1, "m2": df2, "m3": df3}, epoch)
+
+    assert "CLASE" in result.columns
+    assert "CLASE_m1" not in result.columns
+    assert "CLASE_m2" not in result.columns
+    assert "MOD1_VAR" in result.columns
+    assert "MOD2_VAR" in result.columns
+    assert "MOD3_VAR" in result.columns
