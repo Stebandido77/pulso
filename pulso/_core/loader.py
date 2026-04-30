@@ -5,12 +5,52 @@ Coordinates: registry lookup → download → parse → harmonize → (merge).
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+import logging
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     import pandas as pd
 
 Area = Literal["cabecera", "resto", "total"]
+
+logger = logging.getLogger(__name__)
+
+
+def _required_modules_for_variables(
+    variable_map: dict[str, Any],
+    sources: dict[str, Any],
+    epoch_key: str,
+    requested_variables: list[str] | None = None,
+) -> set[str]:
+    """Return modules required by canonical variables for this epoch.
+
+    Only includes modules listed in sources["modules"] that have epoch_key in
+    their available_in list. Variables without a mapping for epoch_key are
+    silently skipped.
+    """
+    epoch_modules: set[str] = {
+        name
+        for name, meta in sources["modules"].items()
+        if epoch_key in meta.get("available_in", [])
+    }
+
+    required: set[str] = set()
+    variables_dict: dict[str, Any] = variable_map["variables"]
+    target_vars = (
+        requested_variables if requested_variables is not None else list(variables_dict.keys())
+    )
+
+    for var_name in target_vars:
+        entry = variables_dict.get(var_name)
+        if not entry:
+            continue
+        if epoch_key not in entry.get("mappings", {}):
+            continue
+        module = entry.get("module")
+        if module and module in epoch_modules:
+            required.add(module)
+
+    return required
 
 
 def load(
@@ -156,13 +196,20 @@ def load_merged(
     import pandas as pd
 
     from pulso._config.epochs import epoch_for_month
-    from pulso._config.registry import _load_sources
+    from pulso._config.registry import _load_sources, _load_variable_map
     from pulso._core.harmonizer import harmonize_dataframe
     from pulso._core.merger import merge_modules
-    from pulso._utils.validation import validate_year_month
+    from pulso._utils.validation import validate_module, validate_year_month
 
     periods = validate_year_month(year, month)
     sources = _load_sources()
+
+    # Issue 1: validate all user-specified modules against the global registry
+    # upfront so invalid names raise immediately instead of being silently skipped.
+    if modules is not None:
+        all_known_modules = list(sources["modules"].keys())
+        for mod in modules:
+            validate_module(mod, all_known_modules)
 
     all_frames: list[pd.DataFrame] = []
     multi = len(periods) > 1
@@ -181,7 +228,20 @@ def load_merged(
                 hint="Use pulso.list_available() to see which months are in the registry.",
             )
 
-        available_modules = modules if modules is not None else list(record["modules"].keys())
+        # Determine the working module list for this period.
+        working_modules = list(record["modules"].keys()) if modules is None else list(modules)
+
+        # Issue 2: when harmonize=True and the user provided an explicit module
+        # list, auto-include any modules required by the canonical variables so
+        # harmonization doesn't silently skip variables whose source columns are
+        # absent.  Only applies when harmonize=True; user's list is sacred otherwise.
+        if harmonize and modules is not None:
+            variable_map = _load_variable_map()
+            required = _required_modules_for_variables(variable_map, sources, epoch.key, variables)
+            for m in required:
+                if m not in working_modules:
+                    working_modules.append(m)
+                    logger.debug("Auto-including module %r required by harmonized variables.", m)
 
         module_dfs = {
             mod: load(
@@ -194,7 +254,7 @@ def load_merged(
                 show_progress=show_progress,
                 allow_unvalidated=allow_unvalidated,
             )
-            for mod in available_modules
+            for mod in working_modules
             if mod in record["modules"]
         }
 

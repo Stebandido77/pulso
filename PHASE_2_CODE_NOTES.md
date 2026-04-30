@@ -185,3 +185,47 @@ as float64-with-NaN now harmonize without raising or being skipped.
 ("1", "2") instead of the original dtype (1.0, 2.0). This is the correct canonical
 form for categoricals. See `test_categorical_validation_passes_for_valid_codes`
 (updated).
+
+---
+
+## Phase 2 Debt — Module Validation & Auto-Inclusion (PR #16)
+
+### Validation
+
+`load_merged()` now validates every module in the `modules` parameter against
+`sources.json` before any loading begins. Invalid module names raise
+`ModuleNotAvailableError` immediately instead of being silently skipped by the
+`if mod in record["modules"]` filter. This mirrors the existing behaviour of
+`load()` (single-module).
+
+### Auto-inclusion
+
+A new private helper `_required_modules_for_variables(variable_map, sources,
+epoch_key, requested_variables)` computes the set of modules required by
+canonical variables for a given epoch. It filters to modules that (a) appear in
+`sources["modules"]` and (b) list the epoch in their `available_in` field, so
+epoch-specific modules are not accidentally requested for the wrong epoch.
+
+When `harmonize=True` and the user provides an explicit `modules` list,
+`load_merged()` calls this helper and appends any missing required modules to
+the working list. Auto-included modules are logged at `DEBUG` level
+(`pulso._core.loader` logger) for traceability without noisy warnings.
+
+This means a user calling:
+
+```python
+pulso.load_merged(year=2024, month=6,
+                  modules=["caracteristicas_generales", "ocupados",
+                           "desocupados", "inactivos"],
+                  harmonize=True)
+```
+
+now gets `vivienda_propia` (from `vivienda_hogares`) and `ingreso_total` (from
+`otros_ingresos`) in the output without needing to name those modules explicitly.
+
+When `harmonize=False`, the user's exact module list is respected (no
+auto-inclusion). The `modules=None` case is unchanged: it falls back to
+`list(record["modules"].keys())`, which already includes all modules registered
+for that period.
+
+### Closes Issue #12
