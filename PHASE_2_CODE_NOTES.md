@@ -142,6 +142,46 @@ In a well-merged DataFrame where all persons from `caracteristicas_generales` ap
 
 ## Open Issues to Create
 
-1. **educ_max categories incomplete**: GEIH-2 P3042 has values 1-13 but variable_map categories cover only 1-9. Categorical validation will raise HarmonizationError on production data. Curator must extend or the Builder must add a `default` to the recode or disable validation for this variable.
+1. **educ_max / parentesco_jefe categories incomplete**: GEIH-2 P3042 has values 1-13 but variable_map categories cover only 1-9; P6050 has values 11, 12, 13 not in the declared domain. Categorical validation skips these variables with a warning on production data. Curator must extend categories (see GitHub issue #11).
 
-2. **Float-encoded integers in recode**: If DANE's CSV files have float64 columns for integer-coded variables (due to NaN presence), recode string-key matching fails (e.g., "1.0" ≠ "1"). Add int-float detection in `_apply_recode` in Phase 3.
+2. ~~Float-encoded integers in recode~~ — **FIXED** (see "Bug fixes" section below).
+
+---
+
+## Bug fixes (2026-04-29, end-to-end testing against real DANE 2024-06)
+
+### Fix 1: merger drops duplicate non-key columns
+
+**Problem**: iterative outer-joins between 3 modules suffixed shared identifier
+columns (CLASE, DPTO, FEX_C18, MES, HOGAR) as `CLASE_caracteristicas_generales`,
+`CLASE_ocupados`, `CLASE_no_ocupados`, etc. The harmonizer then couldn't find the
+source column (e.g. `CLASE` for `area`) and silently skipped those variables.
+
+**Fix**: before each join, columns already present in the running merged DataFrame
+(excluding merge keys) are dropped from the incoming module. First module's copy of
+shared columns wins; module-specific columns (OCI, DSI, INGLABO, P6040, …) are
+unaffected.
+
+**Impact**: `area`, `departamento`, `hogar_id`, `peso_expansion`, and any variable
+whose source column also appears in a later module now harmonize correctly.
+
+### Fix 2: float-to-string canonicalization for categorical variables
+
+**Problem**: pandas reads CSV integer columns that contain NaN as float64 (int64
+cannot represent NaN). Category codes like `1.0`, `2.0` were stringified as
+`"1.0"`, `"2.0"`, failing recode lookups and domain checks whose keys are JSON
+strings `"1"`, `"2"`.
+
+**Fix**: `_to_canonical_string(series)` helper detects float64 columns where all
+non-null values are whole numbers and converts via `Int64 → string` (1.0 → "1").
+Used in `_apply_recode`, `_validate_categorical_domain`, and the categorical
+post-transform normalisation step in `harmonize_variable`.
+
+**Impact**: `estado_civil`, `parentesco_jefe`, `posicion_ocupacional`,
+`tipo_contrato`, `educ_max`, and all other categorical variables that DANE stores
+as float64-with-NaN now harmonize without raising or being skipped.
+
+**Side effect**: categorical identity-transform columns now return `StringDtype`
+("1", "2") instead of the original dtype (1.0, 2.0). This is the correct canonical
+form for categoricals. See `test_categorical_validation_passes_for_valid_codes`
+(updated).
