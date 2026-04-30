@@ -46,6 +46,29 @@ def _iter_relevant_variables(
         yield canonical_name, entry
 
 
+def _to_canonical_string(series: pd.Series) -> pd.Series:
+    """Convert to StringDtype preserving integer representation for float columns.
+
+    When pandas reads a CSV integer column that contains NaN values, it uses
+    float64 (since int64 cannot represent NaN). Values like 1.0 become "1.0"
+    after a naive .astype("string"), which fails recode lookups and categorical
+    domain checks whose keys are JSON strings like "1".
+
+    This helper detects whole-number float columns and converts via Int64:
+        1.0 → "1", 2.0 → "2", NaN → pd.NA, 1.5 → "1.5" (unchanged)
+    """
+    if pd.api.types.is_float_dtype(series):
+        non_null = series.dropna()
+        if len(non_null) > 0:
+            try:
+                int_form = non_null.astype("Int64")
+                if (non_null == int_form).all():
+                    return series.astype("Int64").astype("string")
+            except (OverflowError, ValueError):
+                pass
+    return series.astype("string")
+
+
 def _apply_recode(
     source: pd.Series,
     mapping: dict[str, Any],
@@ -54,10 +77,10 @@ def _apply_recode(
 ) -> pd.Series:
     """Map source values through `mapping`; use `default` for unmapped non-null values.
 
-    Source is cast to StringDtype before lookup so int64/float64 values like 1
-    become "1" to match JSON string keys.
+    Source is converted via _to_canonical_string so int64/float64 values like
+    1 or 1.0 both become "1" to match JSON string keys.
     """
-    str_source = source.astype("string")
+    str_source = _to_canonical_string(source)
 
     if default is None:
         unmapped_mask = ~str_source.isin(mapping.keys()) & str_source.notna()
@@ -190,7 +213,7 @@ def _validate_categorical_domain(
     if len(non_null) == 0:
         return
 
-    str_values = non_null.astype(str)
+    str_values = _to_canonical_string(non_null)
     invalid_mask = ~str_values.isin(valid_keys)
     if invalid_mask.any():
         invalid_vals = str_values[invalid_mask].unique().tolist()
@@ -300,8 +323,11 @@ def harmonize_variable(
                 f"Variable {canonical_name!r}: cannot cast result to BooleanDtype: {exc}"
             ) from exc
 
-    # --- Post-transform: categorical domain validation ---
+    # --- Post-transform: categorical normalisation + domain validation ---
     if variable_entry.get("type") == "categorical":
+        # Normalise float-encoded ints (e.g. 1.0 → "1") so recode lookups and
+        # domain checks work correctly against JSON string keys like "1", "2".
+        result = _to_canonical_string(result)
         _validate_categorical_domain(result, variable_entry, canonical_name)
 
     return result.rename(canonical_name)

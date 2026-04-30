@@ -260,7 +260,8 @@ def test_categorical_validation_passes_for_valid_codes() -> None:
         categories={"1": "hombre", "2": "mujer"},
     )
     s = harmonize_variable(df, "sexo", entry, _epoch())
-    assert list(s) == [1, 2, 1]
+    # Categorical identity results are normalised to canonical string form
+    assert list(s) == ["1", "2", "1"]
 
 
 def test_categorical_validation_raises_on_out_of_domain() -> None:
@@ -330,3 +331,40 @@ def test_harmonize_variable_no_mapping_for_epoch_raises() -> None:
     entry = _var_entry(source="COL", transform="identity", epoch_key="geih_2006_2020")
     with pytest.raises(ConfigError, match="no mapping for epoch"):
         harmonize_variable(df, "myvar", entry, _epoch("nonexistent_epoch"))
+
+
+# ---------------------------------------------------------------------------
+# Bug fixes: float-encoded integer handling (Bug 2, 2026-04-29)
+# ---------------------------------------------------------------------------
+
+
+def test_recode_handles_float_source() -> None:
+    """Recode keys are JSON strings; source read by pandas as float64 must match."""
+    import numpy as np
+
+    df = pd.DataFrame({"CLASE": [1.0, 2.0, 3.0, np.nan]})
+    mapping = {"1": "cabecera", "2": "centro_poblado", "3": "rural_disperso"}
+    entry = _var_entry(source="CLASE", transform={"op": "recode", "mapping": mapping})
+    s = harmonize_variable(df, "area", entry, _epoch())
+    assert s.iloc[0] == "cabecera"
+    assert s.iloc[1] == "centro_poblado"
+    assert s.iloc[2] == "rural_disperso"
+    assert pd.isna(s.iloc[3])
+
+
+def test_categorical_validation_handles_float_source() -> None:
+    """Float-encoded ints (pandas CSV-with-NaN artefact) pass categorical validation."""
+    import numpy as np
+
+    df = pd.DataFrame({"P6070": [1.0, 2.0, np.nan, 1.0, 2.0]})
+    entry = _var_entry(
+        var_type="categorical",
+        source="P6070",
+        transform="identity",
+        categories={"1": "casado", "2": "union_libre"},
+    )
+    s = harmonize_variable(df, "estado_civil", entry, _epoch())
+    assert s.notna().sum() == 4
+    # Canonical form must be "1" / "2", not "1.0" / "2.0"
+    valid = set(s.dropna().unique().tolist())
+    assert valid.issubset({"1", "2"}), f"Expected canonical string codes, got {valid}"
