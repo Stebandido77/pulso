@@ -1,9 +1,15 @@
 """Parser: reads files inside the ZIP into pandas DataFrames.
 
 Format dispatch is driven by the epoch's `file_format` field.
-Shape dispatch is driven by `epoch.area_filter`:
-  - None  → Shape A (GEIH-1): physically separate Cabecera/Resto files.
-  - set   → Shape B (GEIH-2): single unified file with row-level CLASE filter.
+Shape dispatch:
+  - is_shape_a(zip_path) → True   : Shape A (GEIH-1): Cabecera/Resto auto-discovery.
+  - is_shape_a(zip_path) → False  : Shape B (GEIH-2): single unified file with CLASE filter.
+
+Shape A auto-discovery (Phase 3.2.B):
+  Each module is found by scanning the ZIP for filenames starting with
+  'Cabecera' or 'Resto' and containing a keyword from MODULE_KEYWORDS_GEIH1.
+  Area files (prefix 'Area') are discarded. Cabecera and Resto DataFrames
+  are concatenated with a synthetic CLASE column (1=urban, 2=rural).
 """
 
 from __future__ import annotations
@@ -22,6 +28,135 @@ if TYPE_CHECKING:
     from pulso._config.epochs import Epoch
 
 Area = Literal["cabecera", "resto", "total"]
+
+# ---------------------------------------------------------------------------
+# Shape A: module keyword mapping and auto-discovery
+# ---------------------------------------------------------------------------
+
+MODULE_KEYWORDS_GEIH1: dict[str, list[str]] = {
+    "caracteristicas_generales": [
+        "Características generales",  # correct accent, 2015+
+        "Caracteristicas generales",  # no accent, fixture / some years
+        "Caractericas generales",  # 2007 typo: missing 't'
+    ],
+    "ocupados": ["Ocupados"],
+    "desocupados": ["Desocupados"],
+    "inactivos": ["Inactivos"],
+    "vivienda_hogares": ["Vivienda y Hogares"],
+    "otros_ingresos": ["Otros ingresos"],
+    "otras_formas_trabajo": ["Otras actividades y ayudas"],
+    "fuerza_de_trabajo": ["Fuerza de trabajo"],
+}
+
+
+def is_shape_a(zip_path: Path) -> bool:
+    """Detect Shape A by checking for 'Cabecera' in any filename inside the ZIP."""
+    with zipfile.ZipFile(zip_path) as zf:
+        names = zf.namelist()
+    return any("Cabecera" in n for n in names)
+
+
+def find_shape_a_files(
+    zip_path: Path,
+    module: str,
+) -> tuple[str | None, str | None]:
+    """Locate Cabecera and Resto files for *module* inside a Shape A ZIP.
+
+    Uses substring keyword matching against MODULE_KEYWORDS_GEIH1 to tolerate
+    filename variations across GEIH-1 years (typos, spacing, encoding).
+
+    Returns:
+        (cabecera_inner_path, resto_inner_path). Either may be None if not found.
+    """
+    keywords = MODULE_KEYWORDS_GEIH1.get(module, [module])
+
+    with zipfile.ZipFile(zip_path) as zf:
+        names = zf.namelist()
+
+    cabecera: str | None = None
+    resto: str | None = None
+
+    for name in names:
+        if name.endswith("/"):
+            continue  # directory entry
+        basename = name.rsplit("/", 1)[-1] if "/" in name else name
+        lower = basename.lower()
+
+        # Only accept files with Cabecera or Resto prefix; discard Area and others.
+        if lower.startswith("cabecera"):
+            prefix = "cabecera"
+        elif lower.startswith("resto"):
+            prefix = "resto"
+        else:
+            continue
+
+        # Match at least one keyword
+        if not any(kw.lower() in lower for kw in keywords):
+            continue
+
+        if prefix == "cabecera":
+            cabecera = name
+        else:
+            resto = name
+
+    return cabecera, resto
+
+
+def parse_shape_a_module(
+    zip_path: Path,
+    module: str,
+    epoch: Epoch,
+) -> pd.DataFrame:
+    """Load *module* from a Shape A ZIP by concatenating Cabecera + Resto.
+
+    Adds a synthetic CLASE column (1 = Cabecera/urban, 2 = Resto/rural) so
+    downstream area-filter code that expects CLASE works without modification.
+
+    Raises:
+        ParseError: If neither a Cabecera nor a Resto file is found.
+    """
+    import pandas as pd
+
+    cab_name, resto_name = find_shape_a_files(zip_path, module)
+
+    if not cab_name and not resto_name:
+        with zipfile.ZipFile(zip_path) as _zf:
+            sample = _zf.namelist()[:8]
+        raise ParseError(
+            f"Module {module!r}: no Cabecera or Resto file found in {zip_path.name}. "
+            f"First entries in ZIP: {sample}"
+        )
+
+    sep = epoch.separator if epoch.separator is not None else ","
+    dfs: list[pd.DataFrame] = []
+
+    with zipfile.ZipFile(zip_path) as zf:
+        if cab_name:
+            with zf.open(cab_name) as fh:
+                df_cab: pd.DataFrame = pd.read_csv(
+                    fh,
+                    encoding=epoch.encoding,
+                    sep=sep,
+                    decimal=epoch.decimal,
+                    low_memory=False,
+                )
+                df_cab["CLASE"] = 1
+                dfs.append(df_cab)
+        if resto_name:
+            with zf.open(resto_name) as fh:
+                df_resto: pd.DataFrame = pd.read_csv(
+                    fh,
+                    encoding=epoch.encoding,
+                    sep=sep,
+                    decimal=epoch.decimal,
+                    low_memory=False,
+                )
+                df_resto["CLASE"] = 2
+                dfs.append(df_resto)
+
+    if len(dfs) == 1:
+        return dfs[0]
+    return pd.concat(dfs, axis=0, ignore_index=True)
 
 
 def _parse_csv(
@@ -79,9 +214,10 @@ def parse_module(
 
     Extrae y parsea un módulo del archivo ZIP.
 
-    Dispatches on epoch.area_filter:
-    - None  → Shape A: load cabecera/resto files directly; area='total' concatenates both.
-    - set   → Shape B: load single file, apply optional row_filter, then area_filter by CLASE.
+    Dispatch order:
+    1. is_shape_a(zip_path) → True  : Shape A auto-discovery (Cabecera+Resto concat).
+    2. epoch.area_filter is None    : Shape A lookup (explicit paths from sources.json).
+    3. epoch.area_filter is not None: Shape B (single file, row-level CLASE filter).
 
     Args:
         zip_path: Path to the local ZIP file.
@@ -100,6 +236,24 @@ def parse_module(
     """
     import pandas as pd
 
+    # ── Shape A auto-discovery ────────────────────────────────────────────────
+    # Detect by presence of 'Cabecera' filenames; bypass sources.json path lookup.
+    if is_shape_a(zip_path):
+        df = parse_shape_a_module(zip_path, module, epoch)
+        # _area column for backward compatibility with callers that expect it.
+        df["_area"] = df["CLASE"].map({1: "cabecera", 2: "resto"})
+        # Area filtering via the synthetic CLASE column.
+        if area == "cabecera":
+            df = df[df["CLASE"] == 1].reset_index(drop=True)
+        elif area == "resto":
+            df = df[df["CLASE"] == 2].reset_index(drop=True)
+        # Column selection (keeps CLASE and _area unless caller explicitly omits them).
+        if columns is not None:
+            available = [c for c in columns if c in df.columns]
+            df = df[available]
+        return df
+
+    # ── Shape A lookup / Shape B ──────────────────────────────────────────────
     sources = _load_sources()
     key = f"{year}-{month:02d}"
     record = sources["data"][key]
@@ -113,7 +267,7 @@ def parse_module(
         raise ParseError(f"Unknown file format: {epoch.file_format!r}")
 
     if epoch.area_filter is None:
-        # Shape A: physically separate Cabecera/Resto files
+        # Shape A lookup: explicit cabecera/resto paths from sources.json.
         if area == "cabecera":
             inner = module_files["cabecera"]
             if inner is None:
@@ -127,7 +281,7 @@ def parse_module(
             return _parse_fn(zip_path, inner, epoch, columns)
 
         # area == "total": parse both and concatenate
-        frames = []
+        frames: list[pd.DataFrame] = []
         for label, path_key in (("cabecera", "cabecera"), ("resto", "resto")):
             inner = module_files.get(path_key)
             if inner is None:

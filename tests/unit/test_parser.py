@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -276,3 +277,125 @@ def test_parse_module_unified_with_row_filter(
     df = parse_module(UNIFIED_FIXTURE_ZIP, 2024, 6, "desocupados", "total", geih2_epoch)
     assert len(df) > 0
     assert (df["DSI"] == 1).all()
+
+
+# ---------------------------------------------------------------------------
+# Shape A auto-discovery tests (Phase 3.2.B)
+# ---------------------------------------------------------------------------
+
+
+def test_is_shape_a_detects_cabecera_files(tmp_path: Path, shape_a_epoch: Any) -> None:
+    """Shape A is detected when the ZIP contains a file with 'Cabecera' in its name."""
+    from pulso._core.parser import is_shape_a
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("Diciembre.csv/Cabecera - Ocupados.csv", "DIRECTORIO;P6020\n1;1\n")
+
+    assert is_shape_a(zip_path) is True
+
+
+def test_is_shape_a_returns_false_for_shape_b(tmp_path: Path) -> None:
+    """Shape B (unified) ZIP has no 'Cabecera' file — is_shape_a returns False."""
+    from pulso._core.parser import is_shape_a
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Ocupados.CSV", "DIRECTORIO;P6020\n1;1\n")
+
+    assert is_shape_a(zip_path) is False
+
+
+def test_find_shape_a_files_returns_cabecera_and_resto(tmp_path: Path) -> None:
+    """find_shape_a_files locates both Cabecera and Resto for a module."""
+    from pulso._core.parser import find_shape_a_files
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("Junio.csv/Cabecera - Ocupados.csv", "x")
+        zf.writestr("Junio.csv/Resto - Ocupados.csv", "x")
+        zf.writestr("Junio.csv/Area - Ocupados.csv", "x")  # should be ignored
+
+    cab, resto = find_shape_a_files(zip_path, "ocupados")
+    assert cab is not None
+    assert "Cabecera" in cab
+    assert resto is not None
+    assert "Resto" in resto
+
+
+def test_find_shape_a_files_handles_2007_typo(tmp_path: Path) -> None:
+    """'Caractericas generales' (2007 typo) matches the canonical module."""
+    from pulso._core.parser import find_shape_a_files
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("Diciembre.csv/Cabecera - Caractericas generales.csv", "x")
+
+    cab, _resto = find_shape_a_files(zip_path, "caracteristicas_generales")
+    assert cab is not None  # matched despite typo
+
+
+def test_find_shape_a_files_ignores_area_files(tmp_path: Path) -> None:
+    """Area - * files are never returned by find_shape_a_files."""
+    from pulso._core.parser import find_shape_a_files
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Area - Ocupados.csv", "x")
+        zf.writestr("CSV/Cabecera - Ocupados.csv", "x")
+        zf.writestr("CSV/Resto - Ocupados.csv", "x")
+
+    cab, resto = find_shape_a_files(zip_path, "ocupados")
+    assert cab is not None
+    assert "Cabecera" in cab
+    assert resto is not None
+    assert "Resto" in resto
+    assert "Area" not in (cab or "")
+    assert "Area" not in (resto or "")
+
+
+def test_parse_shape_a_concatenates_cabecera_and_resto(tmp_path: Path, shape_a_epoch: Any) -> None:
+    """parse_shape_a_module concatenates Cabecera + Resto, adds CLASE column."""
+    import pandas as pd
+
+    from pulso._core.parser import parse_shape_a_module
+
+    rows_cab = pd.DataFrame(
+        {"DIRECTORIO": ["0001", "0002", "0003"], "SECUENCIA_P": [1, 1, 1], "ORDEN": [1, 1, 1]}
+    )
+    rows_resto = pd.DataFrame(
+        {"DIRECTORIO": ["0004", "0005"], "SECUENCIA_P": [1, 1], "ORDEN": [1, 1]}
+    )
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr(
+            "Test.csv/Cabecera - Ocupados.csv",
+            rows_cab.to_csv(sep=";", decimal=",", index=False).encode("utf-8"),
+        )
+        zf.writestr(
+            "Test.csv/Resto - Ocupados.csv",
+            rows_resto.to_csv(sep=";", decimal=",", index=False).encode("utf-8"),
+        )
+
+    df = parse_shape_a_module(zip_path, "ocupados", shape_a_epoch)
+
+    assert len(df) == 5  # 3 Cabecera + 2 Resto
+    assert "CLASE" in df.columns
+    assert (df["CLASE"] == 1).sum() == 3
+    assert (df["CLASE"] == 2).sum() == 2
+    # DIRECTORIO is read as int by pandas (zero-padding lost); just check uniqueness
+    assert df["DIRECTORIO"].nunique() == 5
+
+
+def test_parse_shape_a_raises_when_module_missing(tmp_path: Path, shape_a_epoch: Any) -> None:
+    """parse_shape_a_module raises ParseError if no Cabecera or Resto file matches."""
+    from pulso._core.parser import parse_shape_a_module
+    from pulso._utils.exceptions import ParseError
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Cabecera - Ocupados.csv", "x")  # only has ocupados, not vivienda
+
+    with pytest.raises(ParseError, match="vivienda_hogares"):
+        parse_shape_a_module(zip_path, "vivienda_hogares", shape_a_epoch)
