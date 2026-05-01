@@ -15,7 +15,7 @@ def test_get_epoch_geih_2021_present() -> None:
     assert e.file_format == "csv"
     assert e.separator == ";"
     assert e.decimal == ","
-    assert e.date_range[0] == "2021-01"
+    assert e.date_range[0] == "2022-01"
     assert e.date_range[1] is None  # open-ended
 
 
@@ -27,7 +27,7 @@ def test_get_epoch_geih_2006_2020() -> None:
     assert e.key == "geih_2006_2020"
     assert e.encoding == "latin-1"
     assert e.date_range[0] == "2006-01"
-    assert e.date_range[1] == "2020-12"
+    assert e.date_range[1] == "2021-12"
 
 
 def test_get_epoch_unknown_raises_config_error() -> None:
@@ -86,12 +86,32 @@ def test_epoch_for_month_2020_12_is_geih2006() -> None:
     assert e.key == "geih_2006_2020"
 
 
-def test_epoch_for_month_2021_01_boundary() -> None:
-    """2021-01 is the first month of the new epoch."""
+def test_epoch_for_month_2022_01_boundary() -> None:
+    """2022-01 is the first month of the new epoch (file format break with Marco 2018)."""
     from pulso._config.epochs import epoch_for_month
 
-    e = epoch_for_month(2021, 1)
+    e = epoch_for_month(2022, 1)
     assert e.key == "geih_2021_present"
+
+
+def test_epoch_for_month_2021_12_is_geih2006() -> None:
+    """2021-12 is still in the old epoch (file format break is 2022-01, not 2021-01)."""
+    from pulso._config.epochs import epoch_for_month
+
+    e = epoch_for_month(2021, 12)
+    assert e.key == "geih_2006_2020"
+
+
+def test_epoch_for_month_2021_06_is_geih2006() -> None:
+    """Regression: 2021-06 must fall in geih_2006_2020 (old format ~6MB), not geih_2021_present.
+
+    Empirically validated in Phase 3.2 spike: 2021-06 ZIP is 6.2 MB (Shape A old format),
+    while 2022-01 is 77 MB (Shape B Marco 2018 redesign).
+    """
+    from pulso._config.epochs import epoch_for_month
+
+    e = epoch_for_month(2021, 6)
+    assert e.key == "geih_2006_2020"
 
 
 def test_epoch_for_month_2006_01_boundary() -> None:

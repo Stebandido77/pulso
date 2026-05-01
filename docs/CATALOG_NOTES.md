@@ -260,3 +260,33 @@ maintainable (DANE adding new surveys doesn't affect the scan). The committed
 6. **Check `checksum_sha256`**: Currently `null` for all entries — DANE does not
    publish checksums on the get_microdata page. The validate step in Phase 3.2
    should compute checksums after downloading a sample.
+
+
+## Update 2026-05-01: Epoch Boundary Correction
+
+After Phase 3.1 was merged, the Phase 3.2 strategic spike (downloading 4 ZIPs from 2007-12, 2015-06, 2021-06, 2022-01) provided empirical evidence that the GEIH file format break is **January 2022**, not January 2021 as initially assumed.
+
+### Evidence
+
+| Month | Size (MB) | File format | Epoch |
+|---|---|---|---|
+| 2007-12 | 6.4 | Shape A (CSV simple) | geih_2006_2020 |
+| 2015-06 | 6.7 | Shape A | geih_2006_2020 |
+| 2021-06 | 6.2 | Shape A | geih_2006_2020 (corrected) |
+| 2022-01 | 77 | Shape B (Marco 2018) | geih_2021_present |
+
+The 2021 files retain the old format despite DANE's documented methodological redesign date being 2021. The actual file format transition occurred 12 months later when the 2018 sampling frame was deployed in production.
+
+### Impact
+
+- `pulso/data/epochs.json`: `geih_2006_2020.date_range` extended from `[2006-01, 2020-12]` to `[2006-01, 2021-12]`. `geih_2021_present.date_range` shifted from `[2021-01, null]` to `[2022-01, null]`.
+- `scripts/scrape_dane_catalog.py`: `infer_epoch()` updated from `year < 2021` to `year < 2022`.
+- `pulso/data/_scraped_catalog.json`: regenerated. 12 entries (2021-01 through 2021-12) reclassified from `geih_2021_present` to `geih_2006_2020`.
+- Tests: `test_epoch_for_month_2021_01_boundary` removed (no longer a boundary). Added `test_epoch_for_month_2022_01_boundary`, `test_epoch_for_month_2021_12_is_geih2006`, `test_epoch_for_month_2021_06_is_geih2006`.
+
+### Final distribution
+
+- `geih_2006_2020`: 180 entries (2007-01 through 2021-12)
+- `geih_2021_present`: 50 entries (2022-01 through 2026-02)
+
+The epoch key name `geih_2021_present` is intentionally retained despite being technically misleading. Renaming to `geih_2022_present` would touch ~170 references across code, tests, and data files. The key is an internal identifier; the date_range is the source of truth.
