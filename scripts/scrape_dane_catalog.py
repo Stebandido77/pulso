@@ -389,7 +389,7 @@ def parse_microdata_files(
 
 
 def infer_epoch(year: int, _month: int) -> str:
-    if year < 2021:
+    if year < 2022:
         return "geih_2006_2020"
     return "geih_2021_present"
 

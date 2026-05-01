@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-05-01T06:06:52.660123+00:00",
+  "scraped_at": "2026-05-01T06:49:28.328748+00:00",
   "scraped_by": "scripts/scrape_dane_catalog.py",
   "schema_version": "0.1.0",
   "entries": [
@@ -2508,7 +2508,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5463080,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Enero.csv",
       "anomalies": [
         "Multiple formats available: Enero.spss, Enero.dta"
@@ -2523,7 +2523,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5494538,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Febrero.csv.",
       "anomalies": [
         "Multiple formats available: Febrero.spss, Febrero.dta."
@@ -2538,7 +2538,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5400166,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Marzo.csv",
       "anomalies": [
         "Multiple formats available: Marzo.spss., Marzo.dta, GEIH_2021_Marco_2018 (II.Semestre)., GEIH_Marco_2018 (I.Semestre)."
@@ -2553,7 +2553,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5546967,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Abril.csv.",
       "anomalies": [
         "Multiple formats available: Abril.spss, Abril.dta."
@@ -2568,7 +2568,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6627000,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Mayo.csv",
       "anomalies": [
         "Multiple formats available: Mayo.spss, Mayo.dta"
@@ -2583,7 +2583,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6176112,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Junio.csv",
       "anomalies": [
         "Multiple formats available: Junio.sav, Junio.dta"
@@ -2598,7 +2598,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6910115,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Julio.csv",
       "anomalies": [
         "Multiple formats available: Julio.spss, Julio.dta"
@@ -2613,7 +2613,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6574571,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Agosto.csv",
       "anomalies": [
         "Multiple formats available: Agosto.spss, Agosto.dta"
@@ -2628,7 +2628,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6490685,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Septiembre.csv",
       "anomalies": [
         "Multiple formats available: Septiembre.spss, Septiembre.dta"
@@ -2643,7 +2643,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 6291456,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Octubre.csv",
       "anomalies": [
         "Multiple formats available: Octubre.spss, Octubre.dta"
@@ -2658,7 +2658,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5987368,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Noviembre.csv",
       "anomalies": [
         "Multiple formats available: Noviembre.spss, Noviembre.dta"
@@ -2673,7 +2673,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
       "checksum_sha256": null,
       "size_bytes": 5924454,
-      "epoch_inferred": "geih_2021_present",
+      "epoch_inferred": "geih_2006_2020",
       "file_name": "Diciembre.csv",
       "anomalies": [
         "Multiple formats available: Diciembre.spss, Diciembre.dta"

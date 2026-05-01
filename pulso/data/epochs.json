@@ -1,22 +1,35 @@
 {
   "metadata": {
     "schema_version": "1.1.0",
-    "last_updated": "2026-04-28T00:00:00Z"
+    "last_updated": "2026-05-01T06:40:22.943262+00:00"
   },
   "epochs": {
     "geih_2006_2020": {
       "label": "GEIH marco muestral 2005",
       "label_en": "GEIH 2005 sampling frame",
-      "date_range": ["2006-01", "2020-12"],
+      "date_range": [
+        "2006-01",
+        "2021-12"
+      ],
       "merge_keys": {
-        "persona": ["DIRECTORIO", "SECUENCIA_P", "ORDEN"],
-        "hogar": ["DIRECTORIO", "SECUENCIA_P"]
+        "persona": [
+          "DIRECTORIO",
+          "SECUENCIA_P",
+          "ORDEN"
+        ],
+        "hogar": [
+          "DIRECTORIO",
+          "SECUENCIA_P"
+        ]
       },
       "encoding": "latin-1",
       "file_format": "csv",
       "separator": ";",
       "decimal": ",",
-      "folder_pattern": ["Cabecera/", "Resto/"],
+      "folder_pattern": [
+        "Cabecera/",
+        "Resto/"
+      ],
       "weight_variable": "fex_c_2011",
       "area_filter": null,
       "notes_es": "Operativo continuo mensual desde enero 2006. Marco muestral del Censo 2005. Reemplazó a la Encuesta Continua de Hogares (ECH) que cubría 2000-2005, no incluida en este paquete por discontinuidades metodológicas mayores. Cada módulo se entrega como dos archivos separados (Cabecera/ y Resto/).",
@@ -26,21 +39,38 @@
     "geih_2021_present": {
       "label": "GEIH rediseñada (post-OIT, marco 2018)",
       "label_en": "Redesigned GEIH (post-ILO, 2018 frame)",
-      "date_range": ["2021-01", null],
+      "date_range": [
+        "2022-01",
+        null
+      ],
       "merge_keys": {
-        "persona": ["DIRECTORIO", "SECUENCIA_P", "ORDEN"],
-        "hogar": ["DIRECTORIO", "SECUENCIA_P"]
+        "persona": [
+          "DIRECTORIO",
+          "SECUENCIA_P",
+          "ORDEN"
+        ],
+        "hogar": [
+          "DIRECTORIO",
+          "SECUENCIA_P"
+        ]
       },
       "encoding": "latin-1",
       "file_format": "csv",
       "separator": ";",
       "decimal": ",",
-      "folder_pattern": ["CSV/"],
+      "folder_pattern": [
+        "CSV/"
+      ],
       "weight_variable": "FEX_C18",
       "area_filter": {
         "column": "CLASE",
-        "cabecera_values": [1],
-        "resto_values": [2, 3]
+        "cabecera_values": [
+          1
+        ],
+        "resto_values": [
+          2,
+          3
+        ]
       },
       "notes_es": "Rediseño metodológico aplicando recomendaciones de la 19ª CIET (OIT, 2013). Marco muestral del Censo Nacional de Población y Vivienda 2018. Discontinuidad documentada con la GEIH 2006-2020 en variables clave de mercado laboral. Cada módulo se entrega como un único archivo nacional; el split urbano/rural se hace filtrando la columna CLASE (1=cabecera, 2=centro poblado, 3=rural disperso).",
       "notes_en": "Methodological redesign applying 19th ICLS (ILO, 2013) recommendations. 2018 Census sampling frame. Documented discontinuity with the 2006-2020 GEIH on key labor market variables. Each module is delivered as a single nationwide file; urban/rural split is applied by filtering the CLASE column (1=cabecera, 2=centro poblado, 3=rural disperso).",
