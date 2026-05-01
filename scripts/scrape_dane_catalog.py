@@ -36,7 +36,6 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 import requests
 from bs4 import BeautifulSoup
@@ -57,14 +56,31 @@ MAX_RETRIES = 3
 
 SPANISH_MONTHS = {
     # Full names
-    "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
-    "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
-    "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12,
+    "enero": 1,
+    "febrero": 2,
+    "marzo": 3,
+    "abril": 4,
+    "mayo": 5,
+    "junio": 6,
+    "julio": 7,
+    "agosto": 8,
+    "septiembre": 9,
+    "octubre": 10,
+    "noviembre": 11,
+    "diciembre": 12,
     # Abbreviations used by DANE in newer catalogs (e.g. "Ene_2024")
-    "ene": 1, "feb": 2, "mar": 3, "abr": 4,
+    "ene": 1,
+    "feb": 2,
+    "mar": 3,
+    "abr": 4,
     # "may" omitted — ambiguous without "_" context; "mayo" already covers it
-    "jun": 6, "jul": 7, "ago": 8,
-    "sep": 9, "oct": 10, "nov": 11, "dic": 12,
+    "jun": 6,
+    "jul": 7,
+    "ago": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dic": 12,
 }
 
 # Patterns that indicate an auxiliary (non-primary) file
@@ -92,6 +108,7 @@ log = logging.getLogger(__name__)
 # HTTP helpers
 # ---------------------------------------------------------------------------
 
+
 def make_session() -> requests.Session:
     s = requests.Session()
     s.headers.update({"User-Agent": USER_AGENT})
@@ -102,7 +119,7 @@ def fetch_with_retry(
     url: str,
     session: requests.Session,
     label: str = "",
-) -> Optional[str]:
+) -> str | None:
     """Fetch URL with rate-limiting and retries. Returns HTML or None."""
     time.sleep(RATE_LIMIT_SECONDS)
     for attempt in range(MAX_RETRIES):
@@ -125,6 +142,7 @@ def fetch_with_retry(
 # ---------------------------------------------------------------------------
 # Collection discovery
 # ---------------------------------------------------------------------------
+
 
 def discover_annual_geih_catalogs(session: requests.Session) -> list[tuple[int, int, str]]:
     """Return list of (catalog_id, year, title) for main annual GEIH catalogs.
@@ -192,7 +210,8 @@ def discover_annual_geih_catalogs(session: requests.Session) -> list[tuple[int, 
 # Monthly file parsing
 # ---------------------------------------------------------------------------
 
-def parse_size_bytes(alt_text: str) -> Optional[int]:
+
+def parse_size_bytes(alt_text: str) -> int | None:
     """Parse 'Descargar [ZIP, 7.82 MB]' → bytes as int."""
     m = re.search(r"([\d.,]+)\s*(MB|GB|KB)", alt_text, re.IGNORECASE)
     if not m:
@@ -203,7 +222,7 @@ def parse_size_bytes(alt_text: str) -> Optional[int]:
     return int(value * multipliers[unit])
 
 
-def detect_month_from_name(name: str) -> Optional[int]:
+def detect_month_from_name(name: str) -> int | None:
     """Return month number (1-12) if name contains a Spanish month name.
 
     Checks full names before abbreviations to avoid false positives
@@ -212,18 +231,35 @@ def detect_month_from_name(name: str) -> Optional[int]:
     name_lower = name.lower()
     # Check full names first (sorted longest-first to avoid prefix clashes)
     full_names = [
-        ("enero", 1), ("febrero", 2), ("marzo", 3), ("abril", 4),
-        ("mayo", 5), ("junio", 6), ("julio", 7), ("agosto", 8),
-        ("septiembre", 9), ("octubre", 10), ("noviembre", 11), ("diciembre", 12),
+        ("enero", 1),
+        ("febrero", 2),
+        ("marzo", 3),
+        ("abril", 4),
+        ("mayo", 5),
+        ("junio", 6),
+        ("julio", 7),
+        ("agosto", 8),
+        ("septiembre", 9),
+        ("octubre", 10),
+        ("noviembre", 11),
+        ("diciembre", 12),
     ]
     for month_name, month_num in full_names:
         if month_name in name_lower:
             return month_num
     # Fall back to abbreviations (only if no full name matched)
     abbrevs = [
-        ("sep", 9), ("oct", 10), ("nov", 11), ("dic", 12),
-        ("ene", 1), ("feb", 2), ("mar", 3), ("abr", 4),
-        ("jun", 6), ("jul", 7), ("ago", 8),
+        ("sep", 9),
+        ("oct", 10),
+        ("nov", 11),
+        ("dic", 12),
+        ("ene", 1),
+        ("feb", 2),
+        ("mar", 3),
+        ("abr", 4),
+        ("jun", 6),
+        ("jul", 7),
+        ("ago", 8),
     ]
     for abbrev, month_num in abbrevs:
         if abbrev in name_lower:
@@ -244,7 +280,7 @@ def detect_format_priority(name: str) -> int:
         return 1
     if "." not in lower.rsplit("/", 1)[-1]:
         return 1  # no extension = likely primary SPSS/ZIP
-    if lower.endswith(".spss") or lower.endswith(".sav"):
+    if lower.endswith((".spss", ".sav")):
         return 2
     if lower.endswith(".dta"):
         return 3
@@ -266,7 +302,7 @@ def parse_microdata_files(
     spans = soup.find_all("span", class_="resource-info")
 
     # Collect all candidate files: {month_num: [(priority, file_id, name, size_bytes, url)]}
-    candidates: dict[int, list[tuple[int, str, str, Optional[int], str]]] = {}
+    candidates: dict[int, list[tuple[int, str, str, int | None, str]]] = {}
     skipped_names: list[str] = []
 
     for span in spans:
@@ -290,7 +326,7 @@ def parse_microdata_files(
 
         # Get size and URL from input button
         parent_div = span.find_parent("div", class_="resource-left-col")
-        size_bytes: Optional[int] = None
+        size_bytes: int | None = None
         download_url = f"{BASE_URL}/index.php/catalog/{catalog_id}/download/{file_id}"
 
         if parent_div:
@@ -351,7 +387,8 @@ def parse_microdata_files(
 # Epoch inference
 # ---------------------------------------------------------------------------
 
-def infer_epoch(year: int, month: int) -> str:
+
+def infer_epoch(year: int, _month: int) -> str:
     if year < 2021:
         return "geih_2006_2020"
     return "geih_2021_present"
@@ -360,6 +397,7 @@ def infer_epoch(year: int, month: int) -> str:
 # ---------------------------------------------------------------------------
 # Gap detection
 # ---------------------------------------------------------------------------
+
 
 def detect_gaps(entries: list[dict], min_year: int, max_year: int) -> list[dict]:
     """Return list of {year, month, reason} for expected but missing months."""
@@ -399,6 +437,7 @@ def _gap_reason(year: int, month: int) -> str:
 # Main scraper
 # ---------------------------------------------------------------------------
 
+
 def scrape_catalog(
     output_path: Path,
     dry_run: bool = False,
@@ -419,8 +458,12 @@ def scrape_catalog(
         log.error("No annual GEIH catalogs found. Aborting.")
         sys.exit(1)
 
-    log.info("Found %d annual GEIH catalogs: years %d-%d",
-             len(annual_catalogs), annual_catalogs[0][1], annual_catalogs[-1][1])
+    log.info(
+        "Found %d annual GEIH catalogs: years %d-%d",
+        len(annual_catalogs),
+        annual_catalogs[0][1],
+        annual_catalogs[-1][1],
+    )
 
     # Step 2: For each annual catalog, scrape monthly files
     log.info("=== Step 2: Scraping monthly files from each annual catalog ===")
@@ -434,7 +477,9 @@ def scrape_catalog(
         if html is None:
             msg = f"Failed to fetch /get_microdata for catalog {catalog_id} (year {year})"
             log.error(msg)
-            catalog_errors.append({"catalog_id": catalog_id, "year": year, "reason": "fetch_failed"})
+            catalog_errors.append(
+                {"catalog_id": catalog_id, "year": year, "reason": "fetch_failed"}
+            )
             continue
 
         entries, anomalies = parse_microdata_files(html, catalog_id, year)
@@ -453,7 +498,9 @@ def scrape_catalog(
 
         # Save partial results periodically
         if not dry_run and (i + 1) % save_interval == 0:
-            _write_partial(output_path, all_entries, catalogs_visited, catalog_errors, annual_catalogs)
+            _write_partial(
+                output_path, all_entries, catalogs_visited, catalog_errors, annual_catalogs
+            )
             log.info("Partial save after %d catalogs.", i + 1)
 
     # Step 3: Sort entries and detect gaps
@@ -479,15 +526,14 @@ def scrape_catalog(
             "anomalies": catalog_anomalies,
             "annual_catalogs_found": len(annual_catalogs),
             "annual_catalogs": [
-                {"id": cid, "year": year, "title": title}
-                for cid, year, title in annual_catalogs
+                {"id": cid, "year": year, "title": title} for cid, year, title in annual_catalogs
             ],
         },
     }
 
     if not dry_run:
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
+        with output_path.open("w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
         log.info("Written to %s", output_path)
 
@@ -499,7 +545,7 @@ def _write_partial(
     entries: list[dict],
     visited: int,
     errors: list[dict],
-    annual_catalogs: list[tuple[int, int, str]],
+    _annual_catalogs: list[tuple[int, int, str]],
 ) -> None:
     partial = {
         "scraped_at": datetime.now(timezone.utc).isoformat() + " (partial)",
@@ -515,13 +561,14 @@ def _write_partial(
         },
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+    with output_path.open("w", encoding="utf-8") as f:
         json.dump(partial, f, indent=2, ensure_ascii=False)
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(
@@ -562,7 +609,7 @@ def main() -> int:
     result = scrape_catalog(args.output, dry_run=args.dry_run)
     scrape_log = result["scrape_log"]
 
-    print(f"\nScrape complete.")
+    print("\nScrape complete.")
     print(f"  Annual catalogs found  : {scrape_log['annual_catalogs_found']}")
     print(f"  Monthly entries found  : {scrape_log['geih_matches']}")
     print(f"  Catalogs visited       : {scrape_log['catalogs_visited']}")
