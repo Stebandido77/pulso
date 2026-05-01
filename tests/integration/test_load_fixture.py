@@ -113,3 +113,47 @@ def test_load_ocupados_unified_cabecera(registry_with_unified_fixture: None) -> 
     assert df.shape[0] > 0
     assert "DIRECTORIO" in df.columns
     assert (df["CLASE"] == 1).all()
+
+
+@pytest.mark.integration
+def test_load_shape_a_geih1_fixture(tmp_path: pytest.TempPathFactory) -> None:
+    """Shape A auto-discovery: build_shape_a_zip → parse_shape_a_module → correct shape.
+
+    Tests the full auto-discovery path without the download stack.
+    n_cabecera=3, n_resto=2 → total 5 rows, CLASE values 1 and 2.
+    """
+    import pandas as pd
+
+    from pulso._config.epochs import Epoch
+    from pulso._core.parser import parse_shape_a_module
+    from tests._build_fixtures import build_shape_a_zip
+
+    zip_path = tmp_path / "geih1_test.zip"  # type: ignore[operator]
+    build_shape_a_zip(zip_path, year=2015, month=6, n_cabecera=3, n_resto=2)
+
+    epoch = Epoch(
+        key="geih_2006_2020",
+        label="GEIH 2006-2020",
+        label_en="GEIH 2006-2020",
+        date_range=("2006-01", "2020-12"),
+        merge_keys_persona=("DIRECTORIO", "SECUENCIA_P", "ORDEN"),
+        merge_keys_hogar=("DIRECTORIO", "SECUENCIA_P"),
+        encoding="utf-8",
+        file_format="csv",
+        separator=";",
+        decimal=",",
+        folder_pattern=("Cabecera/", "Resto/"),
+        weight_variable="FEX_C18",
+        area_filter=None,
+        notes_es=None,
+        methodology_url=None,
+    )
+
+    df = parse_shape_a_module(zip_path, "ocupados", epoch)
+
+    assert isinstance(df, pd.DataFrame)
+    assert df.shape[0] == 5  # 3 Cabecera + 2 Resto
+    assert "CLASE" in df.columns
+    assert (df["CLASE"] == 1).sum() == 3
+    assert (df["CLASE"] == 2).sum() == 2
+    assert "DIRECTORIO" in df.columns

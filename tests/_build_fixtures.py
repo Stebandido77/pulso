@@ -200,6 +200,88 @@ def build_unified_fixture_zip(dest: Path, seed: int = 42) -> None:
     print(f"Written: {dest}  ({dest.stat().st_size:,} bytes)")
 
 
+SHAPE_A_GEIH1_ZIP_NAME = "geih1_shape_a_sample.zip"
+
+# Canonical module filenames used by build_shape_a_zip (mimic real DANE GEIH-1 naming).
+_SHAPE_A_MODULES = {
+    "caracteristicas_generales": "Características generales (Personas)",
+    "ocupados": "Ocupados",
+    "desocupados": "Desocupados",
+    "inactivos": "Inactivos",
+}
+
+
+def _make_shape_a_carac(directorios: list[int]) -> pd.DataFrame:
+    rows = [
+        {
+            "DIRECTORIO": f"{d:04d}",
+            "SECUENCIA_P": 1,
+            "ORDEN": 1,
+            "P6020": 1 if d % 2 == 0 else 2,
+            "P6040": 20 + d,
+            "FEX_C18": float(1000 + d * 10),
+        }
+        for d in directorios
+    ]
+    return pd.DataFrame(rows)
+
+
+def _make_shape_a_simple(directorios: list[int]) -> pd.DataFrame:
+    """Minimal persona table — merge keys only."""
+    rows = [{"DIRECTORIO": f"{d:04d}", "SECUENCIA_P": 1, "ORDEN": 1} for d in directorios]
+    return pd.DataFrame(rows)
+
+
+def build_shape_a_zip(
+    output_path: Path,
+    year: int = 2015,
+    month: int = 6,
+    folder_name: str = "Junio.csv",
+    n_cabecera: int = 3,
+    n_resto: int = 2,
+) -> Path:
+    """Create a synthetic GEIH-1 Shape A ZIP for testing.
+
+    Produces 4 modules x 2 areas (Cabecera + Resto) = 8 CSVs inside a single
+    ZIP, reproducing the structure of real DANE GEIH-1 microdata files.
+
+    Args:
+        output_path: Destination path for the ZIP.
+        year: Nominal year (affects only the folder name indirectly).
+        month: Nominal month (not embedded in this fixture).
+        folder_name: Top-level folder inside the ZIP (varies across years).
+        n_cabecera: Number of Cabecera rows to generate.
+        n_resto: Number of Resto rows to generate.
+
+    Returns:
+        output_path (for convenience chaining).
+    """
+    cab_ids = list(range(1, n_cabecera + 1))
+    resto_ids = list(range(n_cabecera + 1, n_cabecera + n_resto + 1))
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for mod_key, label in _SHAPE_A_MODULES.items():
+            if mod_key == "caracteristicas_generales":
+                df_cab = _make_shape_a_carac(cab_ids)
+                df_resto = _make_shape_a_carac(resto_ids)
+            else:
+                df_cab = _make_shape_a_simple(cab_ids)
+                df_resto = _make_shape_a_simple(resto_ids)
+
+            zf.writestr(
+                f"{folder_name}/Cabecera - {label}.csv",
+                _df_to_bytes(df_cab),
+            )
+            zf.writestr(
+                f"{folder_name}/Resto - {label}.csv",
+                _df_to_bytes(df_resto),
+            )
+
+    return output_path
+
+
 if __name__ == "__main__":
     build_fixture_zip(FIXTURE_DIR / ZIP_NAME)
     build_unified_fixture_zip(FIXTURE_DIR / UNIFIED_ZIP_NAME)
+    build_shape_a_zip(FIXTURE_DIR / SHAPE_A_GEIH1_ZIP_NAME)
