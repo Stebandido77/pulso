@@ -1,0 +1,3465 @@
+{
+  "scraped_at": "2026-05-01T06:06:52.660123+00:00",
+  "scraped_by": "scripts/scrape_dane_catalog.py",
+  "schema_version": "0.1.0",
+  "entries": [
+    {
+      "year": 2007,
+      "month": 1,
+      "catalog_id": 317,
+      "file_id": 13491,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13491",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 6857687,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 2,
+      "catalog_id": 317,
+      "file_id": 13493,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13493",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7570718,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 3,
+      "catalog_id": 317,
+      "file_id": 13495,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13495",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7654604,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 4,
+      "catalog_id": 317,
+      "file_id": 13497,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13497",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7717519,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.dta, Abril.txt"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 5,
+      "catalog_id": 317,
+      "file_id": 13499,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13499",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7560232,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.dta, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 6,
+      "catalog_id": 317,
+      "file_id": 13501,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13501",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7465861,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.dta, Junio.txt"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 7,
+      "catalog_id": 317,
+      "file_id": 13503,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13503",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7518289,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.dta, Julio.txt"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 8,
+      "catalog_id": 317,
+      "file_id": 13505,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/13505",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7623147,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.dta, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 9,
+      "catalog_id": 317,
+      "file_id": 10924,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/10924",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7497318,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.spss, Septiembre.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 10,
+      "catalog_id": 317,
+      "file_id": 10928,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/10928",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7413432,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.spss, Octubre.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 11,
+      "catalog_id": 317,
+      "file_id": 10930,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/10930",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 7014973,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.spss, Noviembre.dta"
+      ]
+    },
+    {
+      "year": 2007,
+      "month": 12,
+      "catalog_id": 317,
+      "file_id": 10934,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/10934",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
+      "checksum_sha256": null,
+      "size_bytes": 6406799,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.spss, Diciembre.dta"
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 1,
+      "catalog_id": 206,
+      "file_id": 3268,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3268",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 14921236,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero",
+      "anomalies": [
+        "Multiple formats available: Enero txt., Enero_csv"
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 2,
+      "catalog_id": 206,
+      "file_id": 3269,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3269",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 15382609,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero",
+      "anomalies": [
+        "Multiple formats available: Febrero txt., Febrero_csv"
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 3,
+      "catalog_id": 206,
+      "file_id": 3270,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3270",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 15015608,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo",
+      "anomalies": [
+        "Multiple formats available: Marzo txt., Marzo_csv"
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 4,
+      "catalog_id": 206,
+      "file_id": 12794,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12794",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 7361003,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 5,
+      "catalog_id": 206,
+      "file_id": 12795,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12795",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 7172259,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 6,
+      "catalog_id": 206,
+      "file_id": 12796,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12796",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6784286,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 7,
+      "catalog_id": 206,
+      "file_id": 12798,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12798",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6815744,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 8,
+      "catalog_id": 206,
+      "file_id": 12799,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12799",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6878658,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 9,
+      "catalog_id": 206,
+      "file_id": 12800,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12800",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6700400,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 10,
+      "catalog_id": 206,
+      "file_id": 12801,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12801",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 11,
+      "catalog_id": 206,
+      "file_id": 12802,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12802",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6815744,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre txt."
+      ]
+    },
+    {
+      "year": 2008,
+      "month": 12,
+      "catalog_id": 206,
+      "file_id": 12803,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12803",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
+      "checksum_sha256": null,
+      "size_bytes": 6438256,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre txt."
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 1,
+      "catalog_id": 207,
+      "file_id": 12995,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/12995",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6207569,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 2,
+      "catalog_id": 207,
+      "file_id": 12996,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/12996",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6469713,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 3,
+      "catalog_id": 207,
+      "file_id": 12997,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/12997",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6427770,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 4,
+      "catalog_id": 207,
+      "file_id": 12998,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/12998",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6616514,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 5,
+      "catalog_id": 207,
+      "file_id": 12999,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/12999",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6553600,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 6,
+      "catalog_id": 207,
+      "file_id": 13000,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13000",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6448742,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 7,
+      "catalog_id": 207,
+      "file_id": 13001,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13001",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6763315,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 8,
+      "catalog_id": 207,
+      "file_id": 13002,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13002",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6784286,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 9,
+      "catalog_id": 207,
+      "file_id": 13003,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13003",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6763315,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 10,
+      "catalog_id": 207,
+      "file_id": 13004,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13004",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6742343,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 11,
+      "catalog_id": 207,
+      "file_id": 13005,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13005",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6700400,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2009,
+      "month": 12,
+      "catalog_id": 207,
+      "file_id": 13006,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/207/download/13006",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/207",
+      "checksum_sha256": null,
+      "size_bytes": 6448742,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 1,
+      "catalog_id": 205,
+      "file_id": 12974,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12974",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6721372,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 2,
+      "catalog_id": 205,
+      "file_id": 12975,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12975",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6920601,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 3,
+      "catalog_id": 205,
+      "file_id": 12976,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12976",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6763315,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 4,
+      "catalog_id": 205,
+      "file_id": 12977,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12977",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 7161774,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 5,
+      "catalog_id": 205,
+      "file_id": 12978,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12978",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6962544,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 6,
+      "catalog_id": 205,
+      "file_id": 12979,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12979",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6857687,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 7,
+      "catalog_id": 205,
+      "file_id": 12980,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12980",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6994001,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 8,
+      "catalog_id": 205,
+      "file_id": 12981,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12981",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 7172259,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv.",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 9,
+      "catalog_id": 205,
+      "file_id": 12982,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12982",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 7140802,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv.",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 10,
+      "catalog_id": 205,
+      "file_id": 12983,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12983",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 7098859,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv.",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 11,
+      "catalog_id": 205,
+      "file_id": 12984,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12984",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 7109345,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv.",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre txt."
+      ]
+    },
+    {
+      "year": 2010,
+      "month": 12,
+      "catalog_id": 205,
+      "file_id": 12985,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/205/download/12985",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/205",
+      "checksum_sha256": null,
+      "size_bytes": 6805258,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv.",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre txt."
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 1,
+      "catalog_id": 182,
+      "file_id": 12719,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12719",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 6847201,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero.sav, Enero.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 2,
+      "catalog_id": 182,
+      "file_id": 12720,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12720",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7528775,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero.sav., Febrero.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 3,
+      "catalog_id": 182,
+      "file_id": 12721,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12721",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7277117,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo.sav, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 4,
+      "catalog_id": 182,
+      "file_id": 12722,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12722",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv.",
+      "anomalies": [
+        "Multiple formats available: Abril.sav, Abril.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 5,
+      "catalog_id": 182,
+      "file_id": 12723,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12723",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7245660,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo.sav, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 6,
+      "catalog_id": 182,
+      "file_id": 12724,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12724",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7235174,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio.sav, Junio.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 7,
+      "catalog_id": 182,
+      "file_id": 12725,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12725",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7266631,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio.sav, Julio.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 8,
+      "catalog_id": 182,
+      "file_id": 12726,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12726",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7214202,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto.sav, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 9,
+      "catalog_id": 182,
+      "file_id": 12727,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12727",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7182745,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.sav, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 10,
+      "catalog_id": 182,
+      "file_id": 12728,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12728",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7140802,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.sav., Octubre.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 11,
+      "catalog_id": 182,
+      "file_id": 12729,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12729",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 7214202,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.sav, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2011,
+      "month": 12,
+      "catalog_id": 182,
+      "file_id": 12730,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12730",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
+      "checksum_sha256": null,
+      "size_bytes": 6962544,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.sav, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 1,
+      "catalog_id": 77,
+      "file_id": 13013,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13013",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 6847201,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 2,
+      "catalog_id": 77,
+      "file_id": 13014,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13014",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7193231,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 3,
+      "catalog_id": 77,
+      "file_id": 13015,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13015",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7130316,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 4,
+      "catalog_id": 77,
+      "file_id": 13016,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13016",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7214202,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 5,
+      "catalog_id": 77,
+      "file_id": 13017,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13017",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7476346,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 6,
+      "catalog_id": 77,
+      "file_id": 13018,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13018",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7109345,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 7,
+      "catalog_id": 77,
+      "file_id": 13019,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13019",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7067402,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 8,
+      "catalog_id": 77,
+      "file_id": 13020,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13020",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7203717,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 9,
+      "catalog_id": 77,
+      "file_id": 13021,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13021",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7109345,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 10,
+      "catalog_id": 77,
+      "file_id": 13022,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13022",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7172259,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 11,
+      "catalog_id": 77,
+      "file_id": 13023,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13023",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 7235174,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv.",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2012,
+      "month": 12,
+      "catalog_id": 77,
+      "file_id": 13024,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/77/download/13024",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/77",
+      "checksum_sha256": null,
+      "size_bytes": 6637486,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 1,
+      "catalog_id": 68,
+      "file_id": 13027,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13027",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 7004487,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 2,
+      "catalog_id": 68,
+      "file_id": 13028,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13028",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 7004487,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 3,
+      "catalog_id": 68,
+      "file_id": 13029,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13029",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6889144,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 4,
+      "catalog_id": 68,
+      "file_id": 13030,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13030",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6973030,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 5,
+      "catalog_id": 68,
+      "file_id": 13031,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13031",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 7109345,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 6,
+      "catalog_id": 68,
+      "file_id": 13032,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13032",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6962544,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 7,
+      "catalog_id": 68,
+      "file_id": 13033,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13033",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6836715,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 8,
+      "catalog_id": 68,
+      "file_id": 13034,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13034",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6899630,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 9,
+      "catalog_id": 68,
+      "file_id": 13035,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13035",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6794772,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt."
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 10,
+      "catalog_id": 68,
+      "file_id": 13036,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13036",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6952058,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 11,
+      "catalog_id": 68,
+      "file_id": 13037,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13037",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6836715,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2013,
+      "month": 12,
+      "catalog_id": 68,
+      "file_id": 13038,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/68/download/13038",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/68",
+      "checksum_sha256": null,
+      "size_bytes": 6427770,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 1,
+      "catalog_id": 328,
+      "file_id": 13043,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13043",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6752829,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 2,
+      "catalog_id": 328,
+      "file_id": 13044,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13044",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6826229,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 3,
+      "catalog_id": 328,
+      "file_id": 13045,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13045",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6679429,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 4,
+      "catalog_id": 328,
+      "file_id": 13046,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13046",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6658457,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 5,
+      "catalog_id": 328,
+      "file_id": 13047,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13047",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6931087,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 6,
+      "catalog_id": 328,
+      "file_id": 13048,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13048",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6532628,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 7,
+      "catalog_id": 328,
+      "file_id": 13049,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13049",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6710886,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 8,
+      "catalog_id": 328,
+      "file_id": 13050,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13050",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6815744,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 9,
+      "catalog_id": 328,
+      "file_id": 13051,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13051",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6658457,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 10,
+      "catalog_id": 328,
+      "file_id": 13052,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13052",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 7014973,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 11,
+      "catalog_id": 328,
+      "file_id": 13053,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13053",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6700400,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2014,
+      "month": 12,
+      "catalog_id": 328,
+      "file_id": 13054,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/328/download/13054",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/328",
+      "checksum_sha256": null,
+      "size_bytes": 6417285,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 1,
+      "catalog_id": 356,
+      "file_id": 13056,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13056",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6585057,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 2,
+      "catalog_id": 356,
+      "file_id": 13057,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13057",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6710886,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 3,
+      "catalog_id": 356,
+      "file_id": 13058,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13058",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6689914,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 4,
+      "catalog_id": 356,
+      "file_id": 13059,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13059",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 5,
+      "catalog_id": 356,
+      "file_id": 13060,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13060",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6763315,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 6,
+      "catalog_id": 356,
+      "file_id": 13061,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13061",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6668943,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 7,
+      "catalog_id": 356,
+      "file_id": 13062,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13062",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6899630,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 8,
+      "catalog_id": 356,
+      "file_id": 13063,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13063",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 9,
+      "catalog_id": 356,
+      "file_id": 13064,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13064",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6857687,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 10,
+      "catalog_id": 356,
+      "file_id": 13065,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13065",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6962544,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt."
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 11,
+      "catalog_id": 356,
+      "file_id": 13066,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13066",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6847201,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2015,
+      "month": 12,
+      "catalog_id": 356,
+      "file_id": 13067,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13067",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
+      "checksum_sha256": null,
+      "size_bytes": 6616514,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 1,
+      "catalog_id": 427,
+      "file_id": 13101,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13101",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6616514,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 2,
+      "catalog_id": 427,
+      "file_id": 13102,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13102",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6647971,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 3,
+      "catalog_id": 427,
+      "file_id": 13103,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13103",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 7130316,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 4,
+      "catalog_id": 427,
+      "file_id": 13104,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13104",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6773800,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 5,
+      "catalog_id": 427,
+      "file_id": 13105,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13105",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 7014973,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv.",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 6,
+      "catalog_id": 427,
+      "file_id": 13106,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13106",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 7046430,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 7,
+      "catalog_id": 427,
+      "file_id": 13107,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13107",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 7014973,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 8,
+      "catalog_id": 427,
+      "file_id": 13108,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13108",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6962544,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 9,
+      "catalog_id": 427,
+      "file_id": 13109,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13109",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6721372,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 10,
+      "catalog_id": 427,
+      "file_id": 13110,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13110",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6606028,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre, Octubre.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 11,
+      "catalog_id": 427,
+      "file_id": 13111,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13111",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6574571,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2016,
+      "month": 12,
+      "catalog_id": 427,
+      "file_id": 13112,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/427/download/13112",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/427",
+      "checksum_sha256": null,
+      "size_bytes": 6364856,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 1,
+      "catalog_id": 458,
+      "file_id": 13294,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13294",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6417285,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero, Enero.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 2,
+      "catalog_id": 458,
+      "file_id": 13295,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13295",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6553600,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv.",
+      "anomalies": [
+        "Multiple formats available: Febrero, Febrero.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 3,
+      "catalog_id": 458,
+      "file_id": 13296,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13296",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6490685,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv.",
+      "anomalies": [
+        "Multiple formats available: Marzo, Marzo.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 4,
+      "catalog_id": 458,
+      "file_id": 13297,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13297",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6469713,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril, Abril.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 5,
+      "catalog_id": 458,
+      "file_id": 13298,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13298",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6679429,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo, Mayo.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 6,
+      "catalog_id": 458,
+      "file_id": 13299,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13299",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6553600,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio, Junio.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 7,
+      "catalog_id": 458,
+      "file_id": 13300,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13300",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 6952058,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio, Julio.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 8,
+      "catalog_id": 458,
+      "file_id": 13301,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/13301",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 7035944,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto, Agosto.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 9,
+      "catalog_id": 458,
+      "file_id": 9035,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/9035",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 9133096,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.dta, Septiembre.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 10,
+      "catalog_id": 458,
+      "file_id": 9038,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/9038",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 9133096,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.dta., Octubre.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 11,
+      "catalog_id": 458,
+      "file_id": 9342,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/9342",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 9017753,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.dta, Noviembre.txt"
+      ]
+    },
+    {
+      "year": 2017,
+      "month": 12,
+      "catalog_id": 458,
+      "file_id": 9282,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/458/download/9282",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/458",
+      "checksum_sha256": null,
+      "size_bytes": 8535408,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.dta, Diciembre.txt"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 1,
+      "catalog_id": 547,
+      "file_id": 12198,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/12198",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6606028,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero.spss, Enero.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 2,
+      "catalog_id": 547,
+      "file_id": 12201,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/12201",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6794772,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero.spss, Febrero.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 3,
+      "catalog_id": 547,
+      "file_id": 12204,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/12204",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6826229,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo.spss, Marzo.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 4,
+      "catalog_id": 547,
+      "file_id": 12207,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/12207",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6952058,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: abril.spss, Abril.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 5,
+      "catalog_id": 547,
+      "file_id": 12210,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/12210",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 7119831,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo.spss, Mayo.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 6,
+      "catalog_id": 547,
+      "file_id": 9909,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/9909",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6647971,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio.spss, Junio.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 7,
+      "catalog_id": 547,
+      "file_id": 10017,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10017",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6878658,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio.spss, Julio.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 8,
+      "catalog_id": 547,
+      "file_id": 10102,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10102",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 7035944,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto.spss, Agosto.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 9,
+      "catalog_id": 547,
+      "file_id": 10115,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10115",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6773800,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.spss, Septiembre.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 10,
+      "catalog_id": 547,
+      "file_id": 10205,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10205",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6742343,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.spss, Octubre.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 11,
+      "catalog_id": 547,
+      "file_id": 10341,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10341",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6794772,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.spss, Noviembre.dta"
+      ]
+    },
+    {
+      "year": 2018,
+      "month": 12,
+      "catalog_id": 547,
+      "file_id": 10443,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/547/download/10443",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/547",
+      "checksum_sha256": null,
+      "size_bytes": 6553600,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.spss, Diciembre.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 1,
+      "catalog_id": 599,
+      "file_id": 10719,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/10719",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6784286,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero.spss, Enero.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 2,
+      "catalog_id": 599,
+      "file_id": 10964,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/10964",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero.csv",
+      "anomalies": [
+        "Multiple formats available: Febrero.spss, Febrero.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 3,
+      "catalog_id": 599,
+      "file_id": 11117,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/11117",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6710886,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo.spss, Marzo.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 4,
+      "catalog_id": 599,
+      "file_id": 11184,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/11184",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6794772,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril.csv",
+      "anomalies": [
+        "Multiple formats available: Abril.spss, Abril.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 5,
+      "catalog_id": 599,
+      "file_id": 11300,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/11300",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 7025459,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo.spss, Mayo.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 6,
+      "catalog_id": 599,
+      "file_id": 12068,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12068",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6689914,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio.spss, Junio.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 7,
+      "catalog_id": 599,
+      "file_id": 12100,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12100",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6815744,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio.spss, Julio.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 8,
+      "catalog_id": 599,
+      "file_id": 12221,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12221",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6931087,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto.spss, Agosto.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 9,
+      "catalog_id": 599,
+      "file_id": 12275,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12275",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6721372,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.spss, Septiembre.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 10,
+      "catalog_id": 599,
+      "file_id": 12365,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12365",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6805258,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.spss, Octubre.dta."
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 11,
+      "catalog_id": 599,
+      "file_id": 12444,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12444",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6668943,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.spss, Noviembre.dta"
+      ]
+    },
+    {
+      "year": 2019,
+      "month": 12,
+      "catalog_id": 599,
+      "file_id": 12516,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/599/download/12516",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/599",
+      "checksum_sha256": null,
+      "size_bytes": 6417285,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.spss, Diciembre.dta"
+      ]
+    },
+    {
+      "year": 2020,
+      "month": 1,
+      "catalog_id": 780,
+      "file_id": 22286,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22286",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 21799895,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Enero",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 2,
+      "catalog_id": 780,
+      "file_id": 22287,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22287",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 21852323,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Febrero",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 3,
+      "catalog_id": 780,
+      "file_id": 22288,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22288",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 10915676,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Marzo",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 4,
+      "catalog_id": 780,
+      "file_id": 22289,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22289",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 8399093,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Abril",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 5,
+      "catalog_id": 780,
+      "file_id": 22290,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22290",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 12289310,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Mayo",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 6,
+      "catalog_id": 780,
+      "file_id": 22291,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22291",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 12278824,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Junio",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 7,
+      "catalog_id": 780,
+      "file_id": 22292,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22292",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 12142510,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Julio",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 8,
+      "catalog_id": 780,
+      "file_id": 22293,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22293",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 24043847,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Agosto",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 9,
+      "catalog_id": 780,
+      "file_id": 22294,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22294",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 23708303,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Septiembre",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 10,
+      "catalog_id": 780,
+      "file_id": 22295,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22295",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 24201134,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Octubre",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 11,
+      "catalog_id": 780,
+      "file_id": 22296,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22296",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 23435673,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Noviembre",
+      "anomalies": []
+    },
+    {
+      "year": 2020,
+      "month": 12,
+      "catalog_id": 780,
+      "file_id": 22297,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/780/download/22297",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/780",
+      "checksum_sha256": null,
+      "size_bytes": 23330816,
+      "epoch_inferred": "geih_2006_2020",
+      "file_name": "Diciembre",
+      "anomalies": []
+    },
+    {
+      "year": 2021,
+      "month": 1,
+      "catalog_id": 701,
+      "file_id": 23451,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/23451",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5463080,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Enero.csv",
+      "anomalies": [
+        "Multiple formats available: Enero.spss, Enero.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 2,
+      "catalog_id": 701,
+      "file_id": 23454,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/23454",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5494538,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Febrero.csv.",
+      "anomalies": [
+        "Multiple formats available: Febrero.spss, Febrero.dta."
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 3,
+      "catalog_id": 701,
+      "file_id": 23457,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/23457",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5400166,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Marzo.csv",
+      "anomalies": [
+        "Multiple formats available: Marzo.spss., Marzo.dta, GEIH_2021_Marco_2018 (II.Semestre)., GEIH_Marco_2018 (I.Semestre)."
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 4,
+      "catalog_id": 701,
+      "file_id": 23460,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/23460",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5546967,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Abril.csv.",
+      "anomalies": [
+        "Multiple formats available: Abril.spss, Abril.dta."
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 5,
+      "catalog_id": 701,
+      "file_id": 20528,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20528",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6627000,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Mayo.csv",
+      "anomalies": [
+        "Multiple formats available: Mayo.spss, Mayo.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 6,
+      "catalog_id": 701,
+      "file_id": 20551,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20551",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6176112,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Junio.csv",
+      "anomalies": [
+        "Multiple formats available: Junio.sav, Junio.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 7,
+      "catalog_id": 701,
+      "file_id": 20630,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20630",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6910115,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Julio.csv",
+      "anomalies": [
+        "Multiple formats available: Julio.spss, Julio.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 8,
+      "catalog_id": 701,
+      "file_id": 20673,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20673",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6574571,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Agosto.csv",
+      "anomalies": [
+        "Multiple formats available: Agosto.spss, Agosto.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 9,
+      "catalog_id": 701,
+      "file_id": 20676,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20676",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6490685,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Septiembre.csv",
+      "anomalies": [
+        "Multiple formats available: Septiembre.spss, Septiembre.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 10,
+      "catalog_id": 701,
+      "file_id": 20707,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20707",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 6291456,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Octubre.csv",
+      "anomalies": [
+        "Multiple formats available: Octubre.spss, Octubre.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 11,
+      "catalog_id": 701,
+      "file_id": 20833,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20833",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5987368,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Noviembre.csv",
+      "anomalies": [
+        "Multiple formats available: Noviembre.spss, Noviembre.dta"
+      ]
+    },
+    {
+      "year": 2021,
+      "month": 12,
+      "catalog_id": 701,
+      "file_id": 20902,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20902",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
+      "checksum_sha256": null,
+      "size_bytes": 5924454,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Diciembre.csv",
+      "anomalies": [
+        "Multiple formats available: Diciembre.spss, Diciembre.dta"
+      ]
+    },
+    {
+      "year": 2022,
+      "month": 1,
+      "catalog_id": 771,
+      "file_id": 22688,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22688",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 76986449,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Enero_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 2,
+      "catalog_id": 771,
+      "file_id": 22689,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22689",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 78538342,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Febrero_2022_Marco_2018.",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 3,
+      "catalog_id": 771,
+      "file_id": 22690,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22690",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 79104573,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Marzo_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 4,
+      "catalog_id": 771,
+      "file_id": 22894,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22894",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 78066483,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Abril_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 5,
+      "catalog_id": 771,
+      "file_id": 22692,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22692",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 48706355,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Mayo_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 6,
+      "catalog_id": 771,
+      "file_id": 22693,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22693",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 70590136,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Junio_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 7,
+      "catalog_id": 771,
+      "file_id": 22694,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22694",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 68241326,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Julio_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 8,
+      "catalog_id": 771,
+      "file_id": 22695,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22695",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 70663536,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Agosto_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 9,
+      "catalog_id": 771,
+      "file_id": 22696,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22696",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 75990302,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Septiembre_Marco_2018.",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 10,
+      "catalog_id": 771,
+      "file_id": 22697,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22697",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 71638712,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Octubre_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 11,
+      "catalog_id": 771,
+      "file_id": 23016,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/23016",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 72666316,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Noviembre_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2022,
+      "month": 12,
+      "catalog_id": 771,
+      "file_id": 22699,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22699",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
+      "checksum_sha256": null,
+      "size_bytes": 66521661,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "GEIH_Diciembre_2022_Marco_2018",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 1,
+      "catalog_id": 782,
+      "file_id": 22349,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22349",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 69122129,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Enero",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 2,
+      "catalog_id": 782,
+      "file_id": 22466,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22466",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 71963770,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Febrero",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 3,
+      "catalog_id": 782,
+      "file_id": 22553,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22553",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 74323066,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Marzo",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 4,
+      "catalog_id": 782,
+      "file_id": 22610,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22610",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 63847792,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Abril",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 5,
+      "catalog_id": 782,
+      "file_id": 22819,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22819",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 67979182,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Mayo",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 6,
+      "catalog_id": 782,
+      "file_id": 22888,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22888",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 68199383,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Junio",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 7,
+      "catalog_id": 782,
+      "file_id": 22917,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22917",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 67318579,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Julio",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 8,
+      "catalog_id": 782,
+      "file_id": 22946,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/22946",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 70999080,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Agosto",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 9,
+      "catalog_id": 782,
+      "file_id": 23017,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/23017",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 64592281,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Septiembre",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 10,
+      "catalog_id": 782,
+      "file_id": 23081,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/23081",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 61404610,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Octubre",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 11,
+      "catalog_id": 782,
+      "file_id": 23115,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/23115",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 69981962,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Noviembre",
+      "anomalies": []
+    },
+    {
+      "year": 2023,
+      "month": 12,
+      "catalog_id": 782,
+      "file_id": 23243,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/782/download/23243",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/782",
+      "checksum_sha256": null,
+      "size_bytes": 70474792,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Diciembre",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "catalog_id": 819,
+      "file_id": 23313,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23313",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 68440555,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Ene_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "catalog_id": 819,
+      "file_id": 23362,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23362",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 68178411,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Febrero_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "catalog_id": 819,
+      "file_id": 23596,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23596",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 67171778,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Marzo 2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "catalog_id": 819,
+      "file_id": 23496,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23496",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 67821895,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Abril 2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "catalog_id": 819,
+      "file_id": 23598,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23598",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 68555898,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Mayo_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "catalog_id": 819,
+      "file_id": 23625,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23625",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 66909634,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Junio_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "catalog_id": 819,
+      "file_id": 23631,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23631",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 69090672,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Julio_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "catalog_id": 819,
+      "file_id": 23651,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23651",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 62757273,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Agosto_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "catalog_id": 819,
+      "file_id": 23671,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23671",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 59905146,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Septiembre_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "catalog_id": 819,
+      "file_id": 23677,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23677",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 60125347,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Octubre_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "catalog_id": 819,
+      "file_id": 23729,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23729",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 59317944,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Noviembre_ 2024",
+      "anomalies": []
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "catalog_id": 819,
+      "file_id": 23794,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/819/download/23794",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/819",
+      "checksum_sha256": null,
+      "size_bytes": 57388564,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Diciembre_2024",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "catalog_id": 853,
+      "file_id": 24263,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24263",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 61865984,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Enero 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "catalog_id": 853,
+      "file_id": 24264,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24264",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 63732449,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Febrero 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "catalog_id": 853,
+      "file_id": 24267,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24267",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 65148026,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Marzo 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "catalog_id": 853,
+      "file_id": 24269,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24269",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 64833454,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Abril 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "catalog_id": 853,
+      "file_id": 24268,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24268",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 66532147,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Mayo 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "catalog_id": 853,
+      "file_id": 24266,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24266",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 63994593,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Junio 2025.",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "catalog_id": 853,
+      "file_id": 24265,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24265",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 64099450,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Julio 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "catalog_id": 853,
+      "file_id": 24307,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24307",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 64393052,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Agosto 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "catalog_id": 853,
+      "file_id": 24324,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24324",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 65263370,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Septiembre 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "catalog_id": 853,
+      "file_id": 24382,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24382",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 69247959,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Octubre 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "catalog_id": 853,
+      "file_id": 24406,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24406",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 66972549,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Noviembre 2025",
+      "anomalies": []
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "catalog_id": 853,
+      "file_id": 24463,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/853/download/24463",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/853",
+      "checksum_sha256": null,
+      "size_bytes": 63428362,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Diciembre 2025.",
+      "anomalies": []
+    },
+    {
+      "year": 2026,
+      "month": 1,
+      "catalog_id": 900,
+      "file_id": 24530,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/900/download/24530",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/900",
+      "checksum_sha256": null,
+      "size_bytes": 65567457,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Enero 2026",
+      "anomalies": []
+    },
+    {
+      "year": 2026,
+      "month": 2,
+      "catalog_id": 900,
+      "file_id": 24594,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/900/download/24594",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/900",
+      "checksum_sha256": null,
+      "size_bytes": 70632079,
+      "epoch_inferred": "geih_2021_present",
+      "file_name": "Febrero 2026",
+      "anomalies": []
+    }
+  ],
+  "gaps": [
+    {
+      "year": 2026,
+      "month": 3,
+      "reason": "Not yet published by DANE (publication lag is typically 1-2 months)"
+    },
+    {
+      "year": 2026,
+      "month": 4,
+      "reason": "Not yet published by DANE (publication lag is typically 1-2 months)"
+    },
+    {
+      "year": 2026,
+      "month": 5,
+      "reason": "Not yet published by DANE (publication lag is typically 1-2 months)"
+    }
+  ],
+  "scrape_log": {
+    "catalogs_visited": 20,
+    "geih_matches": 230,
+    "errors": [],
+    "anomalies": [
+      {
+        "catalog_id": 900,
+        "year": 2026,
+        "note": "Only 2/12 months found"
+      }
+    ],
+    "annual_catalogs_found": 20,
+    "annual_catalogs": [
+      {
+        "id": 317,
+        "year": 2007,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH 2007"
+      },
+      {
+        "id": 206,
+        "year": 2008,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2008"
+      },
+      {
+        "id": 207,
+        "year": 2009,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2009"
+      },
+      {
+        "id": 205,
+        "year": 2010,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2010"
+      },
+      {
+        "id": 182,
+        "year": 2011,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2011"
+      },
+      {
+        "id": 77,
+        "year": 2012,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2012"
+      },
+      {
+        "id": 68,
+        "year": 2013,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2013"
+      },
+      {
+        "id": 328,
+        "year": 2014,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2014"
+      },
+      {
+        "id": 356,
+        "year": 2015,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2015"
+      },
+      {
+        "id": 427,
+        "year": 2016,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2016"
+      },
+      {
+        "id": 458,
+        "year": 2017,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH -2017"
+      },
+      {
+        "id": 547,
+        "year": 2018,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2018"
+      },
+      {
+        "id": 599,
+        "year": 2019,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2019"
+      },
+      {
+        "id": 780,
+        "year": 2020,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2020"
+      },
+      {
+        "id": 701,
+        "year": 2021,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2021"
+      },
+      {
+        "id": 771,
+        "year": 2022,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2022"
+      },
+      {
+        "id": 782,
+        "year": 2023,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2023."
+      },
+      {
+        "id": 819,
+        "year": 2024,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2024."
+      },
+      {
+        "id": 853,
+        "year": 2025,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2025"
+      },
+      {
+        "id": 900,
+        "year": 2026,
+        "title": "Gran Encuesta Integrada de Hogares - GEIH - 2026"
+      }
+    ]
+  }
+}
