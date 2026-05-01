@@ -149,8 +149,7 @@ def build_month_record(entry: dict, catalog_scraped_at: str) -> dict:
         modules = {
             name: dict(SHAPE_A_FILES[name])
             for name in CANONICAL_MODULES
-            if epoch in CANONICAL_MODULES[name]["available_in"]
-            and name in SHAPE_A_FILES
+            if epoch in CANONICAL_MODULES[name]["available_in"] and name in SHAPE_A_FILES
         }
 
     return {
@@ -225,8 +224,10 @@ def main() -> int:
             new_data[key] = build_month_record(entry, catalog_scraped_at)
             generated += 1
 
-    print(f"Preserved {preserved} manually validated entr{'y' if preserved == 1 else 'ies'}: "
-          f"{', '.join(k for k, v in existing_data.items() if v.get('validated'))}")
+    print(
+        f"Preserved {preserved} manually validated entr{'y' if preserved == 1 else 'ies'}: "
+        f"{', '.join(k for k, v in existing_data.items() if v.get('validated'))}"
+    )
     print(f"Generated {generated} new entries")
 
     # Build full sources structure
