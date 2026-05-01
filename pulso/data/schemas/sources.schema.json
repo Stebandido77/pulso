@@ -91,9 +91,14 @@
           "description": "URL to the DANE catalog page describing this dataset."
         },
         "checksum_sha256": {
-          "type": "string",
-          "pattern": "^[a-f0-9]{64}$",
-          "description": "SHA-256 hex digest of the downloaded ZIP."
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            { "type": "null" }
+          ],
+          "description": "SHA-256 hex digest of the downloaded ZIP. Null when DANE does not publish a checksum (default for most entries; Phase 3.4 fills with computed checksums)."
         },
         "size_bytes": {
           "type": ["integer", "null"],
