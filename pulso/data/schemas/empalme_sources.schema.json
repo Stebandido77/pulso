@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Stebandido77/pulso/blob/main/pulso/data/schemas/empalme_sources.schema.json",
+  "title": "GEIH Empalme Catalog",
+  "description": "Annual GEIH Empalme microdata catalogs (2010-2020). Each entry is one ZIP per year containing 12 monthly sub-ZIPs with Cabecera/Resto structure (geih_2006_2020 epoch). Keys are 4-digit year strings.",
+  "type": "object",
+  "required": ["metadata", "data"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version", "data_version", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+$",
+          "description": "Schema version (major.minor)."
+        },
+        "data_version": {
+          "type": "string",
+          "pattern": "^\\d{4}$",
+          "description": "Latest year covered by this catalog."
+        },
+        "description": {
+          "type": "string"
+        },
+        "scraped_at": {
+          "anyOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ],
+          "description": "ISO-8601 timestamp of when this catalog was last verified."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Annual Empalme entries keyed by 4-digit year string (2010-2020).",
+      "patternProperties": {
+        "^20(1[0-9]|20)$": { "$ref": "#/$defs/EmpalmeEntry" }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    }
+  },
+  "$defs": {
+    "EmpalmeEntry": {
+      "type": "object",
+      "required": [
+        "catalog_id",
+        "idno",
+        "downloadable",
+        "download_url",
+        "landing_page",
+        "zip_filename",
+        "size_bytes",
+        "checksum_sha256",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "catalog_id": {
+          "type": "integer",
+          "description": "Numeric catalog ID in the DANE Microdatos portal."
+        },
+        "idno": {
+          "type": "string",
+          "description": "NADA-style IDNO string used by the DANE API (e.g. DANE-DIMPE-GEIH-EMPALME-2015)."
+        },
+        "downloadable": {
+          "type": "boolean",
+          "description": "True when the ZIP file has been published and is publicly accessible. False for years where DANE has created the catalog record but not yet uploaded the data (currently 2020)."
+        },
+        "download_url": {
+          "anyOf": [
+            { "type": "string", "format": "uri" },
+            { "type": "null" }
+          ],
+          "description": "Direct URL to the annual ZIP. Pattern: https://microdatos.dane.gov.co/index.php/catalog/{catalog_id}/download/{resource_id}. Null when downloadable=false."
+        },
+        "landing_page": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the DANE catalog landing page for this year."
+        },
+        "zip_filename": {
+          "anyOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ],
+          "description": "Filename served via Content-Disposition by the download URL. Null when downloadable=false. Note: 2013 has a DANE-side typo in the filename."
+        },
+        "size_bytes": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "type": "null" }
+          ],
+          "description": "Content-Length in bytes confirmed via HTTP HEAD. Null when downloadable=false."
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            { "type": "null" }
+          ],
+          "description": "SHA-256 hex digest of the downloaded ZIP. Null until computed."
+        },
+        "notes": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ],
+          "description": "Free-form notes: filename typos, publication anomalies, IDNO irregularities, etc."
+        }
+      }
+    }
+  }
+}

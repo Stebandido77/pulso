@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "schema_version": "1.0",
+    "data_version": "2020",
+    "description": "Annual GEIH Empalme microdata catalogs (2010-2020). Each download is one ZIP per year containing 12 monthly sub-ZIPs with Cabecera/Resto structure (geih_2006_2020 epoch). Download URLs verified via HTTP HEAD on 2026-05-01. 2020 catalog exists on DANE portal but the ZIP has not been published.",
+    "scraped_at": "2026-05-01T00:00:00Z"
+  },
+  "data": {
+    "2010": {
+      "catalog_id": 765,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2010",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/765/download/22001",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/765",
+      "zip_filename": "GEIH_Empalme_2010.zip",
+      "size_bytes": 219702328,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2011": {
+      "catalog_id": 755,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2011",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/755/download/21719",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/755",
+      "zip_filename": "GEIH_Empalme_2011.zip",
+      "size_bytes": 224312554,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2012": {
+      "catalog_id": 760,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2012",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/760/download/21879",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/760",
+      "zip_filename": "GEIH_Empalme_2012.zip",
+      "size_bytes": 261280670,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2013": {
+      "catalog_id": 761,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2013",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/761/download/21903",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/761",
+      "zip_filename": "GEIH_Emplame_2013.zip",
+      "size_bytes": 252617638,
+      "checksum_sha256": null,
+      "notes": "DANE typo in ZIP filename: 'GEIH_Emplame_2013.zip' (missing 'p' in Empalme). This is the actual filename served by the server and must be preserved as-is."
+    },
+    "2014": {
+      "catalog_id": 756,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2014",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/756/download/21743",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/756",
+      "zip_filename": "GEIH_Empalme_2014.zip",
+      "size_bytes": 258217796,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2015": {
+      "catalog_id": 762,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2015",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/762/download/21928",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/762",
+      "zip_filename": "GEIH_Empalme_2015.zip",
+      "size_bytes": 229540468,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2016": {
+      "catalog_id": 757,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2016",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/757/download/21776",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/757",
+      "zip_filename": "GEIH_Empalme_2016.zip",
+      "size_bytes": 230131436,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2017": {
+      "catalog_id": 763,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2017",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/763/download/21947",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/763",
+      "zip_filename": "GEIH_Empalme_2017.zip",
+      "size_bytes": 234080087,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2018": {
+      "catalog_id": 758,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2018",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/758/download/21795",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/758",
+      "zip_filename": "GEIH_Empalme_2018.zip",
+      "size_bytes": 234063925,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2019": {
+      "catalog_id": 759,
+      "idno": "DANE-DIMPE-GEIH-EMPALME-2019",
+      "downloadable": true,
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/759/download/21814",
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/759",
+      "zip_filename": "GEIH_Empalme_2019.zip",
+      "size_bytes": 231904344,
+      "checksum_sha256": null,
+      "notes": null
+    },
+    "2020": {
+      "catalog_id": 764,
+      "idno": "DANE-DIMPE-GEIH-EMPAL-2020",
+      "downloadable": false,
+      "download_url": null,
+      "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/764",
+      "zip_filename": null,
+      "size_bytes": null,
+      "checksum_sha256": null,
+      "notes": "ZIP not published by DANE as of 2026-05-01. Catalog record exists (created 2022-11-15) with 8 data file entries defined, but no download is attached. IDNO anomaly: 'DANE-DIMPE-GEIH-EMPAL-2020' (truncated — missing 'ME' vs. the 2010-2019 pattern DANE-DIMPE-GEIH-EMPALME-{year})."
+    }
+  }
+}
