@@ -20,6 +20,7 @@ import zipfile
 from typing import TYPE_CHECKING, Literal, cast
 
 from pulso._config.registry import _load_sources
+from pulso._utils.columns import _normalize_dane_columns
 from pulso._utils.exceptions import ParseError
 
 if TYPE_CHECKING:
@@ -215,9 +216,8 @@ def parse_shape_a_module(
             df_resto["CLASE"] = 2
             dfs.append(df_resto)
 
-    if len(dfs) == 1:
-        return dfs[0]
-    return pd.concat(dfs, axis=0, ignore_index=True)
+    result = dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
+    return _normalize_dane_columns(result)
 
 
 def _parse_csv(
