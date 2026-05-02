@@ -141,59 +141,66 @@ C (Architecture docs) → A (Shape A normalization) → B (Variable introspectio
 
 ---
 
-## Open Questions
+## Decisions — All Resolved (2026-05-02)
 
-The following decisions require human input before implementation starts:
+The four open questions from the original RFC have been answered. Decisions are recorded below with justification.
 
-### OQ-1: Shape A normalization scope (Line A)
+### Decision OQ-1: Shape A normalization — **Option 3 (broad + rename)**
 
-Should the uppercase normalization in `parse_shape_a_module()` also apply to the `load()` and `load_merged()` raw paths for pre-2022 months — i.e., should ALL columns be uppercased after parsing, or only the merge keys?
+**Chosen:** Uppercase ALL columns in `parse_shape_a_module()` + rename `FEX_C_XXXX → FEX_C`.
 
-**Option 1 (narrow):** Uppercase only the epoch's merge keys (current behavior for merge keys via `_read_csv_with_fallback`). Fixes the immediate MergeError but leaves mixed-case non-key columns (e.g. `Fex_c_2011`).
+**Justification:** Option 3 produces full consistency across all three shapes (A, B, C). Shape C already does this via `_normalize_empalme_columns()`; Shape A must match so that downstream code (merger, harmonizer, user code) sees identical column conventions regardless of the data source. The `variable_map.json` entry for `geih_2006_2020` must be updated from `source_variable: "fex_c_2011"` to `source_variable: "FEX_C"` as part of this change (coordinated Builder + Curator PRs).
 
-**Option 2 (broad):** Uppercase ALL columns in Shape A (mirrors what `_normalize_empalme_columns` does for Shape C). Fully consistent, but changes column names exposed to users and may break user code that checks for `Fex_c_2011`.
-
-**Option 3 (broad + rename):** Uppercase all + rename `FEX_C_XXXX → FEX_C` for weight columns. Requires updating `variable_map.json` to use `FEX_C` as `source_variable` for `geih_2006_2020` epoch (currently `fex_c_2011`). Most consistent but widest impact.
-
-> **Decision needed from @Stebandido77:** Which option? Option 2 or 3 would also allow removing the `_normalize_empalme_columns` code duplication in favor of a shared helper.
+**Consequence:** A shared helper `_normalize_dane_columns()` in `parser.py` replaces the duplicated logic in `empalme.py::_normalize_empalme_columns()`. Column name `fex_c_2011` is no longer exposed to users; `FEX_C` is the canonical name. Any user code checking for `fex_c_2011` directly must be updated — this is acceptable because the library is pre-v1.0.
 
 ---
 
-### OQ-2: Output format for `describe_variable()` (Line B)
+### Decision OQ-2: `describe_variable()` output format — **dict**
 
-Should `describe_variable(name)` return:
-- **a) A Python dict** — easy to serialize, familiar to researchers coming from JSON APIs.
-- **b) A named dataclass / frozen object** — type-safe, IDE-autocomplete, harder to extend.
-- **c) A DataFrame** — consistent with `list_variables()`, good for display but awkward for nested structures like epoch mappings.
+**Chosen:** `describe_variable(name)` returns a Python `dict`.
 
-> **Decision needed from @Stebandido77:** Preferred output type.
+**Justification:** Researchers coming from JSON APIs and REPL-driven workflows find dicts easier to inspect than dataclasses. The nested structure of epoch mappings (`{"geih_2006_2020": {"source_variable": ...}, ...}`) maps naturally to a dict; flattening it into a DataFrame would require awkward multi-level indexing. The return value mirrors the structure already present in `variable_map.json`, minimizing transformation overhead.
 
----
-
-### OQ-3: Scope of `describe(module, year)` (Line B)
-
-The current stub for `describe(module, year)` raises `ConfigError` (wrong exception type — likely should be `NotImplementedError`). The intended behavior is unclear from the docstring. Should it:
-- **a)** Return module metadata (level, description, available epochs) — a summary of the module entry in `sources.json`.
-- **b)** Return the full record for a specific (module, year) — including the file paths inside the ZIP.
-- **c)** Return a combined view of module + epoch + variables available for that combination.
-
-> **Decision needed from @Stebandido77:** Intended behavior of `describe(module, year)`.
+`describe_harmonization(variable)` returns a `pd.DataFrame` (one row per epoch) — consistent with `list_variables()` and easy to display in notebooks.
 
 ---
 
-### OQ-4: Phase 5 (PyPI release) prerequisites (all lines)
+### Decision OQ-3: `describe(module, year)` scope — **combined view**
 
-Are all three lines (A, B, C) required before a PyPI release, or is a release acceptable with:
-- `list_variables()` etc. still raising `NotImplementedError` (documented as planned)?
-- Architecture docs as a PR draft rather than merged?
+**Chosen:** Returns a combined dict with `{module_metadata, available_periods, harmonized_variables, raw_columns}`. `year` is optional; if provided, filters to that epoch.
 
-> **Decision needed from @Stebandido77:** What is the minimum viable set for v1.0?
+**Justification:** Researchers want to know both _what modules exist_ and _which harmonized variables they feed_. A combined view answers "what can I get from `ocupados` in 2015?" without chaining multiple calls. The `year` filter maps to an epoch key, so the implementation reuses the existing epoch-resolution logic.
+
+**Shape:**
+```python
+{
+    "module": "ocupados",
+    "level": "persona",
+    "description_es": "...",
+    "available_epochs": ["geih_2006_2020", "geih_2021_present"],
+    "harmonized_variables": ["sexo", "edad", "condicion_actividad", ...],
+    "raw_columns_sample": ["P6020", "P6040", "FEX_C", ...],  # from variable_map
+}
+```
 
 ---
 
-## Decisions Already Taken
+### Decision OQ-4: PyPI v1.0 prerequisites — **Line C + Line A required; Line B deferred to v1.1**
 
-The following design choices are **not** open questions — they were made during Phase 3 / 3.5 and are recorded here for clarity:
+**Chosen execution order: C → A → v1.0 → B → v1.1**
+
+| Milestone | Required lines | Rationale |
+|-----------|---------------|-----------|
+| v1.0 (PyPI first release) | C (architecture docs) + A (parser fix) | Correctness bug (#42) and undocumented architecture are blocking for a public release |
+| v1.1 | B (variable introspection) | Feature addition, not a correctness issue; `list_variables()` etc. can be 🚧 planned at v1.0 |
+
+**Justification:** A PyPI release with a known `MergeError` on valid inputs (issue #42) is unacceptable. Architecture docs (Line C) stabilize the codebase contract before the parser surgery of Line A. Line B is a pure feature addition — researchers can use the library productively at v1.0 without it.
+
+---
+
+## Decisions Already Taken (from Phase 3 / 3.5)
+
+The following design choices were settled before this RFC and are recorded here for completeness:
 
 - **Epoch boundary = 2022-01.** Confirmed empirically via `epoch_for_month()`. The old README said 2020→2021; this is corrected.
 - **Shape C (Empalme) normalizes to uppercase.** `_normalize_empalme_columns()` uppercases all columns and renames `FEX_C_XXXX → FEX_C`. This decision is local to the Empalme path.
