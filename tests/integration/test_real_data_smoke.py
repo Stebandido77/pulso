@@ -50,9 +50,9 @@ def test_real_zip_downloads_and_has_expected_structure(year: int, month: int) ->
     with zipfile.ZipFile(zip_path) as zf:
         names = zf.namelist()
         assert len(names) > 0, f"{year}-{month}: ZIP has no entries"
-        assert any(
-            name.lower().endswith(".csv") for name in names
-        ), f"No CSV files in {zip_path.name}. Entries: {names[:5]}"
+        assert any(name.lower().endswith(".csv") for name in names), (
+            f"No CSV files in {zip_path.name}. Entries: {names[:5]}"
+        )
 
 
 @pytest.mark.integration
@@ -138,6 +138,6 @@ def test_real_zip_checksum_matches_sources_json(year: int, month: int) -> None:
 
     zip_path = get_cached_zip(year, month)
     actual_sha = compute_sha256(zip_path)
-    assert (
-        actual_sha == expected_sha
-    ), f"{key}: checksum mismatch\n  expected: {expected_sha}\n  actual:   {actual_sha}"
+    assert actual_sha == expected_sha, (
+        f"{key}: checksum mismatch\n  expected: {expected_sha}\n  actual:   {actual_sha}"
+    )
