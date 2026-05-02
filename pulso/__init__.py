@@ -30,6 +30,7 @@ from pulso._config.registry import (
     list_modules,
     list_variables,
 )
+from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
 from pulso._utils.cache import cache_clear, cache_info, cache_path
@@ -50,5 +51,6 @@ __all__ = [
     "list_modules",
     "list_variables",
     "load",
+    "load_empalme",
     "load_merged",
 ]

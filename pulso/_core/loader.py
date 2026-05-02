@@ -166,6 +166,7 @@ def load_merged(
     cache: bool = True,
     show_progress: bool = True,
     allow_unvalidated: bool = False,
+    apply_smoothing: bool = False,
 ) -> pd.DataFrame:
     """Load multiple modules, merge on epoch keys, and optionally harmonize.
 
@@ -184,6 +185,9 @@ def load_merged(
         cache: If True, use the local cache.
         show_progress: If True, display a tqdm progress bar.
         allow_unvalidated: If True, allow entries marked validated=false.
+        apply_smoothing: If True and year is in 2010-2019, replace the entire
+            month dataset with the Empalme equivalent (all modules). For year=2020
+            warns and falls back; years outside 2010-2020 are silently unchanged.
 
     Returns:
         Merged (and optionally harmonized) DataFrame at persona level.
@@ -215,6 +219,36 @@ def load_merged(
     multi = len(periods) > 1
 
     for y, mo in periods:
+        # ── Empalme smoothing path ────────────────────────────────────────────
+        if apply_smoothing:
+            from pulso._core.empalme import (
+                EMPALME_DOWNLOADABLE_MAX,
+                EMPALME_YEAR_MAX,
+                EMPALME_YEAR_MIN,
+                _load_empalme_month_merged,
+            )
+
+            if EMPALME_YEAR_MIN <= y <= EMPALME_DOWNLOADABLE_MAX:
+                merged = _load_empalme_month_merged(
+                    y, mo, area=area, harmonize=harmonize, variables=variables
+                )
+                if multi:
+                    merged = merged.assign(year=y, month=mo)
+                all_frames.append(merged)
+                continue
+
+            if y == EMPALME_YEAR_MAX:
+                import warnings
+
+                warnings.warn(
+                    f"apply_smoothing=True requested for {y}-{mo:02d} but the Empalme ZIP "
+                    f"for {y} has not been published by DANE. "
+                    "Falling back to raw GEIH data.",
+                    UserWarning,
+                    stacklevel=2,
+                )
+            # For years outside 2010-2020: silently fall through to normal path.
+        # ── Normal loading path ───────────────────────────────────────────────
         epoch = epoch_for_month(y, mo)
         key = f"{y}-{mo:02d}"
 
