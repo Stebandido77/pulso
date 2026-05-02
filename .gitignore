@@ -26,6 +26,9 @@ pip-delete-this-directory.txt
 # Virtual environments
 .venv/
 .venv-1/
+.venv-pypi-test/
+.venv-smoke/
+.venv-pypi-final/
 venv/
 env/
 ENV/
