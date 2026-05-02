@@ -233,8 +233,7 @@ def load_merged(
                     y, mo, area=area, harmonize=harmonize, variables=variables
                 )
                 if multi:
-                    merged["year"] = y
-                    merged["month"] = mo
+                    merged = merged.assign(year=y, month=mo)
                 all_frames.append(merged)
                 continue
 

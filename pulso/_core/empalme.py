@@ -143,6 +143,44 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
 
 # ── Shape C parsing helpers ───────────────────────────────────────────────────
 
+_FEX_C_PATTERN: re.Pattern[str] = re.compile(r"^FEX_C(?:_\d{4})?$")
+
+
+def _normalize_empalme_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Uppercase all column names and normalize FEX_C year-variants to canonical FEX_C.
+
+    Empalme CSVs have mixed-case columns (e.g. 'Hogar', 'Area', 'Fex_c_2011').
+    The merger and harmonizer expect uppercase names; the weight column must be
+    FEX_C so the rest of the pipeline treats it consistently.
+
+    Step 1: uppercase all columns.
+    Step 2: rename FEX_C_XXXX → FEX_C (covers FEX_C_2011, FEX_C_2018, …).
+    If >1 FEX_C-pattern column is found (unexpected), warn and keep the first.
+    """
+    import warnings
+
+    df = df.copy()
+    df.columns = df.columns.str.upper()
+
+    fex_matches = [c for c in df.columns if _FEX_C_PATTERN.match(c)]
+
+    if len(fex_matches) > 1:
+        warnings.warn(
+            f"Multiple FEX_C-pattern columns found in empalme CSV: {fex_matches}. "
+            f"Keeping {fex_matches[0]!r} as 'FEX_C'; dropping the rest.",
+            UserWarning,
+            stacklevel=3,
+        )
+        df = df.drop(columns=fex_matches[1:])
+        if fex_matches[0] != "FEX_C":
+            df = df.rename(columns={fex_matches[0]: "FEX_C"})
+            logger.debug("Normalized %r → 'FEX_C' (multi-match path)", fex_matches[0])
+    elif len(fex_matches) == 1 and fex_matches[0] != "FEX_C":
+        df = df.rename(columns={fex_matches[0]: "FEX_C"})
+        logger.debug("Normalized column %r → 'FEX_C'", fex_matches[0])
+
+    return df
+
 
 def _detect_month_from_name(name: str) -> int | None:
     """Extract month number from a sub-ZIP name like '6. Junio.zip'.
@@ -179,10 +217,10 @@ def _parse_empalme_module(inner_zip_path: Path, module: str) -> pd.DataFrame:
     """Parse one module from a Shape C (Empalme) monthly sub-ZIP.
 
     Shape C: unified nationwide CSV at ``<NN>. <Mes>/CSV/<ModuleName>.CSV``.
-    No Cabecera/Resto split.
+    No Cabecera/Resto split.  Column names are normalized via
+    _normalize_empalme_columns so the rest of the pipeline sees uppercase names
+    and the canonical FEX_C weight column.
     """
-    import pandas as pd  # noqa: F401 — needed for type resolution
-
     epoch = get_epoch("geih_2006_2020")
     with zipfile.ZipFile(inner_zip_path) as zf:
         csv_name = _find_empalme_module_csv(zf, module)
@@ -193,7 +231,8 @@ def _parse_empalme_module(inner_zip_path: Path, module: str) -> pd.DataFrame:
             )
         with zf.open(csv_name) as fh:
             raw_bytes = fh.read()
-    return _read_csv_with_fallback(raw_bytes, epoch)
+    df = _read_csv_with_fallback(raw_bytes, epoch)
+    return _normalize_empalme_columns(df)
 
 
 def _apply_area_filter(df: pd.DataFrame, area: str) -> pd.DataFrame:
@@ -375,9 +414,7 @@ def load_empalme(
         finally:
             tmp_path.unlink(missing_ok=True)
 
-        df["year"] = year
-        df["month"] = detected_month
-        frames.append(df)
+        frames.append(df.assign(year=year, month=detected_month))
 
     if not frames:
         return pd.DataFrame()

@@ -187,3 +187,56 @@ def test_apply_smoothing_2020_warns_and_falls_back(monkeypatch: pytest.MonkeyPat
 
     # Shapes must match: smoothing fell back to the raw path
     assert result_smooth.shape == result_raw.shape
+
+
+# ── _normalize_empalme_columns unit tests ─────────────────────────────────────
+
+
+def test_normalize_empalme_columns_uppercases_all() -> None:
+    """All column names must be uppercased by _normalize_empalme_columns."""
+    import pandas as pd
+
+    from pulso._core.empalme import _normalize_empalme_columns
+
+    df = pd.DataFrame({"Hogar": [1], "Area": [2], "directorio": [3], "FEX_C": [4]})
+    result = _normalize_empalme_columns(df)
+
+    assert list(result.columns) == ["HOGAR", "AREA", "DIRECTORIO", "FEX_C"]
+
+
+def test_normalize_empalme_columns_renames_fex_variants() -> None:
+    """FEX_C_XXXX variants must be renamed to canonical FEX_C; others untouched."""
+    import warnings
+
+    import pandas as pd
+
+    from pulso._core.empalme import _normalize_empalme_columns
+
+    # FEX_C_2011 → FEX_C
+    df_2011 = pd.DataFrame({"FEX_C_2011": [1.0], "P6020": [1]})
+    r = _normalize_empalme_columns(df_2011)
+    assert "FEX_C" in r.columns, "FEX_C_2011 must be renamed to FEX_C"
+    assert "FEX_C_2011" not in r.columns
+    assert "P6020" in r.columns  # unrelated column untouched
+
+    # FEX_C_2018 → FEX_C
+    df_2018 = pd.DataFrame({"fex_c_2018": [2.0]})
+    r2 = _normalize_empalme_columns(df_2018)
+    assert "FEX_C" in r2.columns
+
+    # FEX_C already canonical → idempotent
+    df_canonical = pd.DataFrame({"FEX_C": [3.0]})
+    r3 = _normalize_empalme_columns(df_canonical)
+    assert "FEX_C" in r3.columns
+    assert r3["FEX_C"].iloc[0] == 3.0
+
+    # Duplicate FEX_C + FEX_C_2011 → warns, keeps one
+    df_dual = pd.DataFrame({"FEX_C": [1.0], "FEX_C_2011": [2.0], "P6040": [3]})
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        r4 = _normalize_empalme_columns(df_dual)
+    assert any(
+        "Multiple FEX_C" in str(w.message) for w in caught
+    ), "Expected UserWarning about multiple FEX_C columns"
+    assert "FEX_C" in r4.columns
+    assert r4.columns.tolist().count("FEX_C") == 1  # only one FEX_C column
