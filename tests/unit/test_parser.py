@@ -399,3 +399,60 @@ def test_parse_shape_a_raises_when_module_missing(tmp_path: Path, shape_a_epoch:
 
     with pytest.raises(ParseError, match="vivienda_hogares"):
         parse_shape_a_module(zip_path, "vivienda_hogares", shape_a_epoch)
+
+
+# ---------------------------------------------------------------------------
+# Regression tests: word-boundary keyword matching (Phase 3.3.1 hotfix)
+# ---------------------------------------------------------------------------
+
+
+def test_find_shape_a_files_distinguishes_ocupados_from_desocupados(tmp_path: Path) -> None:
+    """Regression: 'ocupados' must NOT match 'Desocupados' as a substring.
+
+    Before this fix, searching for module 'ocupados' would match
+    'Cabecera - Desocupados.csv' because 'ocupados' is a substring of 'desocupados'.
+    """
+    from pulso._core.parser import find_shape_a_files
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Cabecera - Desocupados.csv", "x")
+        zf.writestr("CSV/Resto - Desocupados.csv", "x")
+
+    cab, resto = find_shape_a_files(zip_path, "ocupados")
+    assert cab is None, f"Expected no match for 'ocupados', got: {cab}"
+    assert resto is None, f"Expected no match for 'ocupados', got: {resto}"
+
+
+def test_find_shape_a_files_robust_to_filename_order(tmp_path: Path) -> None:
+    """Regression: file order in the ZIP must not affect keyword-match correctness.
+
+    Before this fix, fixtures relied on alphabetical ordering (D < O) so that
+    'Ocupados' would overwrite 'Desocupados' as the last match. Real DANE ZIPs
+    do not guarantee any file order, so the fix must work regardless of order.
+    """
+    from pulso._core.parser import find_shape_a_files
+
+    zip_path = tmp_path / "test.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        # Desocupados written FIRST (non-alphabetical: if old code iterated this
+        # order and Ocupados came after, Ocupados would win by last-match — but
+        # in real ZIPs the order could be reversed, so the fix must not rely on it)
+        zf.writestr("CSV/Cabecera - Desocupados.csv", "x")
+        zf.writestr("CSV/Resto - Desocupados.csv", "x")
+        zf.writestr("CSV/Cabecera - Ocupados.csv", "x")
+        zf.writestr("CSV/Resto - Ocupados.csv", "x")
+
+    cab_o, resto_o = find_shape_a_files(zip_path, "ocupados")
+    assert cab_o is not None, "Expected to find Cabecera - Ocupados"
+    assert "Ocupados" in cab_o, f"Wrong file matched: {cab_o}"
+    assert "Desocupados" not in cab_o, f"Matched Desocupados instead of Ocupados: {cab_o}"
+    assert resto_o is not None
+    assert "Ocupados" in resto_o, f"Wrong file: {resto_o}"
+    assert "Desocupados" not in resto_o, f"Matched Desocupados instead of Ocupados: {resto_o}"
+
+    cab_d, resto_d = find_shape_a_files(zip_path, "desocupados")
+    assert cab_d is not None
+    assert "Desocupados" in cab_d, f"Wrong file matched: {cab_d}"
+    assert resto_d is not None
+    assert "Desocupados" in resto_d, f"Wrong file: {resto_d}"

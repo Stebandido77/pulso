@@ -14,6 +14,7 @@ Shape A auto-discovery (Phase 3.2.B):
 
 from __future__ import annotations
 
+import re
 import zipfile
 from typing import TYPE_CHECKING, Literal, cast
 
@@ -90,8 +91,9 @@ def find_shape_a_files(
         else:
             continue
 
-        # Match at least one keyword
-        if not any(kw.lower() in lower for kw in keywords):
+        # Match at least one keyword using word-boundary regex so that e.g.
+        # "ocupados" does NOT match inside "desocupados".
+        if not any(re.search(r"\b" + re.escape(kw.lower()) + r"\b", lower) for kw in keywords):
             continue
 
         if prefix == "cabecera":
