@@ -76,6 +76,33 @@ pulso-add-month = "scripts.add_month:main"
 [tool.hatch.build.targets.wheel]
 packages = ["pulso"]
 
+[tool.hatch.build.targets.sdist]
+include = [
+    "pulso/",
+    "tests/",
+    "docs/",
+    "scripts/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "pyproject.toml",
+]
+exclude = [
+    ".venv*",
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/*.pyc",
+    ".git",
+    ".github",
+    ".gitignore",
+    ".ruff_cache",
+    ".mypy_cache",
+    "scripts/_spike_phase35",
+    "scripts/scrape_cache",
+    "dist/",
+    "build/",
+]
+
 
 # ─── Testing ──────────────────────────────────────────────────────────
 
