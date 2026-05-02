@@ -35,7 +35,7 @@ from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
 from pulso._utils.cache import cache_clear, cache_info, cache_path
 
-__version__ = "0.0.1"
+__version__ = "1.0.0rc1"
 
 __all__ = [
     "__version__",
