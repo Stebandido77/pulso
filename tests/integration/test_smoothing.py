@@ -40,34 +40,34 @@ def test_smoothing_2015_06_real() -> None:
         df_smooth = pulso.load_merged(2015, 6, harmonize=True, apply_smoothing=True)
 
     # Plausible shape for national GEIH 2015-06 (no raw baseline available)
-    assert (
-        df_smooth.shape[0] > 50_000
-    ), f"Smoothed 2015-06 must have plausible row count for national GEIH, got {df_smooth.shape[0]}"
-    assert (
-        df_smooth.shape[0] < 100_000
-    ), f"Smoothed 2015-06 row count suspiciously high (likely duplicated): {df_smooth.shape[0]}"
-    assert (
-        df_smooth.shape[1] >= 300
-    ), f"Smoothed dataframe must have >=300 columns post-harmonize, got {df_smooth.shape[1]}"
+    assert df_smooth.shape[0] > 50_000, (
+        f"Smoothed 2015-06 must have plausible row count for national GEIH, got {df_smooth.shape[0]}"
+    )
+    assert df_smooth.shape[0] < 100_000, (
+        f"Smoothed 2015-06 row count suspiciously high (likely duplicated): {df_smooth.shape[0]}"
+    )
+    assert df_smooth.shape[1] >= 300, (
+        f"Smoothed dataframe must have >=300 columns post-harmonize, got {df_smooth.shape[1]}"
+    )
 
     # Bug 1 regressions: column normalisation
-    assert (
-        "FEX_C" in df_smooth.columns
-    ), "Smoothed DataFrame must expose canonical FEX_C column (empalme column normaliser)"
-    assert "fex_c_2011" not in {
-        c.lower() for c in df_smooth.columns
-    }, "fex_c_2011 must have been renamed to FEX_C by _normalize_empalme_columns"
-    assert (
-        "HOGAR" in df_smooth.columns
-    ), "HOGAR must be uppercase — merger key normalisation required"
+    assert "FEX_C" in df_smooth.columns, (
+        "Smoothed DataFrame must expose canonical FEX_C column (empalme column normaliser)"
+    )
+    assert "fex_c_2011" not in {c.lower() for c in df_smooth.columns}, (
+        "fex_c_2011 must have been renamed to FEX_C by _normalize_empalme_columns"
+    )
+    assert "HOGAR" in df_smooth.columns, (
+        "HOGAR must be uppercase — merger key normalisation required"
+    )
     # Normalised raw DANE columns are all-uppercase; canonical harmonised columns are
     # lowercase snake_case.  Check only the uppercase set for duplicates — the
     # harmonizer intentionally adds a canonical 'area' alongside the raw 'AREA'.
     raw_cols = [c for c in df_smooth.columns if c == c.upper()]
     raw_lower = [c.lower() for c in raw_cols]
-    assert len(set(raw_lower)) == len(
-        raw_lower
-    ), "Normalised DANE columns must have no case-insensitive duplicates"
+    assert len(set(raw_lower)) == len(raw_lower), (
+        "Normalised DANE columns must have no case-insensitive duplicates"
+    )
 
     # No Python warnings.warn() about these strings (harmonizer uses logger.warning,
     # not warnings.warn, so this is a guard against accidental warnings.warn calls).
@@ -98,21 +98,21 @@ def test_load_empalme_2015_real() -> None:
     assert df["year"].nunique() == 1, "All rows must have the same year"
     assert df["year"].iloc[0] == 2015, "year column must equal 2015"
     assert "month" in df.columns
-    assert set(df["month"].unique()) == set(
-        range(1, 13)
-    ), f"Expected all 12 months, got: {sorted(df['month'].unique())}"
+    assert set(df["month"].unique()) == set(range(1, 13)), (
+        f"Expected all 12 months, got: {sorted(df['month'].unique())}"
+    )
 
     # Bug 1 regression: FEX_C column present and non-null
-    assert (
-        "FEX_C" in df.columns
-    ), "FEX_C must be present — empalme column normaliser must rename fex_c_2011 → FEX_C"
+    assert "FEX_C" in df.columns, (
+        "FEX_C must be present — empalme column normaliser must rename fex_c_2011 → FEX_C"
+    )
     assert df["FEX_C"].notna().sum() > 0, "FEX_C must have at least some non-null values"
 
     # Row count sanity: ~50k-100k rows per month plausible for national GEIH data
     rows_per_month = df.groupby("month").size()
-    assert (
-        rows_per_month.min() > 5_000
-    ), f"Suspiciously few rows in at least one month: {rows_per_month.to_dict()}"
+    assert rows_per_month.min() > 5_000, (
+        f"Suspiciously few rows in at least one month: {rows_per_month.to_dict()}"
+    )
 
     # No Python warnings.warn() calls about these strings
     fex_warns = [w for w in caught if "fex_c_2011" in str(w.message).lower()]

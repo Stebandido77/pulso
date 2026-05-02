@@ -235,8 +235,8 @@ def test_normalize_empalme_columns_renames_fex_variants() -> None:
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         r4 = _normalize_empalme_columns(df_dual)
-    assert any(
-        "Multiple FEX_C" in str(w.message) for w in caught
-    ), "Expected UserWarning about multiple FEX_C columns"
+    assert any("Multiple FEX_C" in str(w.message) for w in caught), (
+        "Expected UserWarning about multiple FEX_C columns"
+    )
     assert "FEX_C" in r4.columns
     assert r4.columns.tolist().count("FEX_C") == 1  # only one FEX_C column
