@@ -38,9 +38,9 @@ def test_all_11_years_present(empalme_data: dict) -> None:
     """All years 2010-2020 must be present as keys under data."""
     expected = {str(y) for y in range(2010, 2021)}
     actual = set(empalme_data["data"].keys())
-    assert (
-        actual == expected
-    ), f"Missing years: {expected - actual}, unexpected: {actual - expected}"
+    assert actual == expected, (
+        f"Missing years: {expected - actual}, unexpected: {actual - expected}"
+    )
 
 
 def test_idno_2020_anomaly(empalme_data: dict) -> None:
@@ -53,9 +53,9 @@ def test_idno_pattern_other_years(empalme_data: dict) -> None:
     for year in range(2010, 2020):
         entry = empalme_data["data"][str(year)]
         expected = f"DANE-DIMPE-GEIH-EMPALME-{year}"
-        assert (
-            entry["idno"] == expected
-        ), f"Year {year}: expected {expected!r}, got {entry['idno']!r}"
+        assert entry["idno"] == expected, (
+            f"Year {year}: expected {expected!r}, got {entry['idno']!r}"
+        )
 
 
 def test_2020_not_downloadable(empalme_data: dict) -> None:
@@ -89,9 +89,9 @@ def test_download_url_pattern(empalme_data: dict) -> None:
 def test_2013_typo_documented(empalme_data: dict) -> None:
     """2013 ZIP filename must preserve DANE's typo and document it in notes."""
     entry = empalme_data["data"]["2013"]
-    assert (
-        entry["zip_filename"] == "GEIH_Emplame_2013.zip"
-    ), "2013 filename must keep DANE's typo ('Emplame' not 'Empalme')"
+    assert entry["zip_filename"] == "GEIH_Emplame_2013.zip", (
+        "2013 filename must keep DANE's typo ('Emplame' not 'Empalme')"
+    )
     assert entry["notes"] is not None, "2013 notes must not be null"
     assert "typo" in entry["notes"].lower(), "2013 notes must document the filename typo"
 
