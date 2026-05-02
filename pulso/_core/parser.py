@@ -206,18 +206,17 @@ def parse_shape_a_module(
         if cab_name:
             with zf.open(cab_name) as fh:
                 raw = fh.read()
-            df_cab: pd.DataFrame = _read_csv_with_fallback(raw, epoch)
+            df_cab: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
             df_cab["CLASE"] = 1
             dfs.append(df_cab)
         if resto_name:
             with zf.open(resto_name) as fh:
                 raw = fh.read()
-            df_resto: pd.DataFrame = _read_csv_with_fallback(raw, epoch)
+            df_resto: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
             df_resto["CLASE"] = 2
             dfs.append(df_resto)
 
-    result = dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
-    return _normalize_dane_columns(result)
+    return dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
 
 
 def _parse_csv(

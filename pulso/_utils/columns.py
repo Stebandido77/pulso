@@ -30,6 +30,16 @@ def _normalize_dane_columns(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df.columns = df.columns.str.upper()
 
+    # Detect columns that collided after uppercasing (e.g. 'Clase' + 'CLASE').
+    if df.columns.duplicated().any():
+        dupes = [c for c in df.columns if (df.columns == c).sum() > 1]
+        warnings.warn(
+            f"Columns {dupes} collide post-uppercase. Keeping first occurrence.",
+            UserWarning,
+            stacklevel=3,
+        )
+        df = df.loc[:, ~df.columns.duplicated()]
+
     fex_matches = [c for c in df.columns if _FEX_C_PATTERN.match(c)]
 
     if len(fex_matches) > 1:
