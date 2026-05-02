@@ -107,6 +107,24 @@ def test_catalog_ids_are_unique(empalme_data: dict) -> None:
     assert len(ids) == len(set(ids)), f"Duplicate catalog_ids: {ids}"
 
 
+def test_all_downloadable_have_checksum(empalme_data: dict) -> None:
+    """Every downloadable entry must have a 64-char hex SHA-256 checksum."""
+    import re
+
+    hex64 = re.compile(r"^[a-f0-9]{64}$")
+    for year, entry in empalme_data["data"].items():
+        if entry["downloadable"]:
+            cs = entry["checksum_sha256"]
+            assert cs is not None, f"Year {year}: checksum_sha256 must not be null"
+            assert isinstance(cs, str), f"Year {year}: checksum_sha256 must be a string"
+            assert hex64.match(cs), f"Year {year}: checksum_sha256 must be 64 hex chars, got {cs!r}"
+        else:
+            # Non-downloadable entries must keep checksum null
+            assert entry["checksum_sha256"] is None, (
+                f"Year {year}: non-downloadable entry must have checksum_sha256 null"
+            )
+
+
 @pytest.mark.integration
 def test_download_urls_resolvable(empalme_data: dict) -> None:
     """All active download URLs must return HTTP 200 with Content-Length > 0."""
