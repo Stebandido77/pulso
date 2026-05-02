@@ -3,7 +3,7 @@
     "schema_version": "1.0",
     "data_version": "2020",
     "description": "Annual GEIH Empalme microdata catalogs (2010-2020). Each download is one ZIP per year containing 12 monthly sub-ZIPs with Cabecera/Resto structure (geih_2006_2020 epoch). Download URLs verified via HTTP HEAD on 2026-05-01. 2020 catalog exists on DANE portal but the ZIP has not been published.",
-    "scraped_at": "2026-05-01T00:00:00Z"
+    "scraped_at": "2026-05-02T00:00:00Z"
   },
   "data": {
     "2010": {
@@ -14,7 +14,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/765",
       "zip_filename": "GEIH_Empalme_2010.zip",
       "size_bytes": 219702328,
-      "checksum_sha256": null,
+      "checksum_sha256": "117bc35cbcdc56cc64b4282a8497f6608e45ad07d58c6f5a67fead7abf948140",
       "notes": null
     },
     "2011": {
@@ -25,7 +25,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/755",
       "zip_filename": "GEIH_Empalme_2011.zip",
       "size_bytes": 224312554,
-      "checksum_sha256": null,
+      "checksum_sha256": "c2352f46e2023d1e71ff99415afcf01e0b9605b2e2b62dd773e14c22a540dccb",
       "notes": null
     },
     "2012": {
@@ -36,7 +36,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/760",
       "zip_filename": "GEIH_Empalme_2012.zip",
       "size_bytes": 261280670,
-      "checksum_sha256": null,
+      "checksum_sha256": "22a10ae2163a8536fc7d6451cd884ca3f61749a85822b94ac11cf0182aa558c1",
       "notes": null
     },
     "2013": {
@@ -47,7 +47,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/761",
       "zip_filename": "GEIH_Emplame_2013.zip",
       "size_bytes": 252617638,
-      "checksum_sha256": null,
+      "checksum_sha256": "d7ab57fac1dd78aeafa26059ff18a6540241b34f4f68ba31a8d6a963467c02cb",
       "notes": "DANE typo in ZIP filename: 'GEIH_Emplame_2013.zip' (missing 'p' in Empalme). This is the actual filename served by the server and must be preserved as-is."
     },
     "2014": {
@@ -58,7 +58,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/756",
       "zip_filename": "GEIH_Empalme_2014.zip",
       "size_bytes": 258217796,
-      "checksum_sha256": null,
+      "checksum_sha256": "6da4a1cfe30a885cc87d329278414001a9311ff40f69f30a222704ccc0b03fd0",
       "notes": null
     },
     "2015": {
@@ -69,7 +69,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/762",
       "zip_filename": "GEIH_Empalme_2015.zip",
       "size_bytes": 229540468,
-      "checksum_sha256": null,
+      "checksum_sha256": "cde835eb5575733aa5b80da86c0054de0e890dcaed056931f5839aa5a134e653",
       "notes": null
     },
     "2016": {
@@ -80,7 +80,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/757",
       "zip_filename": "GEIH_Empalme_2016.zip",
       "size_bytes": 230131436,
-      "checksum_sha256": null,
+      "checksum_sha256": "d08372d7b22456937eb8c693126df0985bea331672ffb6f8877559075017c1db",
       "notes": null
     },
     "2017": {
@@ -91,7 +91,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/763",
       "zip_filename": "GEIH_Empalme_2017.zip",
       "size_bytes": 234080087,
-      "checksum_sha256": null,
+      "checksum_sha256": "24bc5f0b7ef4a6bacfd4444626733526362d4ed154d6cb7e948e4a7a9599bb7d",
       "notes": null
     },
     "2018": {
@@ -102,7 +102,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/758",
       "zip_filename": "GEIH_Empalme_2018.zip",
       "size_bytes": 234063925,
-      "checksum_sha256": null,
+      "checksum_sha256": "10dab7928571389c8c4a130c5f3831e3b45e40995f5a52f9deb8ff85cdc473a5",
       "notes": null
     },
     "2019": {
@@ -113,7 +113,7 @@
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/759",
       "zip_filename": "GEIH_Empalme_2019.zip",
       "size_bytes": 231904344,
-      "checksum_sha256": null,
+      "checksum_sha256": "455871963a7d921ef8452007af8f9eb9177f1608fdefe15e80fa7f8431097e53",
       "notes": null
     },
     "2020": {
