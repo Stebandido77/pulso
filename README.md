@@ -93,13 +93,13 @@ El año 2020 existe en el catálogo del DANE pero el ZIP no ha sido publicado; `
 ### Instalación
 
 ```bash
-pip install pulso
+pip install pulso-co
 ```
 
 ### Quickstart
 
 ```python
-import pulso
+import pulso-co as pulso
 
 # 1. Ver qué hay disponible
 disponible = pulso.list_available()              # todos los meses
@@ -239,7 +239,7 @@ Three things it does:
 - **Harmonize** — maps raw DANE column codes (`P6020`, `FEX_C18`, …) to named canonical variables (`sexo`, `peso_expansion`, …) consistently across methodological epochs.
 
 ```python
-import pulso
+import pulso-co as pulso
 
 # Load one module, one month
 df = pulso.load(year=2024, month=6, module="ocupados")
@@ -309,7 +309,7 @@ pip install pulso
 ### Quickstart
 
 ```python
-import pulso
+import pulso-co as pulso 
 
 # 1. See what's available
 available = pulso.list_available()          # all months
