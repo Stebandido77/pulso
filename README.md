@@ -29,7 +29,7 @@ Tres cosas que hace:
 - **Armoniza** — mapea los códigos de columna crudos del DANE (`P6020`, `FEX_C18`, …) a variables canónicas nombradas (`sexo`, `peso_expansion`, …) de forma consistente entre épocas metodológicas.
 
 ```python
-import pulso
+import pulso-co as pulso 
 
 # Cargar un módulo, un mes
 df = pulso.load(year=2024, month=6, module="ocupados")
