@@ -3,7 +3,7 @@ requires = ["hatchling>=1.18"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pulso"
+name = "pulso-co"
 version = "1.0.0rc1"
 description = "Python library to load GEIH microdata from Colombia's DANE"
 readme = "README.md"
