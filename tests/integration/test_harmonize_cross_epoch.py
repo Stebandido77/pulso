@@ -88,9 +88,9 @@ def test_harmonize_produces_canonical_variables(
 
     harmonized = harmonize_dataframe(merged, epoch)
 
-    assert isinstance(
-        harmonized, pd.DataFrame
-    ), f"[{key}] harmonize_dataframe must return DataFrame"
+    assert isinstance(harmonized, pd.DataFrame), (
+        f"[{key}] harmonize_dataframe must return DataFrame"
+    )
     assert len(harmonized) > 0, f"[{key}] harmonized DataFrame must be non-empty"
 
     actual_canonical = {v for v in _CANONICAL_VARS if v in harmonized.columns}

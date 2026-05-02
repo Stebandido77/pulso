@@ -52,7 +52,7 @@ def test_load_all_modules_from_entry(
 
     for module_name in entry["modules"]:
         df = parse_module(zip_path, year, month, module_name, "total", epoch)
-        assert isinstance(
-            df, pd.DataFrame
-        ), f"[{year_month}] Module {module_name!r} did not return a DataFrame"
+        assert isinstance(df, pd.DataFrame), (
+            f"[{year_month}] Module {module_name!r} did not return a DataFrame"
+        )
         assert len(df) > 0, f"[{year_month}] Module {module_name!r} returned empty DataFrame"
