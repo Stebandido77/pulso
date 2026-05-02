@@ -7,13 +7,11 @@ Requires:
 - Internet connection (first run only; subsequent runs use the local cache)
 - ~160 MB disk space in ~/.cache/pulso/raw_zips/
 
-Known issues discovered (documented in docs/PHASE_3_DATA_NOTES.md):
-- 2007-12, 2015-06: UTF-8 BOM in CSV files decoded as latin-1 mangles the first
-  column name to 'ï»¿DIRECTORIO' / 'ï»¿Directorio'. The load test is adapted to
-  accept BOM-prefixed column names.
-- 2022-01: CSV files use comma separator (not semicolon) while the epoch config
-  expects semicolon. Loading produces a single-column DataFrame with raw CSV text.
-  The load test is skipped for 2022-01 until the epoch config is updated.
+Known issues fixed in Phase 3.4.1:
+- 2007-12, 2015-06: UTF-8 BOM in CSV files decoded as latin-1 mangled the first
+  column name to 'ï»¿DIRECTORIO'. Fixed via BOM stripping in _read_csv_with_fallback.
+- 2022-01: CSV uses comma separator while epoch declares semicolon. Fixed via
+  separator auto-detect fallback in _read_csv_with_fallback.
 """
 
 from __future__ import annotations
@@ -32,9 +30,8 @@ REPRESENTATIVE_MONTHS = [
     (2024, 6),
 ]
 
-# Months where the CSV separator in the real ZIP does not match the epoch config.
-# Affected by comma vs semicolon mismatch; load test is skipped until fixed.
-_SEPARATOR_MISMATCH_MONTHS = {(2022, 1)}
+# No months are skipped: separator mismatch is handled by _read_csv_with_fallback.
+_SEPARATOR_MISMATCH_MONTHS: set[tuple[int, int]] = set()
 
 
 @pytest.mark.integration
