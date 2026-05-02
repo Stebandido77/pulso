@@ -97,6 +97,7 @@ markers = [
     "slow: tests that hit the network or take >1s (deselect with '-m \"not slow\"')",
     "integration: tests that require real DANE data (require --run-integration)",
     "unit: fast unit tests (default)",
+    "real_data: tests requiring real DANE downloads (slow, network-dependent)",
 ]
 filterwarnings = [
     "error",
