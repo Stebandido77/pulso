@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pulso"
-version = "0.0.1"
+version = "1.0.0rc1"
 description = "Python library to load GEIH microdata from Colombia's DANE"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["dane", "geih", "colombia", "microdata", "labor-force-survey", "encuesta-hogares", "pulso"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -76,11 +76,6 @@ pulso-add-month = "scripts.add_month:main"
 [tool.hatch.build.targets.wheel]
 packages = ["pulso"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"pulso/data/sources.json" = "pulso/data/sources.json"
-"pulso/data/variable_map.json" = "pulso/data/variable_map.json"
-"pulso/data/epochs.json" = "pulso/data/epochs.json"
-"pulso/data/schemas" = "pulso/data/schemas"
 
 # ─── Testing ──────────────────────────────────────────────────────────
 
