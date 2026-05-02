@@ -23,6 +23,7 @@ import requests
 from pulso._config.epochs import get_epoch
 from pulso._core.parser import MODULE_KEYWORDS_GEIH1, _read_csv_with_fallback
 from pulso._utils.cache import cache_path
+from pulso._utils.columns import _normalize_dane_columns
 from pulso._utils.exceptions import DataNotAvailableError, DownloadError, ParseError
 
 if TYPE_CHECKING:
@@ -143,43 +144,10 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
 
 # ── Shape C parsing helpers ───────────────────────────────────────────────────
 
-_FEX_C_PATTERN: re.Pattern[str] = re.compile(r"^FEX_C(?:_\d{4})?$")
-
 
 def _normalize_empalme_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Uppercase all column names and normalize FEX_C year-variants to canonical FEX_C.
-
-    Empalme CSVs have mixed-case columns (e.g. 'Hogar', 'Area', 'Fex_c_2011').
-    The merger and harmonizer expect uppercase names; the weight column must be
-    FEX_C so the rest of the pipeline treats it consistently.
-
-    Step 1: uppercase all columns.
-    Step 2: rename FEX_C_XXXX → FEX_C (covers FEX_C_2011, FEX_C_2018, …).
-    If >1 FEX_C-pattern column is found (unexpected), warn and keep the first.
-    """
-    import warnings
-
-    df = df.copy()
-    df.columns = df.columns.str.upper()
-
-    fex_matches = [c for c in df.columns if _FEX_C_PATTERN.match(c)]
-
-    if len(fex_matches) > 1:
-        warnings.warn(
-            f"Multiple FEX_C-pattern columns found in empalme CSV: {fex_matches}. "
-            f"Keeping {fex_matches[0]!r} as 'FEX_C'; dropping the rest.",
-            UserWarning,
-            stacklevel=3,
-        )
-        df = df.drop(columns=fex_matches[1:])
-        if fex_matches[0] != "FEX_C":
-            df = df.rename(columns={fex_matches[0]: "FEX_C"})
-            logger.debug("Normalized %r → 'FEX_C' (multi-match path)", fex_matches[0])
-    elif len(fex_matches) == 1 and fex_matches[0] != "FEX_C":
-        df = df.rename(columns={fex_matches[0]: "FEX_C"})
-        logger.debug("Normalized column %r → 'FEX_C'", fex_matches[0])
-
-    return df
+    """Normalize Empalme CSV columns. Delegates to shared _normalize_dane_columns."""
+    return _normalize_dane_columns(df)
 
 
 def _detect_month_from_name(name: str) -> int | None:
