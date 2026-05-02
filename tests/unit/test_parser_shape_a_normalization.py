@@ -62,6 +62,17 @@ def test_normalize_shape_a_warns_on_multiple_fex() -> None:
     assert "FEX_C_2011" not in result.columns
 
 
+def test_normalize_dane_columns_drops_duplicates_with_warning() -> None:
+    """Columns that collide after uppercasing must warn and keep first occurrence."""
+    from pulso._utils.columns import _normalize_dane_columns
+
+    df = pd.DataFrame({"Clase": [1, 2], "CLASE": [3, 4]})
+    with pytest.warns(UserWarning, match="collide"):
+        result = _normalize_dane_columns(df)
+    assert list(result.columns) == ["CLASE"]
+    assert result["CLASE"].tolist() == [1, 2]  # first wins
+
+
 def test_normalize_shape_a_preserves_data() -> None:
     """Data values must not change — only column names."""
     from pulso._utils.columns import _normalize_dane_columns
