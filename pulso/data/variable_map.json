@@ -76,12 +76,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6040",
-          "transform": {"op": "custom", "name": "bin_edad_quinquenal"},
+          "transform": {
+            "op": "custom",
+            "name": "bin_edad_quinquenal"
+          },
           "source_doc": "DANE Ficha Técnica GEIH — calculado a partir de P6040 (edad)."
         },
         "geih_2021_present": {
           "source_variable": "P6040",
-          "transform": {"op": "custom", "name": "bin_edad_quinquenal"},
+          "transform": {
+            "op": "custom",
+            "name": "bin_edad_quinquenal"
+          },
           "source_doc": "DANE Ficha Técnica GEIH 2024 — calculado a partir de P6040 (edad)."
         }
       }
@@ -196,7 +202,11 @@
           "source_variable": "CLASE",
           "transform": {
             "op": "recode",
-            "mapping": {"1": "cabecera", "2": "centro_poblado", "3": "rural_disperso"}
+            "mapping": {
+              "1": "cabecera",
+              "2": "centro_poblado",
+              "3": "rural_disperso"
+            }
           },
           "source_doc": "Diccionario GEIH (marco 2005). Archivos Cabecera/ → CLASE=1; archivos Resto/ → CLASE=2 o 3.",
           "notes": "En GEIH-1, la columna CLASE puede no existir en todos los archivos. Si ausente, inferir del nombre del directorio (Cabecera/→cabecera, Resto/→resto)."
@@ -205,7 +215,11 @@
           "source_variable": "CLASE",
           "transform": {
             "op": "recode",
-            "mapping": {"1": "cabecera", "2": "centro_poblado", "3": "rural_disperso"}
+            "mapping": {
+              "1": "cabecera",
+              "2": "centro_poblado",
+              "3": "rural_disperso"
+            }
           },
           "source_doc": "Diccionario GEIH (marco 2018). CLASE: 1=cabecera municipal, 2=centro poblado, 3=rural disperso. Confirmado en June 2024."
         }
@@ -299,12 +313,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6170",
-          "transform": {"op": "compute", "expr": "P6170 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6170 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P6170: 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "P6170",
-          "transform": {"op": "compute", "expr": "P6170 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6170 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
         }
       }
@@ -319,12 +339,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6160",
-          "transform": {"op": "compute", "expr": "P6160 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6160 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P6160: 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "P6160",
-          "transform": {"op": "compute", "expr": "P6160 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6160 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
         }
       }
@@ -349,8 +375,14 @@
           "notes": "En GEIH-1, OCI probablemente disponible en módulo Fuerza de trabajo o Características generales. Requiere verificación con datos reales de algún año 2006-2020."
         },
         "geih_2021_present": {
-          "source_variable": ["OCI", "DSI"],
-          "transform": {"op": "custom", "name": "merge_labor_status"},
+          "source_variable": [
+            "OCI",
+            "DSI"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "merge_labor_status"
+          },
           "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en ocupados.CSV (todos = 1); DSI en no_ocupados.CSV (1=desocupado, NaN=inactivo).",
           "notes": "Función merge_labor_status: para registros en ocupados → condicion=1; para registros en no_ocupados con DSI=1 → condicion=2; DSI=NaN → condicion=3."
         }
@@ -425,12 +457,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6240",
-          "transform": {"op": "compute", "expr": "P6240 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6240 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P6240: ¿Buscó trabajo la semana pasada? 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "DSI",
-          "transform": {"op": "compute", "expr": "DSI == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "DSI == 1"
+          },
           "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados. DSI=1 indica desocupado (buscó trabajo activamente).",
           "notes": "DSI es indicador derivado en no_ocupados.CSV. Valor 1=desocupado (búsqueda activa confirmada). No se encontró pregunta binaria directa equivalente a P6240 en no_ocupados de June 2024."
         }
@@ -446,12 +484,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P7290",
-          "transform": {"op": "compute", "expr": "P7290 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P7290 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P7290: ¿Estaría disponible para trabajar? 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "P7280",
-          "transform": {"op": "compute", "expr": "P7280 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P7280 == 1"
+          },
           "source_doc": "DANE Ficha Técnica GEIH 2024, módulo No ocupados.",
           "notes": "P7290 (especificado en Phase 2) no encontrado en no_ocupados.CSV de June 2024. P7280 es la variable de disponibilidad más próxima observada. Requiere verificación contra cuestionario DANE."
         }
@@ -582,12 +626,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6440",
-          "transform": {"op": "compute", "expr": "P6440 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6440 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P6440: ¿Tiene contrato escrito? 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "P6440",
-          "transform": {"op": "compute", "expr": "P6440 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6440 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
         }
       }
@@ -629,12 +679,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P6920",
-          "transform": {"op": "compute", "expr": "P6920 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6920 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P6920: ¿Cotiza a pensión? 1=Sí, 2=No."
         },
         "geih_2021_present": {
           "source_variable": "P6920",
-          "transform": {"op": "compute", "expr": "P6920 == 1"},
+          "transform": {
+            "op": "compute",
+            "expr": "P6920 == 1"
+          },
           "source_doc": "Diccionario GEIH (marco 2018). Confirmado en June 2024. 1=Sí, 2=No."
         }
       }
@@ -655,8 +711,19 @@
           "notes": "Verificar disponibilidad de INGTOT en archivos mensuales de GEIH-1; puede no estar en todos los meses."
         },
         "geih_2021_present": {
-          "source_variable": ["INGLABO", "P7500S1A1", "P7500S2A1", "P7500S3A1", "P750S1A1", "P750S2A1", "P750S3A1"],
-          "transform": {"op": "custom", "name": "compute_ingreso_total"},
+          "source_variable": [
+            "INGLABO",
+            "P7500S1A1",
+            "P7500S2A1",
+            "P7500S3A1",
+            "P750S1A1",
+            "P750S2A1",
+            "P750S3A1"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "compute_ingreso_total"
+          },
           "source_doc": "DANE Ficha Técnica GEIH 2024. INGTOT no precomputado en microdatos GEIH-2. Construir desde módulos otros_ingresos y ocupados.",
           "notes": "Variables de ingresos no laborales observadas en June 2024: P7500S*A1 (arriendos, pensiones), P750S*A1 (otras rentas). Lista orientativa; verificar con documentación técnica DANE para lista completa de componentes."
         }
@@ -671,14 +738,28 @@
       "comparability_warning": null,
       "mappings": {
         "geih_2006_2020": {
-          "source_variable": ["DIRECTORIO", "SECUENCIA_P", "HOGAR"],
-          "transform": {"op": "compute", "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"},
+          "source_variable": [
+            "DIRECTORIO",
+            "SECUENCIA_P",
+            "HOGAR"
+          ],
+          "transform": {
+            "op": "compute",
+            "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). Claves de empalme hogar: DIRECTORIO + SECUENCIA_P; HOGAR distingue hogares múltiples en una vivienda.",
           "notes": "Si HOGAR no existe en algún archivo GEIH-1, usar solo DIRECTORIO + SECUENCIA_P."
         },
         "geih_2021_present": {
-          "source_variable": ["DIRECTORIO", "SECUENCIA_P", "HOGAR"],
-          "transform": {"op": "compute", "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"},
+          "source_variable": [
+            "DIRECTORIO",
+            "SECUENCIA_P",
+            "HOGAR"
+          ],
+          "transform": {
+            "op": "compute",
+            "expr": "DIRECTORIO.astype(str) + '_' + SECUENCIA_P.astype(str) + '_' + HOGAR.astype(str)"
+          },
           "source_doc": "Diccionario GEIH (marco 2018). DIRECTORIO, SECUENCIA_P y HOGAR confirmados en June 2024 en todos los módulos."
         }
       }
@@ -693,12 +774,18 @@
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "P5090",
-          "transform": {"op": "compute", "expr": "P5090 <= 2"},
+          "transform": {
+            "op": "compute",
+            "expr": "P5090 <= 2"
+          },
           "source_doc": "Diccionario GEIH (marco 2005). P5090: tenencia de vivienda. 1=propia totalmente pagada, 2=propia pagando, 3+=otras formas de tenencia."
         },
         "geih_2021_present": {
           "source_variable": "P5090",
-          "transform": {"op": "compute", "expr": "P5090 <= 2"},
+          "transform": {
+            "op": "compute",
+            "expr": "P5090 <= 2"
+          },
           "source_doc": "Diccionario GEIH (marco 2018), módulo Datos del hogar y la vivienda. Confirmado en June 2024. P5090: 1=propia pagada, 2=propia pagando, 3=arriendo, 4=usufructo, 5=posesión sin título, 6=propiedad colectiva, 7=otra."
         }
       }
@@ -710,12 +797,12 @@
       "description_es": "Factor de expansión para estimaciones de totales poblacionales.",
       "description_en": "Expansion factor for population total estimates.",
       "unit": null,
-      "comparability_warning": "Nombre de variable cambia entre épocas: fex_c_2011 (marco 2005) a FEX_C18 (marco 2018). Los factores no son comparables directamente por cambio de marco muestral (2005 → 2018).",
+      "comparability_warning": "Nombre de variable cambia entre épocas: FEX_C (marco 2005, DANE original: fex_c_2011, normalizado a FEX_C por el parser) a FEX_C18 (marco 2018). Los factores no son comparables directamente por cambio de marco muestral (2005 → 2018).",
       "mappings": {
         "geih_2006_2020": {
-          "source_variable": "fex_c_2011",
+          "source_variable": "FEX_C",
           "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2005). Factor de expansión ajustado con proyecciones 2011."
+          "source_doc": "Diccionario GEIH (marco 2005). Factor de expansión ajustado con proyecciones 2011. DANE publica la columna como fex_c_2011; el parser Shape A la normaliza a FEX_C canónico."
         },
         "geih_2021_present": {
           "source_variable": "FEX_C18",
@@ -734,10 +821,10 @@
       "comparability_warning": "En GEIH-2, FEX_C18 es el factor único para todos los módulos persona. En GEIH-1, algunos módulos podrían tener factores diferenciados.",
       "mappings": {
         "geih_2006_2020": {
-          "source_variable": "fex_c_2011",
+          "source_variable": "FEX_C",
           "transform": "identity",
           "source_doc": "Diccionario GEIH (marco 2005). Factor de expansión estándar por persona.",
-          "notes": "En GEIH-1, verificar si existen factores de expansión alternativos por módulo (ej. fex_dpto, fex_c). fex_c_2011 es el factor principal recomendado por DANE."
+          "notes": "En GEIH-1, el factor principal recomendado por DANE se publica como fex_c_2011; el parser Shape A lo normaliza a FEX_C canónico. Verificar si existen factores alternativos por módulo (ej. fex_dpto, fex_c)."
         },
         "geih_2021_present": {
           "source_variable": "FEX_C18",
