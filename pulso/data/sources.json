@@ -504,12 +504,12 @@
       "epoch": "geih_2006_2020",
       "download_url": "https://microdatos.dane.gov.co/index.php/catalog/317/download/10934",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/317",
-      "checksum_sha256": null,
+      "checksum_sha256": "ec339fca43a262fb3e15d586094f3d4c28af0a24048d0e2e9adf7560c84b4d4a",
       "size_bytes": 6406799,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "automated",
+      "validated_at": "2026-05-02T02:15:24.227218+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3924,12 +3924,12 @@
       "epoch": "geih_2006_2020",
       "download_url": "https://microdatos.dane.gov.co/index.php/catalog/356/download/13061",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/356",
-      "checksum_sha256": null,
+      "checksum_sha256": "361f8c4244be9785bbdef33eb5af51edcbb84d1980f0fa352b86a0f96429286a",
       "size_bytes": 6668943,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "automated",
+      "validated_at": "2026-05-02T02:15:24.237603+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6888,12 +6888,12 @@
       "epoch": "geih_2006_2020",
       "download_url": "https://microdatos.dane.gov.co/index.php/catalog/701/download/20902",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/701",
-      "checksum_sha256": null,
+      "checksum_sha256": "607ece9b97744df908c60534ee2139f19042182906c8abe8f5eff53c4b8c9ace",
       "size_bytes": 5924454,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "automated",
+      "validated_at": "2026-05-02T02:15:24.246209+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6926,36 +6926,36 @@
       "epoch": "geih_2021_present",
       "download_url": "https://microdatos.dane.gov.co/index.php/catalog/771/download/22688",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/771",
-      "checksum_sha256": null,
+      "checksum_sha256": "48d6bd634c3c98e48008cb08e9bd837694d91d00757fe6a965b928550af1c8aa",
       "size_bytes": 76986449,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "automated",
+      "validated_at": "2026-05-02T02:15:24.357069+00:00",
       "modules": {
         "caracteristicas_generales": {
-          "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Características generales, seguridad social en salud y educación.csv"
         },
         "ocupados": {
-          "file": "CSV/Ocupados.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Ocupados.csv"
         },
         "desocupados": {
-          "file": "CSV/No ocupados.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/No ocupados.csv"
         },
         "inactivos": {
-          "file": "CSV/No ocupados.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/No ocupados.csv"
         },
         "vivienda_hogares": {
-          "file": "CSV/Datos del hogar y la vivienda.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Datos del hogar y la vivienda.CSV"
         },
         "otros_ingresos": {
-          "file": "CSV/Otros ingresos e impuestos.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Otros ingresos e impuestos.csv"
         },
         "migracion": {
-          "file": "CSV/Migración.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Migración.CSV"
         },
         "otras_formas_trabajo": {
-          "file": "CSV/Otras formas de trabajo.CSV"
+          "file": "GEIH_Enero_2022_Marco_2018/CSV/Otras formas de trabajo.csv"
         }
       },
       "notes": null
