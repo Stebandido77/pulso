@@ -14,6 +14,7 @@ Shape A auto-discovery (Phase 3.2.B):
 
 from __future__ import annotations
 
+import io
 import re
 import zipfile
 from typing import TYPE_CHECKING, Literal, cast
@@ -104,6 +105,75 @@ def find_shape_a_files(
     return cabecera, resto
 
 
+def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
+    """Resolve a ZIP member path, tolerating mojibake encoding and missing subfolder prefix.
+
+    Tries in order: (1) exact match, (2) mojibake-fixed path, (3) case-insensitive
+    basename match across all ZIP entries.  Raises KeyError if nothing matches.
+    """
+    names = zf.namelist()
+
+    if path in names:
+        return path
+
+    try:
+        fixed = path.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        fixed = path
+
+    if fixed in names:
+        return fixed
+
+    target = fixed.rsplit("/", 1)[-1].lower()
+    for name in names:
+        if not name.endswith("/") and name.rsplit("/", 1)[-1].lower() == target:
+            return name
+
+    raise KeyError(f"No item named {path!r} in the archive")
+
+
+def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
+    """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
+
+    Column normalization is intentionally narrow: BOM is stripped from all columns;
+    only merge-key columns (DIRECTORIO, SECUENCIA_P, ORDEN) are uppercased.  Other
+    columns (e.g. fex_c_2011) keep their original case to match variable_map.json.
+    """
+    import pandas as pd
+
+    sep = epoch.separator if epoch.separator is not None else ","
+    buf = io.BytesIO(raw_bytes)
+    df: pd.DataFrame = pd.read_csv(
+        buf,
+        encoding=epoch.encoding,
+        sep=sep,
+        decimal=epoch.decimal,
+        low_memory=False,
+    )
+    if df.shape[1] == 1:
+        buf.seek(0)
+        df = pd.read_csv(
+            buf,
+            encoding=epoch.encoding,
+            sep=None,
+            engine="python",
+            decimal=epoch.decimal,
+        )
+
+    # Strip BOM in both its UTF-8 unicode form and latin-1 decoded artifact (ï»¿).
+    df.columns = df.columns.str.replace("﻿", "", regex=False).str.replace(
+        "\xef\xbb\xbf", "", regex=False
+    )
+
+    # Normalize merge-key column names to their canonical uppercase form.
+    # Handles years where DANE stored e.g. 'Directorio' instead of 'DIRECTORIO'.
+    all_merge_keys = set(epoch.merge_keys_persona) | set(epoch.merge_keys_hogar)
+    upper_map = {k.lower(): k for k in all_merge_keys}
+    df.columns = pd.Index([upper_map.get(col.lower(), col) for col in df.columns])
+
+    return df
+
+
 def parse_shape_a_module(
     zip_path: Path,
     module: str,
@@ -129,32 +199,21 @@ def parse_shape_a_module(
             f"First entries in ZIP: {sample}"
         )
 
-    sep = epoch.separator if epoch.separator is not None else ","
     dfs: list[pd.DataFrame] = []
 
     with zipfile.ZipFile(zip_path) as zf:
         if cab_name:
             with zf.open(cab_name) as fh:
-                df_cab: pd.DataFrame = pd.read_csv(
-                    fh,
-                    encoding=epoch.encoding,
-                    sep=sep,
-                    decimal=epoch.decimal,
-                    low_memory=False,
-                )
-                df_cab["CLASE"] = 1
-                dfs.append(df_cab)
+                raw = fh.read()
+            df_cab: pd.DataFrame = _read_csv_with_fallback(raw, epoch)
+            df_cab["CLASE"] = 1
+            dfs.append(df_cab)
         if resto_name:
             with zf.open(resto_name) as fh:
-                df_resto: pd.DataFrame = pd.read_csv(
-                    fh,
-                    encoding=epoch.encoding,
-                    sep=sep,
-                    decimal=epoch.decimal,
-                    low_memory=False,
-                )
-                df_resto["CLASE"] = 2
-                dfs.append(df_resto)
+                raw = fh.read()
+            df_resto: pd.DataFrame = _read_csv_with_fallback(raw, epoch)
+            df_resto["CLASE"] = 2
+            dfs.append(df_resto)
 
     if len(dfs) == 1:
         return dfs[0]
@@ -174,22 +233,26 @@ def _parse_csv(
     Raises:
         ParseError: If the inner file is missing or malformed.
     """
-    import pandas as pd
 
     try:
-        with zipfile.ZipFile(zip_path) as zf, zf.open(inner_path) as fh:
-            df: pd.DataFrame = pd.read_csv(
-                fh,
-                encoding=epoch.encoding,
-                sep=epoch.separator if epoch.separator is not None else ",",
-                decimal=epoch.decimal,
-                usecols=columns,
-                low_memory=False,
-            )
+        with zipfile.ZipFile(zip_path) as zf:
+            resolved = _resolve_zip_path(zf, inner_path)
+            with zf.open(resolved) as fh:
+                raw_bytes = fh.read()
     except KeyError as exc:
         raise ParseError(f"File {inner_path!r} not found inside {zip_path.name}.") from exc
     except Exception as exc:
         raise ParseError(f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}") from exc
+
+    try:
+        df: pd.DataFrame = _read_csv_with_fallback(raw_bytes, epoch)
+    except Exception as exc:
+        raise ParseError(f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}") from exc
+
+    if columns is not None:
+        available = [c for c in columns if c in df.columns]
+        df = df[available]
+
     return df
 
 

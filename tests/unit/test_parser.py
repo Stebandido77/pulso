@@ -456,3 +456,105 @@ def test_find_shape_a_files_robust_to_filename_order(tmp_path: Path) -> None:
     assert "Desocupados" in cab_d, f"Wrong file matched: {cab_d}"
     assert resto_d is not None
     assert "Desocupados" in resto_d, f"Wrong file: {resto_d}"
+
+
+# ---------------------------------------------------------------------------
+# Regression tests: BOM stripping, case normalization, separator auto-detect
+# (Phase 3.4.1)
+# ---------------------------------------------------------------------------
+
+
+def test_parser_strips_bom_from_columns(tmp_path: Path) -> None:
+    """Regression: BOM at start of CSV must be stripped from column names."""
+    from pulso._config.epochs import get_epoch
+    from pulso._core.parser import parse_shape_a_module
+
+    zip_path = tmp_path / "test.zip"
+    csv_with_bom = "﻿DIRECTORIO;SECUENCIA_P;ORDEN;P6020\n1;1;1;1\n2;1;1;2\n"
+
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Cabecera - Ocupados.csv", csv_with_bom.encode("utf-8"))
+
+    epoch = get_epoch("geih_2006_2020")
+    df = parse_shape_a_module(zip_path, "ocupados", epoch)
+
+    assert "DIRECTORIO" in df.columns, f"BOM not stripped. Columns: {list(df.columns)}"
+    assert all(not c.startswith("﻿") for c in df.columns)
+    assert all("\xef\xbb\xbf" not in c for c in df.columns)
+
+
+def test_parser_normalizes_column_case_to_upper(tmp_path: Path) -> None:
+    """Regression: mixed-case columns must be normalized to uppercase."""
+    from pulso._config.epochs import get_epoch
+    from pulso._core.parser import parse_shape_a_module
+
+    zip_path = tmp_path / "test.zip"
+    csv_mixed_case = "Directorio;Secuencia_P;Orden;P6020\n1;1;1;1\n"
+
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Cabecera - Ocupados.csv", csv_mixed_case.encode("latin-1"))
+
+    epoch = get_epoch("geih_2006_2020")
+    df = parse_shape_a_module(zip_path, "ocupados", epoch)
+
+    assert "DIRECTORIO" in df.columns
+    assert "SECUENCIA_P" in df.columns
+    assert "ORDEN" in df.columns
+
+
+def test_parser_auto_detects_comma_separator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Regression: when epoch declares ';' but CSV uses ',', auto-detect."""
+    import pulso._config.registry as reg
+    from pulso._config.epochs import get_epoch
+    from pulso._core.parser import parse_module
+
+    zip_path = tmp_path / "test.zip"
+    csv_comma = "DIRECTORIO,SECUENCIA_P,ORDEN,P6020\n1,1,1,1\n2,1,1,2\n"
+
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("CSV/Ocupados.CSV", csv_comma.encode("latin-1"))
+
+    epoch = get_epoch("geih_2021_present")  # declares ';'
+
+    monkeypatch.setattr(
+        reg,
+        "_SOURCES",
+        {
+            "metadata": {"schema_version": "1.1.0", "data_version": "2022.01"},
+            "modules": {
+                "ocupados": {
+                    "level": "persona",
+                    "description_es": "Ocupados",
+                    "available_in": ["geih_2021_present"],
+                },
+            },
+            "data": {
+                "2022-01": {
+                    "epoch": "geih_2021_present",
+                    "download_url": "https://example.com/x.zip",
+                    "checksum_sha256": "a" * 64,
+                    "modules": {
+                        "ocupados": {
+                            "file": "CSV/Ocupados.CSV",
+                        },
+                    },
+                    "validated": True,
+                }
+            },
+        },
+    )
+
+    df = parse_module(
+        zip_path=zip_path,
+        year=2022,
+        month=1,
+        module="ocupados",
+        area="total",
+        epoch=epoch,
+    )
+
+    assert df.shape[1] >= 4, f"Expected at least 4 columns, got {df.shape[1]}: {list(df.columns)}"
+    assert "DIRECTORIO" in df.columns
+    assert "P6020" in df.columns

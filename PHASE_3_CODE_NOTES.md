@@ -179,3 +179,42 @@ in `pulso/_core/parser.py`.**
 - Real DANE downloads (Phase 3.4)
 - Performance benchmarks beyond runtime
 - Parser keyword fix (Phase 3.4 or separate PR)
+
+## Phase 3.4.1: Parser Real-Data Fixes
+
+### Implementation
+
+Three bugs discovered in Phase 3.4 real-data validation; all fixed in `pulso/_core/parser.py`.
+
+**New helper `_resolve_zip_path(zf, path)`** (bonus fix discovered during 2022-01 validation):
+- Resolves ZIP member paths tolerating mojibake encoding and missing subfolder prefixes.
+- Sources.json for 2022-01 had double-encoded UTF-8 paths (`CaracterÃ­sticas`) and missing
+  the `GEIH_Enero_2022_Marco_2018/` subfolder prefix. The helper tries: exact match → mojibake
+  fix (`.encode('latin-1').decode('utf-8')`) → case-insensitive basename match.
+
+**New helper `_read_csv_with_fallback(raw_bytes, epoch)`**:
+- BOM stripping: `df.columns.str.replace('﻿', '').str.replace('\xef\xbb\xbf', '')`
+  strips both the Unicode BOM form and its latin-1 decoded artifact (`ï»¿`).
+- Merge-key normalization: only the epoch's merge key columns (`DIRECTORIO`, `SECUENCIA_P`,
+  `ORDEN`) are uppercased. Other columns (e.g. `fex_c_2011`) keep their original case to
+  match variable_map.json source variable names.
+- Separator auto-detect: tries `epoch.separator` first; if the result has only 1 column,
+  retries with `sep=None, engine='python'`.
+
+Both Shape A (`parse_shape_a_module`) and Shape B (`_parse_csv`) use this helper.
+
+### Tests added
+
+- `test_parser_strips_bom_from_columns`: BOM-prefixed CSV (latin-1 decoded as `ï»¿DIRECTORIO`)
+  must produce clean `DIRECTORIO` column.
+- `test_parser_normalizes_column_case_to_upper`: mixed-case merge keys (`Directorio`,
+  `Secuencia_P`, `Orden`) must be normalized to uppercase.
+- `test_parser_auto_detects_comma_separator`: epoch declares `;` but CSV uses `,`; fallback
+  must recover and produce ≥4 columns.
+
+### Real-data results (5 strategic months)
+
+- All 5 months now load successfully (was 4 of 5).
+- 2022-01 test no longer skipped (comma separator + mojibake + subfolder all handled).
+- Phase 2 regression preserved: (70020, 525).
+- Full suite: 433 passed, 0 failed (was 433 passed, 1 skipped).
