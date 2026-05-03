@@ -97,6 +97,43 @@ pulso.describe_variable("ingreso_laboral_mensual")
 pulso.describe_harmonization("ingreso_laboral_mensual")
 ```
 
+## Column-level metadata (DANE codebook + Curator)
+
+`load(..., metadata=True)` attaches per-column metadata composed from
+the bundled DANE codebook and pulso's Curator harmonization map:
+
+```python
+df = pulso.load(2024, 6, "ocupados", metadata=True)
+
+# Pretty-print metadata for one column
+print(pulso.describe_column(df, "sexo"))
+# sexo: Sexo de la persona.
+# DANE code: P3271
+# Description (es): Sexo de la persona.
+# ...
+# Categories:
+#   1 = hombre
+#   2 = mujer
+# Source: curator
+
+# Tabular summary of every column
+pulso.list_columns_metadata(df).head()
+```
+
+`load_merged(..., metadata=True)` works the same way and additionally
+records `df.attrs["source_modules"]` so you can see which raw modules
+contributed.
+
+For variables where DANE publishes only a near-empty DDI entry — typically
+conditional sub-questions like `P3044S2`, `P3057`, `P3058S*` —
+`describe_column` renders a "skeletal" block that points you at the
+project issue tracker. See the CHANGELOG for the v1.0.0 metadata coverage
+breakdown.
+
+> **Caveat:** `df.attrs` survives slicing but pandas does not propagate
+> it across `merge`, `groupby`, or `concat`. Re-call `pulso.load(...,
+> metadata=True)` afterwards if you need the metadata back.
+
 ## Caching
 
 Downloaded ZIPs and parsed parquets live in `~/.pulso/`. They're permanent because DANE's published microdata are immutable.

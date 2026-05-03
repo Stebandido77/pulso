@@ -141,6 +141,11 @@ df = pulso.load_merged(
 
 # 5. Aplicar factores de expansión (decisión consciente, no automática)
 df_expandido = pulso.expand(df, weight="peso_expansion")
+
+# 6. Inspeccionar metadata por columna (DANE codebook + Curator)
+df = pulso.load(2024, 6, "ocupados", metadata=True)
+print(pulso.describe_column(df, "sexo"))
+pulso.list_columns_metadata(df).head()
 ```
 
 ### API pública
@@ -163,6 +168,8 @@ df_expandido = pulso.expand(df, weight="peso_expansion")
 | `describe(module, year)` | ✅ estable | Metadatos del módulo + info de época |
 | `list_validated_range()` | ✅ estable | Lista ordenada de pares `(año, mes)` validados |
 | `validation_status()` | ✅ estable | DataFrame con estado de validación de cada entrada |
+| `describe_column(df, column)` | ✅ estable | Describe metadata de una columna (requiere `metadata=True`) |
+| `list_columns_metadata(df)` | ✅ estable | DataFrame resumen de todas las columnas (Curator + codebook DANE) |
 
 ### Validación de datos
 
