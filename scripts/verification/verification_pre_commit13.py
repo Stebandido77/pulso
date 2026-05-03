@@ -130,8 +130,7 @@ def _run_matrix() -> str:
                 print(f"  {name:40s} -> NO SOPORTADO (TypeError): {e}")
             except Exception as e:
                 print(
-                    f"  {name:40s} -> SIGNATURE OK pero error en runtime: "
-                    f"{type(e).__name__}: {e}"
+                    f"  {name:40s} -> SIGNATURE OK pero error en runtime: {type(e).__name__}: {e}"
                 )
 
     return buf.getvalue()

@@ -94,8 +94,7 @@ def _emit_unvalidated_warning(
         fail_suffix = f", ... and {fail_extra} more" if fail_extra > 0 else ""
         sample = "; ".join(f"{k}: {err}" for k, err in fail_examples)
         parts.append(
-            f"{len(failures)} months failed to load and were skipped "
-            f"(e.g., {sample}{fail_suffix})."
+            f"{len(failures)} months failed to load and were skipped (e.g., {sample}{fail_suffix})."
         )
 
     parts.append(

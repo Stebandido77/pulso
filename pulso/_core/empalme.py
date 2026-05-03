@@ -165,7 +165,7 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
             logger.debug("Empalme %d: using cached file %s", year, dest)
             return dest
         logger.warning(
-            "Empalme %d: cached file %s failed checksum verification — " "re-downloading.",
+            "Empalme %d: cached file %s failed checksum verification — re-downloading.",
             year,
             dest,
         )
@@ -186,7 +186,7 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
     elif not verify_checksum(dest, expected_sha):
         dest.unlink()
         raise ChecksumMismatchError(
-            f"Checksum mismatch after downloading Empalme {year}: " f"expected {expected_sha}."
+            f"Checksum mismatch after downloading Empalme {year}: expected {expected_sha}."
         )
 
     return dest

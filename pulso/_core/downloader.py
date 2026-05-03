@@ -135,8 +135,7 @@ def download_zip(
 
     if checksum is None:
         logger.info(
-            "No checksum recorded for %s — downloaded file accepted without "
-            "SHA-256 verification.",
+            "No checksum recorded for %s — downloaded file accepted without SHA-256 verification.",
             key,
         )
     elif not verify_checksum(dest, checksum):

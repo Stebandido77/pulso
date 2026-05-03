@@ -52,7 +52,7 @@ def _normalize_int_arg(
             values = sorted({int(v) for v in value})  # type: ignore[arg-type]
         except (TypeError, ValueError) as exc:
             raise TypeError(
-                f"{name} must be int, range, or iterable of ints " f"(got {type(value).__name__})."
+                f"{name} must be int, range, or iterable of ints (got {type(value).__name__})."
             ) from exc
 
     if not values:
