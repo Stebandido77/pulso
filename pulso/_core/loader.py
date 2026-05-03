@@ -153,6 +153,8 @@ def load(
     strict: bool | None = None,
     allow_unvalidated: bool | None = None,
     _emit_unvalidated_warning_at_end: bool = True,
+    *,
+    metadata: bool = False,
 ) -> pd.DataFrame:
     """Load GEIH microdata for a given module.
 
@@ -179,6 +181,14 @@ def load(
         allow_unvalidated: **Deprecated.** Use ``strict`` instead. The mapping
             is ``allow_unvalidated=True → strict=False`` and
             ``allow_unvalidated=False → strict=True``. Will be removed in v2.0.0.
+        metadata: If True, attach composed Curator + DANE codebook metadata
+            to ``df.attrs["column_metadata"]`` (and stash the source
+            ``year``/``month``/``module``/``epoch`` under ``df.attrs``). Use
+            :func:`pulso.describe_column` and :func:`pulso.list_columns_metadata`
+            to inspect it. ``df.attrs`` survives slicing but pandas does not
+            propagate it across :meth:`pandas.DataFrame.merge`,
+            :meth:`pandas.DataFrame.groupby`, or :func:`pandas.concat`. Default
+            False to keep ``load`` cheap when callers don't need metadata.
 
     Returns:
         DataFrame with one row per observation. Multiple periods add 'year'
@@ -303,12 +313,43 @@ def load(
         )
 
     if not frames:
-        return pd.DataFrame()
+        result = pd.DataFrame()
+    elif len(frames) == 1:
+        result = frames[0]
+    else:
+        result = pd.concat(frames, ignore_index=True)
 
-    if len(frames) == 1:
-        return frames[0]
+    if metadata:
+        _attach_metadata_for_load(result, periods, module)
 
-    return pd.concat(frames, ignore_index=True)
+    return result
+
+
+def _attach_metadata_for_load(
+    df: pd.DataFrame,
+    periods: list[tuple[int, int]],
+    module: str,
+) -> None:
+    """Attach composed metadata to ``df.attrs`` for :func:`load`.
+
+    Anchors the metadata at the last successfully-loaded period (or the
+    first requested one when ``df`` is empty). Multi-period frames span
+    one epoch in the typical case; if the caller asked for periods that
+    cross an epoch boundary the attached metadata corresponds to the
+    anchor period — the cross-epoch story is documented in the API
+    docstring rather than papered over here.
+    """
+    if not periods:
+        return
+    anchor_year, anchor_month = periods[-1]
+    from pulso._config.epochs import epoch_for_month
+    from pulso.metadata.composer import compose_dataframe_metadata
+
+    df.attrs["column_metadata"] = compose_dataframe_metadata(df, anchor_year, anchor_month, module)
+    df.attrs["source_year"] = anchor_year
+    df.attrs["source_month"] = anchor_month
+    df.attrs["source_module"] = module
+    df.attrs["source_epoch"] = epoch_for_month(anchor_year, anchor_month).key
 
 
 def load_merged(
@@ -323,6 +364,8 @@ def load_merged(
     strict: bool | None = None,
     allow_unvalidated: bool | None = None,
     apply_smoothing: bool = False,
+    *,
+    metadata: bool = False,
 ) -> pd.DataFrame:
     """Load multiple modules, merge on epoch keys, and optionally harmonize.
 
@@ -352,6 +395,10 @@ def load_merged(
         apply_smoothing: If True and year is in 2010-2019, replace the entire
             month dataset with the Empalme equivalent. For year=2020 warns
             and falls back; years outside 2010-2020 are silently unchanged.
+        metadata: If True, attach composed Curator + DANE codebook metadata
+            to ``df.attrs["column_metadata"]`` and stash the merged
+            ``source_modules`` list under ``df.attrs``. See :func:`load`
+            for the same caveats around ``df.attrs`` propagation.
 
     Returns:
         Merged (and optionally harmonized) DataFrame at persona level.
@@ -386,6 +433,7 @@ def load_merged(
     all_frames: list[pd.DataFrame] = []
     unvalidated_keys: list[str] = []
     failures: list[tuple[str, str]] = []
+    used_modules: list[str] = []  # preserve insertion order; dedup on output
     multi = len(periods) > 1
 
     from pulso._utils.exceptions import (
@@ -504,6 +552,9 @@ def load_merged(
                 for mod in working_modules
                 if mod in record["modules"]
             }
+            for mod in module_dfs:
+                if mod not in used_modules:
+                    used_modules.append(mod)
 
             merged = merge_modules(module_dfs, epoch, level="persona", how="outer")
 
@@ -535,9 +586,45 @@ def load_merged(
         )
 
     if not all_frames:
-        return pd.DataFrame()
+        result = pd.DataFrame()
+    elif len(all_frames) == 1:
+        result = all_frames[0]
+    else:
+        result = pd.concat(all_frames, ignore_index=True)
 
-    if len(all_frames) == 1:
-        return all_frames[0]
+    if metadata:
+        _attach_metadata_for_load_merged(result, periods, used_modules)
 
-    return pd.concat(all_frames, ignore_index=True)
+    return result
+
+
+def _attach_metadata_for_load_merged(
+    df: pd.DataFrame,
+    periods: list[tuple[int, int]],
+    used_modules: list[str],
+) -> None:
+    """Attach composed metadata to ``df.attrs`` for :func:`load_merged`.
+
+    ``df.attrs["source_modules"]`` is the list of modules that
+    participated in the merge (deduplicated, in first-seen order).
+    Anchoring is the same as :func:`_attach_metadata_for_load`: the
+    last-loaded period.
+    """
+    if not periods:
+        return
+    anchor_year, anchor_month = periods[-1]
+    from pulso._config.epochs import epoch_for_month
+    from pulso.metadata.composer import compose_dataframe_metadata
+
+    # When multiple modules merged, no single 'module' is correct; use a
+    # synthetic '+'-joined label so the composer's `module=` argument is
+    # informative without leaking into Curator lookups (which are
+    # canonical-name-driven, not module-driven).
+    module_label = "+".join(used_modules) if used_modules else "merged"
+    df.attrs["column_metadata"] = compose_dataframe_metadata(
+        df, anchor_year, anchor_month, module_label
+    )
+    df.attrs["source_year"] = anchor_year
+    df.attrs["source_month"] = anchor_month
+    df.attrs["source_modules"] = list(used_modules)
+    df.attrs["source_epoch"] = epoch_for_month(anchor_year, anchor_month).key
