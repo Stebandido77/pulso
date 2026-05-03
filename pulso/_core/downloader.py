@@ -18,18 +18,25 @@ from pulso._utils.exceptions import DataNotAvailableError, DataNotValidatedError
 logger = logging.getLogger(__name__)
 
 
-def verify_checksum(path: Path, expected_sha256: str) -> bool:
+def verify_checksum(path: Path, expected_sha256: str | None) -> bool:
     """Compute the SHA-256 of `path` and compare to `expected_sha256`.
 
     Verifica que el archivo coincide con el checksum esperado.
 
     Args:
         path: Local file to hash.
-        expected_sha256: Lowercase hex digest to compare against.
+        expected_sha256: Lowercase hex digest to compare against. If None
+            (registry entry has no checksum), verification is skipped and
+            the file is treated as valid — the caller is responsible for
+            deciding whether that is acceptable (typically via the
+            `strict` / `allow_unvalidated` flag in `download_zip`).
 
     Returns:
-        True if the digest matches, False otherwise.
+        True if the digest matches, or `expected_sha256 is None`.
+        False otherwise.
     """
+    if expected_sha256 is None:
+        return True
     h = hashlib.sha256()
     with path.open("rb") as f:
         while chunk := f.read(8192):
@@ -80,8 +87,11 @@ def download_zip(
             f"Entry {key!r} has validated=false. Pass allow_unvalidated=True to load it anyway."
         )
 
-    checksum: str = record["checksum_sha256"]
-    short = checksum[:16]
+    checksum: str | None = record["checksum_sha256"]
+    # Cache filename: use checksum prefix when available (content-addressed),
+    # otherwise a stable, period-derived name so unvalidated entries can still
+    # be cached and re-used across runs without colliding with validated ones.
+    short = checksum[:16] if checksum is not None else f"unvalidated_{year}-{month:02d}"
     dest = cache_path() / "raw" / str(year) / f"{month:02d}" / f"{short}.zip"
 
     if cache and dest.exists():
@@ -117,7 +127,13 @@ def download_zip(
 
     tmp.replace(dest)
 
-    if not verify_checksum(dest, checksum):
+    if checksum is None:
+        logger.info(
+            "No checksum recorded for %s — downloaded file accepted without "
+            "SHA-256 verification.",
+            key,
+        )
+    elif not verify_checksum(dest, checksum):
         dest.unlink()
         raise DownloadError(f"Checksum mismatch after download for {key}.")
 
