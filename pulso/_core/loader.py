@@ -6,6 +6,7 @@ Coordinates: registry lookup → download → parse → harmonize → (merge).
 from __future__ import annotations
 
 import logging
+import warnings
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
@@ -14,6 +15,73 @@ if TYPE_CHECKING:
 Area = Literal["cabecera", "resto", "total"]
 
 logger = logging.getLogger(__name__)
+
+
+# Maximum number of unvalidated keys to enumerate verbatim in the
+# aggregated warning before truncating with "... and N more".
+_AGG_WARNING_EXAMPLE_LIMIT: int = 10
+
+
+def _resolve_strict(
+    strict: bool | None,
+    allow_unvalidated: bool | None,
+    *,
+    stacklevel: int = 3,
+) -> bool:
+    """Resolve the new ``strict`` flag against the deprecated ``allow_unvalidated``.
+
+    Compat rules:
+    - If both are passed, ``ValueError``.
+    - If only ``allow_unvalidated`` is passed, emit ``DeprecationWarning`` and
+      translate to ``strict = not allow_unvalidated``.
+    - If neither is passed, default is ``strict=False`` (permissive — load
+      unvalidated entries with a warning instead of raising).
+    """
+    if allow_unvalidated is not None:
+        if strict is not None:
+            raise ValueError(
+                "Cannot pass both `strict` and `allow_unvalidated`. "
+                "`allow_unvalidated` is deprecated; use only `strict`."
+            )
+        warnings.warn(
+            "Parameter `allow_unvalidated` is deprecated and will be removed "
+            "in pulso 2.0.0. Use `strict` instead. "
+            "Mapping: allow_unvalidated=True → strict=False, "
+            "allow_unvalidated=False → strict=True.",
+            DeprecationWarning,
+            stacklevel=stacklevel,
+        )
+        return not allow_unvalidated
+    if strict is None:
+        return False
+    return strict
+
+
+def _emit_unvalidated_warning(
+    unvalidated_keys: list[str],
+    total_loaded: int,
+    total_requested: int,
+    *,
+    stacklevel: int = 3,
+) -> None:
+    """Emit ONE aggregated UserWarning for unvalidated periods loaded.
+
+    Called once at the end of multi-period (or single-period) load when
+    ``strict=False`` and at least one period was loaded without validation.
+    """
+    if not unvalidated_keys:
+        return
+    examples = unvalidated_keys[:_AGG_WARNING_EXAMPLE_LIMIT]
+    extra = len(unvalidated_keys) - len(examples)
+    suffix = f", ... and {extra} more" if extra > 0 else ""
+    msg = (
+        f"Loaded {total_loaded} of {total_requested} months from registry. "
+        f"{len(unvalidated_keys)} months had not been checksum-validated "
+        f"(e.g., {', '.join(examples)}{suffix}). "
+        f"Pass strict=True to enforce validation, or call "
+        f"pulso.list_validated_range() to see which months ARE validated."
+    )
+    warnings.warn(msg, UserWarning, stacklevel=stacklevel)
 
 
 def _required_modules_for_variables(
@@ -62,7 +130,9 @@ def load(
     columns: list[str] | None = None,
     cache: bool = True,
     show_progress: bool = True,
-    allow_unvalidated: bool = False,
+    strict: bool | None = None,
+    allow_unvalidated: bool | None = None,
+    _emit_unvalidated_warning_at_end: bool = True,
 ) -> pd.DataFrame:
     """Load GEIH microdata for a given module.
 
@@ -77,7 +147,13 @@ def load(
         columns: Optional column names to keep (reduces memory).
         cache: If True, use the local cache.
         show_progress: If True, display a tqdm progress bar.
-        allow_unvalidated: If True, allow entries marked validated=false.
+        strict: If True, refuse to load any period whose registry entry has
+            ``validated=false`` and raise ``DataNotValidatedError``. If False
+            (default), load such entries and emit a single aggregated
+            ``UserWarning`` listing the unvalidated periods touched.
+        allow_unvalidated: **Deprecated.** Use ``strict`` instead. The mapping
+            is ``allow_unvalidated=True → strict=False`` and
+            ``allow_unvalidated=False → strict=True``. Will be removed in v2.0.0.
 
     Returns:
         DataFrame with one row per observation. Multiple periods add 'year'
@@ -87,6 +163,7 @@ def load(
     Raises:
         DataNotAvailableError: Requested period not in registry.
         ModuleNotAvailableError: Module not present for the period's epoch.
+        DataNotValidatedError: Entry has validated=false and strict=True.
         DownloadError: Network or checksum failure.
         ParseError: ZIP contents not parseable.
         HarmonizationError: A variable_map transform fails on the data.
@@ -99,6 +176,8 @@ def load(
     from pulso._core.parser import parse_module
     from pulso._utils.validation import validate_area, validate_module, validate_year_month
 
+    strict_flag = _resolve_strict(strict, allow_unvalidated)
+
     validated_area = validate_area(area)
     periods = validate_year_month(year, month)
 
@@ -107,6 +186,7 @@ def load(
     validate_module(module, all_modules)
 
     frames: list[pd.DataFrame] = []
+    unvalidated_keys: list[str] = []
     multi = len(periods) > 1
 
     for y, m in periods:
@@ -131,8 +211,15 @@ def load(
                 f"Available: {list(record['modules'].keys())}."
             )
 
+        if not record["validated"]:
+            unvalidated_keys.append(key)
+
         zip_path = download_zip(
-            y, m, cache=cache, show_progress=show_progress, allow_unvalidated=allow_unvalidated
+            y,
+            m,
+            cache=cache,
+            show_progress=show_progress,
+            allow_unvalidated=not strict_flag,
         )
         df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
 
@@ -146,6 +233,13 @@ def load(
             df["month"] = m
 
         frames.append(df)
+
+    if not strict_flag and _emit_unvalidated_warning_at_end:
+        _emit_unvalidated_warning(
+            unvalidated_keys,
+            total_loaded=len(frames),
+            total_requested=len(periods),
+        )
 
     if not frames:
         return pd.DataFrame()
@@ -165,7 +259,8 @@ def load_merged(
     variables: list[str] | None = None,
     cache: bool = True,
     show_progress: bool = True,
-    allow_unvalidated: bool = False,
+    strict: bool | None = None,
+    allow_unvalidated: bool | None = None,
     apply_smoothing: bool = False,
 ) -> pd.DataFrame:
     """Load multiple modules, merge on epoch keys, and optionally harmonize.
@@ -177,23 +272,32 @@ def load_merged(
         year: Single year (int).
         month: Single month (1-12) or None for all months in the year.
         modules: List of canonical module names. If None, all modules
-            registered for the (year, month) are loaded.
+            registered for the (year, month) are loaded (auto-discovery —
+            modules absent from the period are silently skipped). When
+            provided explicitly, every name must be available for the period
+            or ``ModuleNotAvailableError`` is raised.
         area: 'cabecera', 'resto', or 'total'.
         harmonize: If True, apply variable_map.json transforms after merging.
         variables: Subset of canonical variable names to harmonize. Applies
             only when harmonize=True.
         cache: If True, use the local cache.
         show_progress: If True, display a tqdm progress bar.
-        allow_unvalidated: If True, allow entries marked validated=false.
+        strict: If True, refuse to load periods with ``validated=false`` and
+            raise ``DataNotValidatedError``. If False (default), load such
+            periods and emit a single aggregated ``UserWarning`` afterwards.
+        allow_unvalidated: **Deprecated.** Use ``strict`` instead. Mapping is
+            ``allow_unvalidated=True → strict=False``. Will be removed in v2.0.0.
         apply_smoothing: If True and year is in 2010-2019, replace the entire
-            month dataset with the Empalme equivalent (all modules). For year=2020
-            warns and falls back; years outside 2010-2020 are silently unchanged.
+            month dataset with the Empalme equivalent. For year=2020 warns
+            and falls back; years outside 2010-2020 are silently unchanged.
 
     Returns:
         Merged (and optionally harmonized) DataFrame at persona level.
 
     Raises:
         DataNotAvailableError: Requested period not in registry.
+        DataNotValidatedError: Period has validated=false and strict=True.
+        ModuleNotAvailableError: Module explicitly requested but absent for the period.
         MergeError: Modules cannot be merged (missing keys, etc.).
         HarmonizationError: A variable_map transform fails on the data.
     """
@@ -204,6 +308,8 @@ def load_merged(
     from pulso._core.harmonizer import harmonize_dataframe
     from pulso._core.merger import merge_modules
     from pulso._utils.validation import validate_module, validate_year_month
+
+    strict_flag = _resolve_strict(strict, allow_unvalidated)
 
     periods = validate_year_month(year, month)
     sources = _load_sources()
@@ -216,6 +322,7 @@ def load_merged(
             validate_module(mod, all_known_modules)
 
     all_frames: list[pd.DataFrame] = []
+    unvalidated_keys: list[str] = []
     multi = len(periods) > 1
 
     for y, mo in periods:
@@ -238,8 +345,6 @@ def load_merged(
                 continue
 
             if y == EMPALME_YEAR_MAX:
-                import warnings
-
                 warnings.warn(
                     f"apply_smoothing=True requested for {y}-{mo:02d} but the Empalme ZIP "
                     f"for {y} has not been published by DANE. "
@@ -261,6 +366,9 @@ def load_merged(
                 mo,
                 hint="Use pulso.list_available() to see which months are in the registry.",
             )
+
+        if not record["validated"]:
+            unvalidated_keys.append(key)
 
         # Determine the working module list for this period.
         working_modules = list(record["modules"].keys()) if modules is None else list(modules)
@@ -286,7 +394,8 @@ def load_merged(
                 harmonize=False,
                 cache=cache,
                 show_progress=show_progress,
-                allow_unvalidated=allow_unvalidated,
+                strict=strict_flag,
+                _emit_unvalidated_warning_at_end=False,
             )
             for mod in working_modules
             if mod in record["modules"]
@@ -302,6 +411,13 @@ def load_merged(
             merged["month"] = mo
 
         all_frames.append(merged)
+
+    if not strict_flag:
+        _emit_unvalidated_warning(
+            unvalidated_keys,
+            total_loaded=len(all_frames),
+            total_requested=len(periods),
+        )
 
     if not all_frames:
         return pd.DataFrame()

@@ -89,7 +89,8 @@ def download_zip(
 
     if not record["validated"] and not allow_unvalidated:
         raise DataNotValidatedError(
-            f"Entry {key!r} has validated=false. Pass allow_unvalidated=True to load it anyway."
+            f"Entry {key!r} has validated=false. "
+            f"Pass strict=False to load it anyway (with warning)."
         )
 
     checksum: str | None = record["checksum_sha256"]

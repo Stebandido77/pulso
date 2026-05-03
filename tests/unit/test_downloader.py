@@ -294,14 +294,18 @@ def test_load_end_to_end_with_unvalidated_entry(
     sentinel = pd.DataFrame({"DIRECTORIO": ["1"], "SECUENCIA_P": ["1"], "ORDEN": ["1"]})
     monkeypatch.setattr(parser_mod, "parse_module", lambda *a, **kw: sentinel)
 
-    df = pulso.load(
-        year=2024,
-        month=6,
-        module="ocupados",
-        harmonize=False,
-        show_progress=False,
-        allow_unvalidated=True,
-    )
+    import warnings as _warnings
+
+    with _warnings.catch_warnings():
+        _warnings.simplefilter("ignore", UserWarning)
+        df = pulso.load(
+            year=2024,
+            month=6,
+            module="ocupados",
+            harmonize=False,
+            show_progress=False,
+            strict=False,
+        )
     assert df is sentinel
 
 
