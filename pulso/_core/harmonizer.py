@@ -342,8 +342,11 @@ def harmonize_dataframe(
     """Harmonize multiple variables from variable_map for the given epoch.
 
     If `variables` is None, harmonizes all mapped variables whose source
-    columns are present in df. Variables with missing source columns are
-    silently skipped with a warning.
+    columns are present in df. Variables that fail to harmonize (missing
+    source columns, recode mismatches, etc.) are skipped silently and
+    recorded in ``result.attrs["_skipped_variables"]`` so the orchestrator
+    can aggregate them into a single end-of-load ``UserWarning`` instead of
+    emitting one warning per period.
 
     If keep_raw=True (default), preserves ALL original raw columns alongside
     the canonical harmonized columns. This is the recommended default so
@@ -353,13 +356,15 @@ def harmonize_dataframe(
     Returns a new DataFrame; the input is not mutated.
     """
     canonical_series_list: list[pd.Series] = []
+    skipped: list[str] = []
 
     for canonical_name, entry in _iter_relevant_variables(epoch, variables):
         try:
             series = harmonize_variable(df, canonical_name, entry, epoch)
             canonical_series_list.append(series)
         except HarmonizationError as exc:
-            logger.warning("Skipping variable %r: %s", canonical_name, exc)
+            skipped.append(canonical_name)
+            logger.debug("Skipping variable %r for epoch %s: %s", canonical_name, epoch.key, exc)
             continue
 
     if not canonical_series_list:
@@ -367,6 +372,10 @@ def harmonize_dataframe(
     else:
         canonical_df = pd.concat(canonical_series_list, axis=1)
 
-    if keep_raw:
-        return pd.concat([df, canonical_df], axis=1)
-    return canonical_df
+    result = pd.concat([df, canonical_df], axis=1) if keep_raw else canonical_df
+    # Record skipped vars on the returned DataFrame for the orchestrator to
+    # aggregate. df.attrs is a transient channel — the orchestrator strips
+    # this key before returning to the user.
+    if skipped:
+        result.attrs["_skipped_variables"] = list(skipped)
+    return result

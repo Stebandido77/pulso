@@ -59,6 +59,50 @@ def _resolve_strict(
     return strict
 
 
+# Maximum number of canonical variable names to enumerate verbatim in the
+# aggregated harmonization-skip warning before truncating the rest.
+_AGG_SKIPPED_VARS_EXAMPLE_LIMIT: int = 5
+
+
+def _drain_skipped_variables(df: pd.DataFrame) -> list[str]:
+    """Pop the transient ``_skipped_variables`` list from ``df.attrs`` if present.
+
+    Returns the (possibly empty) list and removes the key so users never see it.
+    """
+    return list(df.attrs.pop("_skipped_variables", []) or [])
+
+
+def _emit_aggregated_skipped_variables_warning(
+    skipped_per_period: list[list[str]],
+    total_periods: int,
+    *,
+    stacklevel: int = 3,
+) -> None:
+    """Emit ONE aggregated ``UserWarning`` for canonical vars skipped during harmonization.
+
+    Each inner list is the set of canonical names skipped for one period.
+    The aggregated message reports the unique set across all periods and
+    truncates the example list at ``_AGG_SKIPPED_VARS_EXAMPLE_LIMIT``.
+    """
+    unique = sorted({v for run in skipped_per_period for v in run})
+    if not unique:
+        return
+
+    n_unique = len(unique)
+    examples = unique[:_AGG_SKIPPED_VARS_EXAMPLE_LIMIT]
+    extra = n_unique - len(examples)
+    suffix = f", and {extra} more" if extra > 0 else ""
+
+    msg = (
+        f"{n_unique} canonical variable(s) skipped during harmonization across "
+        f"{total_periods} period(s) (e.g., {', '.join(examples)}{suffix}). "
+        "This is expected when canonical variables don't apply to the loaded "
+        "module or when a transform's source columns are missing for the epoch. "
+        "Use pulso.list_variables() for the full mapping."
+    )
+    warnings.warn(msg, UserWarning, stacklevel=stacklevel)
+
+
 def _emit_unvalidated_warning(
     unvalidated_keys: list[str],
     total_loaded: int,
@@ -223,6 +267,7 @@ def load(
     frames: list[pd.DataFrame] = []
     unvalidated_keys: list[str] = []
     failures: list[tuple[str, str]] = []
+    skipped_per_period: list[list[str]] = []
     multi = len(periods) > 1
 
     from pulso._utils.exceptions import (
@@ -283,6 +328,9 @@ def load(
                 from pulso._core.harmonizer import harmonize_dataframe
 
                 df = harmonize_dataframe(df, epoch)
+                period_skipped = _drain_skipped_variables(df)
+                if period_skipped:
+                    skipped_per_period.append(period_skipped)
 
             if multi:
                 # Wide GEIH DataFrames (>100 cols) are already block-fragmented
@@ -311,6 +359,10 @@ def load(
             total_requested=len(periods),
             failures=failures,
         )
+        _emit_aggregated_skipped_variables_warning(
+            skipped_per_period,
+            total_periods=len(periods),
+        )
 
     if not frames:
         result = pd.DataFrame()
@@ -318,6 +370,12 @@ def load(
         result = frames[0]
     else:
         result = pd.concat(frames, ignore_index=True)
+
+    # Defensive: strip the transient channel before returning to the user.
+    # _drain_skipped_variables removes it from each per-period frame, but
+    # pd.concat does not propagate attrs and a single-period path could
+    # leave it on the returned frame.
+    result.attrs.pop("_skipped_variables", None)
 
     if metadata:
         _attach_metadata_for_load(result, periods, module)
@@ -434,6 +492,7 @@ def load_merged(
     unvalidated_keys: list[str] = []
     failures: list[tuple[str, str]] = []
     used_modules: list[str] = []  # preserve insertion order; dedup on output
+    skipped_per_period: list[list[str]] = []
     multi = len(periods) > 1
 
     from pulso._utils.exceptions import (
@@ -560,6 +619,9 @@ def load_merged(
 
             if harmonize:
                 merged = harmonize_dataframe(merged, epoch, variables=variables)
+                period_skipped = _drain_skipped_variables(merged)
+                if period_skipped:
+                    skipped_per_period.append(period_skipped)
 
             if multi:
                 # See note in `load`: scope the suppression of pandas'
@@ -584,6 +646,10 @@ def load_merged(
             total_requested=len(periods),
             failures=failures,
         )
+        _emit_aggregated_skipped_variables_warning(
+            skipped_per_period,
+            total_periods=len(periods),
+        )
 
     if not all_frames:
         result = pd.DataFrame()
@@ -591,6 +657,9 @@ def load_merged(
         result = all_frames[0]
     else:
         result = pd.concat(all_frames, ignore_index=True)
+
+    # Defensive: strip the transient channel before returning to the user.
+    result.attrs.pop("_skipped_variables", None)
 
     if metadata:
         _attach_metadata_for_load_merged(result, periods, used_modules)
