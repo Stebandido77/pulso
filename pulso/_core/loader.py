@@ -62,26 +62,45 @@ def _emit_unvalidated_warning(
     total_loaded: int,
     total_requested: int,
     *,
+    failures: list[tuple[str, str]] | None = None,
     stacklevel: int = 3,
 ) -> None:
     """Emit ONE aggregated UserWarning for unvalidated periods loaded.
 
     Called once at the end of multi-period (or single-period) load when
-    ``strict=False`` and at least one period was loaded without validation.
+    ``strict=False`` and at least one period was loaded without validation
+    or one or more periods failed (continue-on-failure path).
     """
-    if not unvalidated_keys:
+    failures = failures or []
+    if not unvalidated_keys and not failures:
         return
-    examples = unvalidated_keys[:_AGG_WARNING_EXAMPLE_LIMIT]
-    extra = len(unvalidated_keys) - len(examples)
-    suffix = f", ... and {extra} more" if extra > 0 else ""
-    msg = (
-        f"Loaded {total_loaded} of {total_requested} months from registry. "
-        f"{len(unvalidated_keys)} months had not been checksum-validated "
-        f"(e.g., {', '.join(examples)}{suffix}). "
-        f"Pass strict=True to enforce validation, or call "
-        f"pulso.list_validated_range() to see which months ARE validated."
+
+    parts: list[str] = [f"Loaded {total_loaded} of {total_requested} months from registry."]
+
+    if unvalidated_keys:
+        examples = unvalidated_keys[:_AGG_WARNING_EXAMPLE_LIMIT]
+        extra = len(unvalidated_keys) - len(examples)
+        suffix = f", ... and {extra} more" if extra > 0 else ""
+        parts.append(
+            f"{len(unvalidated_keys)} months had not been checksum-validated "
+            f"(e.g., {', '.join(examples)}{suffix})."
+        )
+
+    if failures:
+        fail_examples = failures[:_AGG_WARNING_EXAMPLE_LIMIT]
+        fail_extra = len(failures) - len(fail_examples)
+        fail_suffix = f", ... and {fail_extra} more" if fail_extra > 0 else ""
+        sample = "; ".join(f"{k}: {err}" for k, err in fail_examples)
+        parts.append(
+            f"{len(failures)} months failed to load and were skipped "
+            f"(e.g., {sample}{fail_suffix})."
+        )
+
+    parts.append(
+        "Pass strict=True to enforce validation and abort on the first failure, "
+        "or call pulso.list_validated_range() to see which months ARE validated."
     )
-    warnings.warn(msg, UserWarning, stacklevel=stacklevel)
+    warnings.warn(" ".join(parts), UserWarning, stacklevel=stacklevel)
 
 
 def _required_modules_for_variables(
@@ -187,58 +206,86 @@ def load(
 
     frames: list[pd.DataFrame] = []
     unvalidated_keys: list[str] = []
+    failures: list[tuple[str, str]] = []
     multi = len(periods) > 1
 
+    from pulso._utils.exceptions import (
+        DataNotAvailableError,
+        DownloadError,
+        HarmonizationError,
+        MergeError,
+        ModuleNotAvailableError,
+        ParseError,
+    )
+
+    # Errors that represent per-period data/network issues (transient or
+    # period-specific). These are skippable under strict=False. Usage errors
+    # like ModuleNotAvailableError (user typed a module that doesn't exist
+    # for the period) and ConfigError (bad json) are NOT caught — they need
+    # to surface even under strict=False.
+    _SKIPPABLE: tuple[type[BaseException], ...] = (
+        DataNotAvailableError,
+        DownloadError,
+        ParseError,
+        MergeError,
+        HarmonizationError,
+    )
+
     for y, m in periods:
-        epoch = epoch_for_month(y, m)
         key = f"{y}-{m:02d}"
 
-        record = sources["data"].get(key)
-        if record is None:
-            from pulso._utils.exceptions import DataNotAvailableError
+        try:
+            epoch = epoch_for_month(y, m)
 
-            raise DataNotAvailableError(
+            record = sources["data"].get(key)
+            if record is None:
+                raise DataNotAvailableError(
+                    y,
+                    m,
+                    hint="Use pulso.list_available() to see which months are in the registry.",
+                )
+
+            if module not in record["modules"]:
+                raise ModuleNotAvailableError(
+                    f"Module {module!r} is not available for {key}. "
+                    f"Available: {list(record['modules'].keys())}."
+                )
+
+            if not record["validated"]:
+                unvalidated_keys.append(key)
+
+            zip_path = download_zip(
                 y,
                 m,
-                hint="Use pulso.list_available() to see which months are in the registry.",
+                cache=cache,
+                show_progress=show_progress,
+                allow_unvalidated=not strict_flag,
             )
+            df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
 
-        if module not in record["modules"]:
-            from pulso._utils.exceptions import ModuleNotAvailableError
+            if harmonize:
+                from pulso._core.harmonizer import harmonize_dataframe
 
-            raise ModuleNotAvailableError(
-                f"Module {module!r} is not available for {key}. "
-                f"Available: {list(record['modules'].keys())}."
-            )
+                df = harmonize_dataframe(df, epoch)
 
-        if not record["validated"]:
-            unvalidated_keys.append(key)
+            if multi:
+                df["year"] = y
+                df["month"] = m
 
-        zip_path = download_zip(
-            y,
-            m,
-            cache=cache,
-            show_progress=show_progress,
-            allow_unvalidated=not strict_flag,
-        )
-        df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
-
-        if harmonize:
-            from pulso._core.harmonizer import harmonize_dataframe
-
-            df = harmonize_dataframe(df, epoch)
-
-        if multi:
-            df["year"] = y
-            df["month"] = m
-
-        frames.append(df)
+            frames.append(df)
+        except _SKIPPABLE as exc:
+            if strict_flag:
+                raise
+            failures.append((key, f"{type(exc).__name__}: {exc}"))
+            logger.info("Skipping %s under strict=False: %s", key, exc)
+            continue
 
     if not strict_flag and _emit_unvalidated_warning_at_end:
         _emit_unvalidated_warning(
             unvalidated_keys,
             total_loaded=len(frames),
             total_requested=len(periods),
+            failures=failures,
         )
 
     if not frames:
@@ -323,118 +370,149 @@ def load_merged(
 
     all_frames: list[pd.DataFrame] = []
     unvalidated_keys: list[str] = []
+    failures: list[tuple[str, str]] = []
     multi = len(periods) > 1
 
+    from pulso._utils.exceptions import (
+        DataNotAvailableError,
+        DownloadError,
+        HarmonizationError,
+        MergeError,
+        ModuleNotAvailableError,
+        ParseError,
+    )
+
+    # Same skippable set as `load`: per-period data/network errors are
+    # skipped under strict=False; usage errors (ModuleNotAvailableError,
+    # ConfigError) are raised regardless.
+    _SKIPPABLE: tuple[type[BaseException], ...] = (
+        DataNotAvailableError,
+        DownloadError,
+        ParseError,
+        MergeError,
+        HarmonizationError,
+    )
+
     for y, mo in periods:
-        # ── Empalme smoothing path ────────────────────────────────────────────
-        if apply_smoothing:
-            from pulso._core.empalme import (
-                EMPALME_DOWNLOADABLE_MAX,
-                EMPALME_YEAR_MAX,
-                EMPALME_YEAR_MIN,
-                _load_empalme_month_merged,
-            )
-
-            if EMPALME_YEAR_MIN <= y <= EMPALME_DOWNLOADABLE_MAX:
-                merged = _load_empalme_month_merged(
-                    y,
-                    mo,
-                    area=area,
-                    harmonize=harmonize,
-                    variables=variables,
-                    modules=modules,
-                )
-                if multi:
-                    merged = merged.assign(year=y, month=mo)
-                all_frames.append(merged)
-                continue
-
-            if y == EMPALME_YEAR_MAX:
-                warnings.warn(
-                    f"apply_smoothing=True requested for {y}-{mo:02d} but the Empalme ZIP "
-                    f"for {y} has not been published by DANE. "
-                    "Falling back to raw GEIH data.",
-                    UserWarning,
-                    stacklevel=2,
-                )
-            # For years outside 2010-2020: silently fall through to normal path.
-        # ── Normal loading path ───────────────────────────────────────────────
-        epoch = epoch_for_month(y, mo)
         key = f"{y}-{mo:02d}"
 
-        record = sources["data"].get(key)
-        if record is None:
-            from pulso._utils.exceptions import DataNotAvailableError
+        try:
+            # ── Empalme smoothing path ────────────────────────────────────────
+            if apply_smoothing:
+                from pulso._core.empalme import (
+                    EMPALME_DOWNLOADABLE_MAX,
+                    EMPALME_YEAR_MAX,
+                    EMPALME_YEAR_MIN,
+                    _load_empalme_month_merged,
+                )
 
-            raise DataNotAvailableError(
-                y,
-                mo,
-                hint="Use pulso.list_available() to see which months are in the registry.",
-            )
-
-        if not record["validated"]:
-            unvalidated_keys.append(key)
-
-        # Determine the working module list for this period.
-        working_modules = list(record["modules"].keys()) if modules is None else list(modules)
-
-        # M-2: when the user passed `modules=[...]` explicitly, every module
-        # in the list must exist for this period. Silently dropping is the old
-        # bug — surface it so callers know what they actually got.
-        if modules is not None:
-            from pulso._utils.exceptions import ModuleNotAvailableError
-
-            for mod in modules:
-                if mod not in record["modules"]:
-                    raise ModuleNotAvailableError(
-                        f"Module {mod!r} is not available for {key}. "
-                        f"Available for this period: {list(record['modules'].keys())}."
+                if EMPALME_YEAR_MIN <= y <= EMPALME_DOWNLOADABLE_MAX:
+                    merged = _load_empalme_month_merged(
+                        y,
+                        mo,
+                        area=area,
+                        harmonize=harmonize,
+                        variables=variables,
+                        modules=modules,
                     )
+                    if multi:
+                        merged = merged.assign(year=y, month=mo)
+                    all_frames.append(merged)
+                    continue
 
-        # Issue 2: when harmonize=True and the user provided an explicit module
-        # list, auto-include any modules required by the canonical variables so
-        # harmonization doesn't silently skip variables whose source columns are
-        # absent.  Only applies when harmonize=True; user's list is sacred otherwise.
-        if harmonize and modules is not None:
-            variable_map = _load_variable_map()
-            required = _required_modules_for_variables(variable_map, sources, epoch.key, variables)
-            for m in required:
-                if m not in working_modules:
-                    working_modules.append(m)
-                    logger.debug("Auto-including module %r required by harmonized variables.", m)
+                if y == EMPALME_YEAR_MAX:
+                    warnings.warn(
+                        f"apply_smoothing=True requested for {y}-{mo:02d} but the Empalme ZIP "
+                        f"for {y} has not been published by DANE. "
+                        "Falling back to raw GEIH data.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                # For years outside 2010-2020: silently fall through to normal path.
 
-        module_dfs = {
-            mod: load(
-                year=y,
-                month=mo,
-                module=mod,
-                area=area,
-                harmonize=False,
-                cache=cache,
-                show_progress=show_progress,
-                strict=strict_flag,
-                _emit_unvalidated_warning_at_end=False,
-            )
-            for mod in working_modules
-            if mod in record["modules"]
-        }
+            # ── Normal loading path ───────────────────────────────────────────
+            epoch = epoch_for_month(y, mo)
 
-        merged = merge_modules(module_dfs, epoch, level="persona", how="outer")
+            record = sources["data"].get(key)
+            if record is None:
+                raise DataNotAvailableError(
+                    y,
+                    mo,
+                    hint="Use pulso.list_available() to see which months are in the registry.",
+                )
 
-        if harmonize:
-            merged = harmonize_dataframe(merged, epoch, variables=variables)
+            if not record["validated"]:
+                unvalidated_keys.append(key)
 
-        if multi:
-            merged["year"] = y
-            merged["month"] = mo
+            # Determine the working module list for this period.
+            working_modules = list(record["modules"].keys()) if modules is None else list(modules)
 
-        all_frames.append(merged)
+            # M-2: when the user passed `modules=[...]` explicitly, every module
+            # in the list must exist for this period. Silently dropping is the
+            # old bug — surface it so callers know what they actually got.
+            if modules is not None:
+                for mod in modules:
+                    if mod not in record["modules"]:
+                        raise ModuleNotAvailableError(
+                            f"Module {mod!r} is not available for {key}. "
+                            f"Available for this period: {list(record['modules'].keys())}."
+                        )
+
+            # Issue 2: when harmonize=True and the user provided an explicit module
+            # list, auto-include any modules required by the canonical variables so
+            # harmonization doesn't silently skip variables whose source columns are
+            # absent.  Only applies when harmonize=True; user's list is sacred otherwise.
+            if harmonize and modules is not None:
+                variable_map = _load_variable_map()
+                required = _required_modules_for_variables(
+                    variable_map, sources, epoch.key, variables
+                )
+                for m in required:
+                    if m not in working_modules:
+                        working_modules.append(m)
+                        logger.debug(
+                            "Auto-including module %r required by harmonized variables.", m
+                        )
+
+            module_dfs = {
+                mod: load(
+                    year=y,
+                    month=mo,
+                    module=mod,
+                    area=area,
+                    harmonize=False,
+                    cache=cache,
+                    show_progress=show_progress,
+                    strict=strict_flag,
+                    _emit_unvalidated_warning_at_end=False,
+                )
+                for mod in working_modules
+                if mod in record["modules"]
+            }
+
+            merged = merge_modules(module_dfs, epoch, level="persona", how="outer")
+
+            if harmonize:
+                merged = harmonize_dataframe(merged, epoch, variables=variables)
+
+            if multi:
+                merged["year"] = y
+                merged["month"] = mo
+
+            all_frames.append(merged)
+        except _SKIPPABLE as exc:
+            if strict_flag:
+                raise
+            failures.append((key, f"{type(exc).__name__}: {exc}"))
+            logger.info("Skipping %s under strict=False: %s", key, exc)
+            continue
 
     if not strict_flag:
         _emit_unvalidated_warning(
             unvalidated_keys,
             total_loaded=len(all_frames),
             total_requested=len(periods),
+            failures=failures,
         )
 
     if not all_frames:
