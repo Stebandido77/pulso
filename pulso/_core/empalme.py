@@ -33,6 +33,8 @@ from pulso._utils.exceptions import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -360,31 +362,16 @@ def _load_empalme_month_merged(
 # ── Public API ────────────────────────────────────────────────────────────────
 
 
-def load_empalme(
+def _load_empalme_single_year(
     year: int,
-    module: str | None = None,
-    area: str = "total",
-    harmonize: bool = True,
+    module: str | None,
+    area: str,
+    harmonize: bool,
 ) -> pd.DataFrame:
-    """Load all 12 months of GEIH Empalme data for *year*, stacked vertically.
+    """Load all 12 months of empalme data for a single year.
 
-    Args:
-        year: Year in 2010-2019.  2020 raises DataNotAvailableError (ZIP not
-            published); years outside 2010-2020 raise ValueError.
-        module: Canonical module name to load alone (e.g. ``'ocupados'``).
-            If None, all available modules are loaded and merged at persona level.
-        area: ``'cabecera'``, ``'resto'``, or ``'total'``.
-        harmonize: If True, apply variable_map.json transforms.
-
-    Returns:
-        DataFrame with all 12 months stacked.  ``year`` and ``month`` columns
-        are always added.
-
-    Raises:
-        ValueError: year outside 2010-2020.
-        DataNotAvailableError: year=2020 (ZIP not published by DANE).
-        DownloadError: network failure.
-        ParseError: cannot parse a module from the sub-ZIP.
+    Internal helper extracted so the public ``load_empalme`` can iterate
+    over a year iterable and stack the results.
     """
     import pandas as pd
 
@@ -459,4 +446,77 @@ def load_empalme(
 
     if not frames:
         return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
+
+
+def load_empalme(
+    year: int | range | Iterable[int],
+    module: str | None = None,
+    area: str = "total",
+    harmonize: bool = True,
+) -> pd.DataFrame:
+    """Load GEIH Empalme data for one or more years, stacked vertically.
+
+    Args:
+        year: A single ``int`` in 2010-2019, a ``range`` (e.g.
+            ``range(2010, 2020)``), or any iterable of ints. Year 2020 is in
+            the registry but the ZIP has not been published — it raises
+            ``DataNotAvailableError``. Years outside 2010-2020 raise
+            ``ValueError``.
+        module: Canonical module name to load alone (e.g. ``'ocupados'``).
+            If None, all available modules are loaded and merged at persona level.
+        area: ``'cabecera'``, ``'resto'``, or ``'total'``.
+        harmonize: If True, apply variable_map.json transforms.
+
+    Returns:
+        DataFrame with every loaded month stacked. ``year`` and ``month``
+        columns are always added so multi-year stacks remain unambiguous.
+
+    Raises:
+        ValueError: any year outside 2010-2020, or empty iterable.
+        TypeError: ``year`` is bool, str, or non-iterable of unsupported type.
+        DataNotAvailableError: any requested year=2020 (ZIP not published).
+        DownloadError: network failure.
+        ParseError: cannot parse a module from the sub-ZIP.
+    """
+    import pandas as pd
+
+    # Local normalisation: accept int/range/iterable, reject bool/str/empty.
+    # Out-of-range years raise ``ValueError`` (not ``PulsoError``) to preserve
+    # the rc1 contract documented in ``test_load_empalme_invalid_year_raises``.
+    if isinstance(year, bool):
+        raise TypeError(f"year must be int, range, or iterable, not bool (got {year!r}).")
+    if isinstance(year, str):
+        raise TypeError(f"year must be int, range, or iterable of ints, not str (got {year!r}).")
+    if isinstance(year, int):
+        years = [year]
+    elif isinstance(year, range):
+        years = list(year)
+    else:
+        try:
+            years = sorted({int(y) for y in year})
+        except (TypeError, ValueError) as exc:
+            raise TypeError(
+                f"year must be int, range, or iterable of ints (got {type(year).__name__})."
+            ) from exc
+
+    if not years:
+        raise ValueError(f"year cannot be empty (got {year!r}).")
+    for y in years:
+        if y < EMPALME_YEAR_MIN or y > EMPALME_YEAR_MAX:
+            raise ValueError(
+                f"Empalme data is only available for years "
+                f"{EMPALME_YEAR_MIN}-{EMPALME_YEAR_MAX}. Got {y}."
+            )
+
+    frames: list[pd.DataFrame] = []
+    for y in years:
+        df = _load_empalme_single_year(y, module=module, area=area, harmonize=harmonize)
+        if len(df) > 0:
+            frames.append(df)
+
+    if not frames:
+        return pd.DataFrame()
+    if len(frames) == 1:
+        return frames[0]
     return pd.concat(frames, ignore_index=True)

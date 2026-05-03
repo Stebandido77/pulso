@@ -10,6 +10,8 @@ import warnings
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     import pandas as pd
 
 Area = Literal["cabecera", "resto", "total"]
@@ -141,8 +143,8 @@ def _required_modules_for_variables(
 
 
 def load(
-    year: int | range,
-    month: int | list[int] | None = None,
+    year: int | range | Iterable[int],
+    month: int | range | list[int] | tuple[int, ...] | Iterable[int] | None = None,
     module: str = "caracteristicas_generales",
     area: Area = "total",
     harmonize: bool = True,
@@ -158,8 +160,13 @@ def load(
     Carga microdatos del GEIH para el módulo indicado.
 
     Args:
-        year: Single year, range, or iterable of years.
-        month: Single month (1-12), list of months, or None for all 12.
+        year: Single ``int`` (e.g. ``2024``), a ``range`` (e.g.
+            ``range(2007, 2025)``), or any iterable of ints (list, tuple,
+            set). All inputs are normalised internally to a sorted list.
+        month: Single ``int`` (1-12), a ``range`` (e.g. ``range(1, 13)``),
+            any iterable of ints, or ``None`` for all 12 months. The
+            cartesian product of ``year`` x ``month`` defines the periods to
+            load.
         module: Canonical module name (e.g., 'ocupados').
         area: 'cabecera' (urban), 'resto' (rural), or 'total'.
         harmonize: If True, apply variable_map.json transforms.
@@ -298,8 +305,8 @@ def load(
 
 
 def load_merged(
-    year: int,
-    month: int | None = None,
+    year: int | range | Iterable[int],
+    month: int | range | list[int] | tuple[int, ...] | Iterable[int] | None = None,
     modules: list[str] | None = None,
     area: Area = "total",
     harmonize: bool = True,
@@ -316,8 +323,9 @@ def load_merged(
     armonización opcional.
 
     Args:
-        year: Single year (int).
-        month: Single month (1-12) or None for all months in the year.
+        year: Single ``int``, a ``range``, or any iterable of ints.
+        month: Single ``int`` (1-12), a ``range``, any iterable of ints,
+            or ``None`` for all 12 months.
         modules: List of canonical module names. If None, all modules
             registered for the (year, month) are loaded (auto-discovery —
             modules absent from the period are silently skipped). When

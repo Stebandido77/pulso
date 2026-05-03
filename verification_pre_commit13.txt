@@ -1,0 +1,13 @@
+=== Signature actual de pulso.load ===
+(year: 'int | range | Iterable[int]', month: 'int | range | list[int] | tuple[int, ...] | Iterable[int] | None' = None, module: 'str' = 'caracteristicas_generales', area: 'Area' = 'total', harmonize: 'bool' = True, columns: 'list[str] | None' = None, cache: 'bool' = True, show_progress: 'bool' = True, strict: 'bool | None' = None, allow_unvalidated: 'bool | None' = None, _emit_unvalidated_warning_at_end: 'bool' = True) -> 'pd.DataFrame'
+  type hint de month: int | range | list[int] | tuple[int, ...] | Iterable[int] | None
+  type hint de year:  int | range | Iterable[int]
+
+=== Smoke tests de qué soporta (offline, sin red) ===
+  year=int, month=int                      -> SOPORTADO (shape=(1, 3))
+  year=range, month=int                    -> SOPORTADO (shape=(2, 5))
+  year=int, month=range                    -> SOPORTADO (shape=(3, 5))
+  year=range, month=range                  -> SOPORTADO (shape=(6, 5))
+  year=int, month=list                     -> SOPORTADO (shape=(3, 5))
+  year=list, month=list                    -> SOPORTADO (shape=(4, 5))
+  year=int, month=tuple                    -> SOPORTADO (shape=(3, 5))
