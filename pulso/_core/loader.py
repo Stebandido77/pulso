@@ -337,7 +337,12 @@ def load_merged(
 
             if EMPALME_YEAR_MIN <= y <= EMPALME_DOWNLOADABLE_MAX:
                 merged = _load_empalme_month_merged(
-                    y, mo, area=area, harmonize=harmonize, variables=variables
+                    y,
+                    mo,
+                    area=area,
+                    harmonize=harmonize,
+                    variables=variables,
+                    modules=modules,
                 )
                 if multi:
                     merged = merged.assign(year=y, month=mo)
@@ -372,6 +377,19 @@ def load_merged(
 
         # Determine the working module list for this period.
         working_modules = list(record["modules"].keys()) if modules is None else list(modules)
+
+        # M-2: when the user passed `modules=[...]` explicitly, every module
+        # in the list must exist for this period. Silently dropping is the old
+        # bug — surface it so callers know what they actually got.
+        if modules is not None:
+            from pulso._utils.exceptions import ModuleNotAvailableError
+
+            for mod in modules:
+                if mod not in record["modules"]:
+                    raise ModuleNotAvailableError(
+                        f"Module {mod!r} is not available for {key}. "
+                        f"Available for this period: {list(record['modules'].keys())}."
+                    )
 
         # Issue 2: when harmonize=True and the user provided an explicit module
         # list, auto-include any modules required by the canonical variables so

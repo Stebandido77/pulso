@@ -279,14 +279,23 @@ def _load_empalme_month_merged(
     area: str = "total",
     harmonize: bool = True,
     variables: list[str] | None = None,
+    modules: list[str] | None = None,
 ) -> pd.DataFrame:
     """Load one empalme month, all modules merged.  Used by the apply_smoothing path.
 
     Downloads the annual ZIP (uses cache) and extracts only the requested
     month's sub-ZIP to a temp file — the other 11 months' bytes are never read.
 
+    Args:
+        modules: Optional subset of canonical module names to parse. If None,
+            every module discoverable in the sub-ZIP is parsed (legacy
+            behaviour). When provided explicitly, only those modules are
+            parsed; modules absent from the sub-ZIP are reported via
+            ``ParseError`` rather than silently dropped.
+
     Raises:
-        ParseError: sub-ZIP for *month* not found, or all modules fail to parse.
+        ParseError: sub-ZIP for *month* not found, all modules fail to parse,
+            or an explicitly-requested module is missing from the sub-ZIP.
     """
     from pulso._core.harmonizer import harmonize_dataframe
     from pulso._core.merger import merge_modules
@@ -309,15 +318,31 @@ def _load_empalme_month_merged(
         tmp.write(inner_bytes)
         tmp_path = Path(tmp.name)
 
+    # Decide the working set of modules. If the user provided an explicit list,
+    # honour it (M-1 fix); otherwise parse every module key from the registry.
+    target_modules = list(modules) if modules is not None else list(MODULE_KEYWORDS_GEIH1)
+
     try:
         module_dfs: dict[str, pd.DataFrame] = {}
-        for mod_name in MODULE_KEYWORDS_GEIH1:
+        for mod_name in target_modules:
             try:
                 df = _parse_empalme_module(tmp_path, mod_name)
                 df = _apply_area_filter(df, area)
                 module_dfs[mod_name] = df
             except Exception as exc:
-                logger.debug("Empalme %d-%02d: skipping module %r — %s", year, month, mod_name, exc)
+                if modules is not None:
+                    # Explicit request: surface the failure instead of dropping.
+                    raise ParseError(
+                        f"Empalme {year}-{month:02d}: requested module "
+                        f"{mod_name!r} could not be parsed: {exc}"
+                    ) from exc
+                logger.debug(
+                    "Empalme %d-%02d: skipping module %r — %s",
+                    year,
+                    month,
+                    mod_name,
+                    exc,
+                )
 
         if not module_dfs:
             raise ParseError(f"No modules could be parsed for Empalme {year}-{month:02d}.")
