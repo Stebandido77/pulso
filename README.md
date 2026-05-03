@@ -29,13 +29,16 @@ Tres cosas que hace:
 - **Armoniza** — mapea los códigos de columna crudos del DANE (`P6020`, `FEX_C18`, …) a variables canónicas nombradas (`sexo`, `peso_expansion`, …) de forma consistente entre épocas metodológicas.
 
 ```python
-import pulso-co as pulso 
+import pulso
 
 # Cargar un módulo, un mes
 df = pulso.load(year=2024, month=6, module="ocupados")
 
-# Serie temporal
+# Serie temporal (un mes por año)
 df = pulso.load(year=range(2018, 2025), month=6, module="ocupados")
+
+# Producto cartesiano: cada mes de cada año (year × month)
+df = pulso.load(year=range(2018, 2025), month=range(1, 13), module="ocupados")
 
 # Merge entre módulos
 df = pulso.load_merged(year=2024, month=6,
@@ -96,10 +99,28 @@ El año 2020 existe en el catálogo del DANE pero el ZIP no ha sido publicado; `
 pip install pulso-co
 ```
 
+> **Importante — el nombre del paquete y el del módulo son distintos:**
+>
+> - **Distribución en PyPI:** `pulso-co` (con guión, porque el nombre
+>   `pulso` ya estaba tomado en PyPI por otro paquete sin relación).
+> - **Módulo de Python para importar:** `pulso` (sin guión).
+>
+> ```bash
+> pip install pulso-co     # instalar
+> ```
+> ```python
+> import pulso             # importar
+> df = pulso.load(year=2024, month=6, module="ocupados")
+> ```
+>
+> NO escribas `import pulso-co` — los guiones no son válidos en nombres
+> de módulo de Python y resultarían en `SyntaxError`. Mientras esta
+> librería esté en pre-release, instalá con `pip install --pre pulso-co`.
+
 ### Quickstart
 
 ```python
-import pulso-co as pulso
+import pulso
 
 # 1. Ver qué hay disponible
 disponible = pulso.list_available()              # todos los meses
@@ -161,7 +182,11 @@ status[~status.validated].head(5)   # primeros no validados
 df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
 
 # Para forzar validación estricta (raise si no está validado):
-df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+try:
+    df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+except pulso.DataNotValidatedError as exc:
+    # Todas las exceptions están exportadas en el namespace raíz.
+    print(f"Sin validar: {exc}")
 ```
 
 > El parámetro `allow_unvalidated` está deprecado desde v1.0.0rc2 — usá
@@ -266,13 +291,16 @@ Three things it does:
 - **Harmonize** — maps raw DANE column codes (`P6020`, `FEX_C18`, …) to named canonical variables (`sexo`, `peso_expansion`, …) consistently across methodological epochs.
 
 ```python
-import pulso-co as pulso
+import pulso
 
 # Load one module, one month
 df = pulso.load(year=2024, month=6, module="ocupados")
 
-# Time series across years
+# Time series (one month per year)
 df = pulso.load(year=range(2018, 2025), month=6, module="ocupados")
+
+# Cartesian product: every month of every year (year × month)
+df = pulso.load(year=range(2018, 2025), month=range(1, 13), module="ocupados")
 
 # Multi-module merge
 df = pulso.load_merged(year=2024, month=6,
@@ -333,10 +361,28 @@ Year 2020 exists in DANE's catalog but the ZIP has not been published; `load_emp
 pip install pulso-co
 ```
 
+> **Important — the PyPI distribution name and the Python module name differ:**
+>
+> - **PyPI distribution:** `pulso-co` (with the hyphen — the bare name
+>   `pulso` was already taken on PyPI by an unrelated package).
+> - **Python module to import:** `pulso` (no hyphen).
+>
+> ```bash
+> pip install pulso-co     # install
+> ```
+> ```python
+> import pulso             # import
+> df = pulso.load(year=2024, month=6, module="ocupados")
+> ```
+>
+> Do NOT write `import pulso-co` — hyphens are not valid in Python module
+> names and would raise `SyntaxError`. While this library is still in
+> pre-release, install with `pip install --pre pulso-co`.
+
 ### Quickstart
 
 ```python
-import pulso-co as pulso 
+import pulso
 
 # 1. See what's available
 available = pulso.list_available()          # all months
@@ -398,7 +444,11 @@ status[~status.validated].head(5)   # first unvalidated
 df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
 
 # To enforce strict validation (raise on unvalidated entries):
-df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+try:
+    df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+except pulso.DataNotValidatedError as exc:
+    # Every exception class is exported at the top-level namespace.
+    print(f"Unvalidated: {exc}")
 ```
 
 > The `allow_unvalidated` parameter was deprecated in v1.0.0rc2 — use
