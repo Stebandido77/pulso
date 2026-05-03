@@ -111,6 +111,38 @@ def test_describe_column_with_real_load(registry_with_fixture: None) -> None:
 
 
 @pytest.mark.integration
+def test_curator_wins_p3271_categories_e2e(registry_with_fixture: None) -> None:
+    """Fix 4 (precedence) verified end-to-end: a load with metadata=True and a
+    column whose codebook entry has null/empty categories but Curator
+    supplies a category dict must surface the Curator categories. P3271
+    (sex GEIH-2) is the canonical case — Curator has {"1": "hombre",
+    "2": "mujer"} and the codebook for some years has null categories.
+    """
+    import pulso
+
+    df = pulso.load(
+        year=2024,
+        month=6,
+        module="ocupados",
+        area="cabecera",
+        harmonize=False,
+        metadata=True,
+    )
+
+    column_metadata = df.attrs.get("column_metadata") or {}
+    if "P3271" not in column_metadata:
+        pytest.skip("P3271 not in fixture columns; cannot verify Fix 4 here.")
+
+    p3271 = column_metadata["P3271"]
+    cats = p3271.get("categories")
+    assert cats is not None, f"P3271 categories should be non-empty (Curator wins): {p3271!r}"
+    assert len(cats) > 0, f"P3271 categories should be non-empty (Curator wins): {p3271!r}"
+    # Curator labels are lower-case.
+    assert cats.get("1") == "hombre"
+    assert cats.get("2") == "mujer"
+
+
+@pytest.mark.integration
 def test_list_columns_metadata_with_real_load(registry_with_fixture: None) -> None:
     """``list_columns_metadata`` returns a tidy DataFrame on a real load."""
     import pulso
