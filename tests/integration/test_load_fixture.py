@@ -97,11 +97,17 @@ def test_load_unknown_module_raises(registry_with_fixture: None) -> None:
 
 @pytest.mark.integration
 def test_load_missing_period_raises(registry_with_fixture: None) -> None:
+    """Single missing period under strict=True still raises (rc1 contract).
+
+    Under the new strict=False default (Commit 7), a missing period is
+    skipped with a warning rather than aborting; this test exercises the
+    strict path which preserves the original behaviour.
+    """
     import pulso
     from pulso._utils.exceptions import DataNotAvailableError
 
     with pytest.raises(DataNotAvailableError):
-        pulso.load(year=2024, month=7, module="ocupados", harmonize=False)
+        pulso.load(year=2024, month=7, module="ocupados", harmonize=False, strict=True)
 
 
 @pytest.mark.integration

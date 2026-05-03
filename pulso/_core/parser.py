@@ -206,13 +206,23 @@ def parse_shape_a_module(
         if cab_name:
             with zf.open(cab_name) as fh:
                 raw = fh.read()
-            df_cab: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+            try:
+                df_cab: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+            except Exception as exc:
+                raise ParseError(f"Failed to parse {cab_name!r} in {zip_path.name}: {exc}") from exc
             df_cab["CLASE"] = 1
             dfs.append(df_cab)
         if resto_name:
             with zf.open(resto_name) as fh:
                 raw = fh.read()
-            df_resto: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+            try:
+                df_resto: pd.DataFrame = _normalize_dane_columns(
+                    _read_csv_with_fallback(raw, epoch)
+                )
+            except Exception as exc:
+                raise ParseError(
+                    f"Failed to parse {resto_name!r} in {zip_path.name}: {exc}"
+                ) from exc
             df_resto["CLASE"] = 2
             dfs.append(df_resto)
 

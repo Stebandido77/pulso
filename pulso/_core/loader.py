@@ -276,8 +276,16 @@ def load(
                 df = harmonize_dataframe(df, epoch)
 
             if multi:
-                df["year"] = y
-                df["month"] = m
+                # Wide GEIH DataFrames (>100 cols) are already block-fragmented
+                # by the harmonizer's per-variable concat. Adding `year` and
+                # `month` here would trigger a pandas PerformanceWarning that
+                # the project's `filterwarnings = ["error"]` config escalates
+                # to a real error. Ignoring just this warning, scoped to
+                # these two columns, keeps the message-as-error policy
+                # everywhere else.
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", pd.errors.PerformanceWarning)
+                    df = df.assign(year=y, month=m)
 
             frames.append(df)
         except _SKIPPABLE as exc:
@@ -504,8 +512,12 @@ def load_merged(
                 merged = harmonize_dataframe(merged, epoch, variables=variables)
 
             if multi:
-                merged["year"] = y
-                merged["month"] = mo
+                # See note in `load`: scope the suppression of pandas'
+                # PerformanceWarning to just this assignment so the
+                # filterwarnings = ["error"] policy holds everywhere else.
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", pd.errors.PerformanceWarning)
+                    merged = merged.assign(year=y, month=mo)
 
             all_frames.append(merged)
         except _SKIPPABLE as exc:
