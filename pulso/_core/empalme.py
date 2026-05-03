@@ -21,10 +21,16 @@ from typing import TYPE_CHECKING
 import requests
 
 from pulso._config.epochs import get_epoch
+from pulso._core.downloader import verify_checksum
 from pulso._core.parser import MODULE_KEYWORDS_GEIH1, _read_csv_with_fallback
 from pulso._utils.cache import cache_path
 from pulso._utils.columns import _normalize_dane_columns
-from pulso._utils.exceptions import DataNotAvailableError, DownloadError, ParseError
+from pulso._utils.exceptions import (
+    ChecksumMismatchError,
+    DataNotAvailableError,
+    DownloadError,
+    ParseError,
+)
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -91,29 +97,14 @@ def _get_empalme_entry(year: int) -> dict:
 # ── Download ─────────────────────────────────────────────────────────────────
 
 
-def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
-    """Download (or retrieve from cache) the annual Empalme ZIP for *year*.
-
-    Cache location: ``~/.cache/pulso/empalme/{year}.zip``
-
-    Raises:
-        ValueError: year out of empalme range.
-        DataNotAvailableError: year=2020 (ZIP not published).
-        DownloadError: network failure.
-    """
-    entry = _get_empalme_entry(year)
-
-    dest = cache_path() / "empalme" / f"{year}.zip"
-
-    if dest.exists():
-        logger.debug("Empalme %d: using cached file %s", year, dest)
-        return dest
-
-    url: str = entry["download_url"]
-    dest.parent.mkdir(parents=True, exist_ok=True)
+def _stream_to_file(
+    url: str,
+    dest: Path,
+    show_progress: bool,
+    desc: str,
+) -> None:
+    """Stream a GET response to *dest* via a sibling .tmp file (atomic replace)."""
     tmp = dest.with_suffix(".tmp")
-
-    logger.info("Downloading Empalme %d from %s", year, url)
     try:
         response = requests.get(url, stream=True, timeout=120, headers={"User-Agent": "pulso/1.0"})
         response.raise_for_status()
@@ -124,7 +115,7 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
 
             with (
                 tmp.open("wb") as f,
-                tqdm(total=total, unit="B", unit_scale=True, desc=f"empalme-{year}") as bar,
+                tqdm(total=total, unit="B", unit_scale=True, desc=desc) as bar,
             ):
                 for chunk in response.iter_content(chunk_size=65536):
                     f.write(chunk)
@@ -136,9 +127,66 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
     except requests.RequestException as exc:
         if tmp.exists():
             tmp.unlink()
-        raise DownloadError(f"Download failed for Empalme {year}: {exc}") from exc
+        raise DownloadError(f"Download failed for {desc}: {exc}") from exc
 
     tmp.replace(dest)
+
+
+def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
+    """Download (or retrieve from cache) the annual Empalme ZIP for *year*.
+
+    Cache location: ``~/.cache/pulso/empalme/{year}.zip``
+
+    SHA-256 verification:
+        When the registry entry has a recorded ``checksum_sha256`` (years
+        2010-2019 in production), the cached file is verified on every
+        access and the freshly-downloaded file is verified once. A cached
+        file with a mismatched checksum is removed and re-downloaded; if
+        the second download still mismatches, ``ChecksumMismatchError``
+        is raised. When the registry has no checksum (e.g. years for which
+        DANE has not yet published one), verification is skipped with an
+        INFO log entry.
+
+    Raises:
+        ValueError: year out of empalme range.
+        DataNotAvailableError: year=2020 (ZIP not published).
+        DownloadError: network failure.
+        ChecksumMismatchError: downloaded ZIP fails SHA-256 verification.
+    """
+    entry = _get_empalme_entry(year)
+
+    dest = cache_path() / "empalme" / f"{year}.zip"
+    expected_sha: str | None = entry.get("checksum_sha256")
+
+    if dest.exists():
+        if verify_checksum(dest, expected_sha):
+            logger.debug("Empalme %d: using cached file %s", year, dest)
+            return dest
+        logger.warning(
+            "Empalme %d: cached file %s failed checksum verification — " "re-downloading.",
+            year,
+            dest,
+        )
+        dest.unlink()
+
+    url: str = entry["download_url"]
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    logger.info("Downloading Empalme %d from %s", year, url)
+    _stream_to_file(url, dest, show_progress=show_progress, desc=f"empalme-{year}")
+
+    if expected_sha is None:
+        logger.info(
+            "No checksum recorded for Empalme %d — downloaded file accepted "
+            "without SHA-256 verification.",
+            year,
+        )
+    elif not verify_checksum(dest, expected_sha):
+        dest.unlink()
+        raise ChecksumMismatchError(
+            f"Checksum mismatch after downloading Empalme {year}: " f"expected {expected_sha}."
+        )
+
     return dest
 
 
