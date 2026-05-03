@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import io
 import zipfile
 from typing import TYPE_CHECKING
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -240,3 +242,133 @@ def test_normalize_empalme_columns_renames_fex_variants() -> None:
     )
     assert "FEX_C" in r4.columns
     assert r4.columns.tolist().count("FEX_C") == 1  # only one FEX_C column
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# M-3 regression tests: download_empalme_zip must verify SHA-256 when available
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+def _patch_empalme_registry(monkeypatch: pytest.MonkeyPatch, checksum: str | None) -> None:
+    """Replace _load_empalme_registry with a single-entry stub for year 2015."""
+    from pulso._core import empalme as emp_mod
+
+    fake = {
+        "metadata": {"schema_version": "1.0.0"},
+        "data": {
+            "2015": {
+                "year": 2015,
+                "downloadable": True,
+                "download_url": "https://example.com/empalme-2015.zip",
+                "checksum_sha256": checksum,
+                "size_bytes": None,
+                "catalog_id": "0",
+            }
+        },
+    }
+    monkeypatch.setattr(emp_mod, "_load_empalme_registry", lambda: fake)
+
+
+def test_download_empalme_zip_verifies_checksum_when_available(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mocker,  # type: ignore[no-untyped-def]
+) -> None:
+    """M-3: empalme con checksum válido pasa verificación end-to-end."""
+    from pulso._core import empalme as emp_mod
+
+    payload = b"empalme bytes"
+    sha = hashlib.sha256(payload).hexdigest()
+    _patch_empalme_registry(monkeypatch, sha)
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(tmp_path / "cache"))
+
+    mock_response = MagicMock()
+    mock_response.iter_content.return_value = [payload]
+    mock_response.headers = {}
+    mock_response.raise_for_status = MagicMock()
+    mocker.patch("requests.get", return_value=mock_response)
+
+    p = emp_mod.download_empalme_zip(2015, show_progress=False)
+    assert p.exists()
+    assert p.read_bytes() == payload
+
+
+def test_download_empalme_zip_detects_checksum_mismatch(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mocker,  # type: ignore[no-untyped-def]
+) -> None:
+    """M-3: empalme con checksum mismatch raisea ChecksumMismatchError."""
+    from pulso._core import empalme as emp_mod
+    from pulso._utils.exceptions import ChecksumMismatchError
+
+    _patch_empalme_registry(monkeypatch, "f" * 64)  # never matches real bytes
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(tmp_path / "cache"))
+
+    mock_response = MagicMock()
+    mock_response.iter_content.return_value = [b"empalme bytes"]
+    mock_response.headers = {}
+    mock_response.raise_for_status = MagicMock()
+    mocker.patch("requests.get", return_value=mock_response)
+
+    with pytest.raises(ChecksumMismatchError):
+        emp_mod.download_empalme_zip(2015, show_progress=False)
+
+
+def test_download_empalme_zip_skips_verification_when_no_checksum(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mocker,  # type: ignore[no-untyped-def]
+    caplog,  # type: ignore[no-untyped-def]
+) -> None:
+    """M-3: empalme con checksum=None acepta el archivo y emite log INFO."""
+    import logging
+
+    from pulso._core import empalme as emp_mod
+
+    _patch_empalme_registry(monkeypatch, None)
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(tmp_path / "cache"))
+
+    mock_response = MagicMock()
+    mock_response.iter_content.return_value = [b"unverified bytes"]
+    mock_response.headers = {}
+    mock_response.raise_for_status = MagicMock()
+    mocker.patch("requests.get", return_value=mock_response)
+
+    with caplog.at_level(logging.INFO, logger="pulso._core.empalme"):
+        p = emp_mod.download_empalme_zip(2015, show_progress=False)
+
+    assert p.exists()
+    assert any("without SHA-256 verification" in record.message for record in caplog.records), (
+        "Expected INFO log about skipped verification"
+    )
+
+
+def test_download_empalme_zip_invalidates_corrupted_cache(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mocker,  # type: ignore[no-untyped-def]
+) -> None:
+    """M-3: cached file with bad checksum gets removed and re-downloaded once."""
+    from pulso._core import empalme as emp_mod
+
+    good_payload = b"good empalme bytes"
+    sha = hashlib.sha256(good_payload).hexdigest()
+    _patch_empalme_registry(monkeypatch, sha)
+
+    cache_root = tmp_path / "cache"
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(cache_root))
+
+    # Pre-populate cache with corrupted bytes.
+    dest = cache_root / "empalme" / "2015.zip"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(b"corrupt")
+
+    mock_response = MagicMock()
+    mock_response.iter_content.return_value = [good_payload]
+    mock_response.headers = {}
+    mock_response.raise_for_status = MagicMock()
+    mocker.patch("requests.get", return_value=mock_response)
+
+    p = emp_mod.download_empalme_zip(2015, show_progress=False)
+    assert p.read_bytes() == good_payload

@@ -35,6 +35,15 @@ class DownloadError(PulsoError):
     """Raised when the ZIP download fails or the checksum mismatches."""
 
 
+class ChecksumMismatchError(DownloadError):
+    """Raised specifically when a downloaded or cached file's SHA-256 does
+    not match the expected value recorded in the registry.
+
+    Subclasses ``DownloadError`` so existing ``except DownloadError`` blocks
+    continue to catch checksum failures (backward compatibility).
+    """
+
+
 class ParseError(PulsoError):
     """Raised when the parser cannot read a file inside the ZIP."""
 

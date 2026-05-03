@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pulso-co"
-version = "1.0.0rc1"
+version = "1.0.0rc2"
 description = "Python library to load GEIH microdata from Colombia's DANE"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -97,8 +97,12 @@ exclude = [
     ".gitignore",
     ".ruff_cache",
     ".mypy_cache",
+    ".coverage",
+    ".coverage.*",
     "scripts/_spike_phase35",
     "scripts/scrape_cache",
+    "scripts/verification",      # ad-hoc release verification scripts (not user-facing)
+    "docs/internal",             # audit reports, phase notes, issue drafts (process docs)
     "dist/",
     "build/",
 ]

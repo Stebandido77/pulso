@@ -14,7 +14,7 @@ The script:
   5. Prints a JSON snippet to stdout (copy into sources.json manually)
 
 After adding, run a smoke test:
-    pulso.load(year, month, "ocupados", allow_unvalidated=True)
+    pulso.load(year, month, "ocupados", strict=False)
 Then flip `validated: true` and `validated_by: "manual"` in sources.json.
 """
 

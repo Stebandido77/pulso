@@ -4,8 +4,8 @@
 > *Python library to load GEIH microdata from Colombia's DANE.*
 
 [![CI](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml/badge.svg)](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/pulso.svg)](https://pypi.org/project/pulso/)
-[![Python](https://img.shields.io/pypi/pyversions/pulso.svg)](https://pypi.org/project/pulso/)
+[![PyPI version](https://img.shields.io/pypi/v/pulso-co.svg)](https://pypi.org/project/pulso-co/)
+[![Python](https://img.shields.io/pypi/pyversions/pulso-co.svg)](https://pypi.org/project/pulso-co/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -29,13 +29,16 @@ Tres cosas que hace:
 - **Armoniza** — mapea los códigos de columna crudos del DANE (`P6020`, `FEX_C18`, …) a variables canónicas nombradas (`sexo`, `peso_expansion`, …) de forma consistente entre épocas metodológicas.
 
 ```python
-import pulso-co as pulso 
+import pulso
 
 # Cargar un módulo, un mes
 df = pulso.load(year=2024, month=6, module="ocupados")
 
-# Serie temporal
+# Serie temporal (un mes por año)
 df = pulso.load(year=range(2018, 2025), month=6, module="ocupados")
+
+# Producto cartesiano: cada mes de cada año (year × month)
+df = pulso.load(year=range(2018, 2025), month=range(1, 13), module="ocupados")
 
 # Merge entre módulos
 df = pulso.load_merged(year=2024, month=6,
@@ -96,10 +99,28 @@ El año 2020 existe en el catálogo del DANE pero el ZIP no ha sido publicado; `
 pip install pulso-co
 ```
 
+> **Importante — el nombre del paquete y el del módulo son distintos:**
+>
+> - **Distribución en PyPI:** `pulso-co` (con guión, porque el nombre
+>   `pulso` ya estaba tomado en PyPI por otro paquete sin relación).
+> - **Módulo de Python para importar:** `pulso` (sin guión).
+>
+> ```bash
+> pip install pulso-co     # instalar
+> ```
+> ```python
+> import pulso             # importar
+> df = pulso.load(year=2024, month=6, module="ocupados")
+> ```
+>
+> NO escribas `import pulso-co` — los guiones no son válidos en nombres
+> de módulo de Python y resultarían en `SyntaxError`. Mientras esta
+> librería esté en pre-release, instalá con `pip install --pre pulso-co`.
+
 ### Quickstart
 
 ```python
-import pulso-co as pulso
+import pulso
 
 # 1. Ver qué hay disponible
 disponible = pulso.list_available()              # todos los meses
@@ -136,10 +157,41 @@ df_expandido = pulso.expand(df, weight="peso_expansion")
 | `cache_clear(level)` | ✅ estable | Limpia raw / parsed / harmonized / todo |
 | `cache_path()` | ✅ estable | Ruta absoluta al directorio de caché |
 | `data_version()` | ✅ estable | Versión del registro de datos (ej. `"2026.04"`) |
-| `list_variables()` | 🚧 planeada | Listar variables armonizadas canónicas |
-| `describe_variable(name)` | 🚧 planeada | Definición + notas de comparabilidad |
-| `describe_harmonization(variable)` | 🚧 planeada | Detalle del mapeo por época |
-| `describe(module, year)` | 🚧 planeada | Metadatos del módulo + info de época |
+| `list_variables(harmonized)` | ✅ estable | DataFrame de variables canónicas armonizadas |
+| `describe_variable(name)` | ✅ estable | Definición + notas de comparabilidad |
+| `describe_harmonization(variable)` | ✅ estable | Detalle del mapeo por época |
+| `describe(module, year)` | ✅ estable | Metadatos del módulo + info de época |
+| `list_validated_range()` | ✅ estable | Lista ordenada de pares `(año, mes)` validados |
+| `validation_status()` | ✅ estable | DataFrame con estado de validación de cada entrada |
+
+### Validación de datos
+
+```python
+import pulso
+
+# ¿Qué meses están validados end-to-end?
+pulso.list_validated_range()
+# → [(2007, 12), (2015, 6), (2021, 12), (2022, 1), (2024, 6)]
+
+# Estado completo del registro (validados + no validados)
+status = pulso.validation_status()
+status[status.validated]            # solo validados
+status[~status.validated].head(5)   # primeros no validados
+
+# Por defecto pulso es permisivo (carga con UserWarning):
+df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
+
+# Para forzar validación estricta (raise si no está validado):
+try:
+    df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+except pulso.DataNotValidatedError as exc:
+    # Todas las exceptions están exportadas en el namespace raíz.
+    print(f"Sin validar: {exc}")
+```
+
+> El parámetro `allow_unvalidated` está deprecado desde v1.0.0rc2 — usá
+> `strict` en su lugar. Mapping: `allow_unvalidated=True ↔ strict=False`.
+> Ver [`DEPRECATIONS.md`](DEPRECATIONS.md).
 
 ### Caché local
 
@@ -183,7 +235,7 @@ Antes de usar los resultados en una publicación, lee [`docs/caveats.md`](docs/c
 
 ### Estado del proyecto
 
-Versión actual: **v1.0.0-rc1** (release candidate). Disponible en [TestPyPI](https://test.pypi.org/project/pulso/).
+Versión actual: **v1.0.0rc2** (release candidate). Disponible en [PyPI](https://pypi.org/project/pulso-co/) como `pulso-co`.
 
 | Fase | Descripción | Estado |
 |------|-------------|--------|
@@ -193,7 +245,7 @@ Versión actual: **v1.0.0-rc1** (release candidate). Disponible en [TestPyPI](ht
 | 3 | Cobertura GEIH completa (2006–presente) | ✅ |
 | 3.5 | Empalme loader + apply_smoothing | ✅ |
 | 4 | Deuda técnica + normalización Shape A | ✅ |
-| 5 | Release en PyPI | 🚧 |
+| 5 | Release en PyPI | ✅ |
 
 Ver [`CHANGELOG.md`](CHANGELOG.md) para más detalles.
 
@@ -239,13 +291,16 @@ Three things it does:
 - **Harmonize** — maps raw DANE column codes (`P6020`, `FEX_C18`, …) to named canonical variables (`sexo`, `peso_expansion`, …) consistently across methodological epochs.
 
 ```python
-import pulso-co as pulso
+import pulso
 
 # Load one module, one month
 df = pulso.load(year=2024, month=6, module="ocupados")
 
-# Time series across years
+# Time series (one month per year)
 df = pulso.load(year=range(2018, 2025), month=6, module="ocupados")
+
+# Cartesian product: every month of every year (year × month)
+df = pulso.load(year=range(2018, 2025), month=range(1, 13), module="ocupados")
 
 # Multi-module merge
 df = pulso.load_merged(year=2024, month=6,
@@ -303,13 +358,31 @@ Year 2020 exists in DANE's catalog but the ZIP has not been published; `load_emp
 ### Installation
 
 ```bash
-pip install pulso
+pip install pulso-co
 ```
+
+> **Important — the PyPI distribution name and the Python module name differ:**
+>
+> - **PyPI distribution:** `pulso-co` (with the hyphen — the bare name
+>   `pulso` was already taken on PyPI by an unrelated package).
+> - **Python module to import:** `pulso` (no hyphen).
+>
+> ```bash
+> pip install pulso-co     # install
+> ```
+> ```python
+> import pulso             # import
+> df = pulso.load(year=2024, month=6, module="ocupados")
+> ```
+>
+> Do NOT write `import pulso-co` — hyphens are not valid in Python module
+> names and would raise `SyntaxError`. While this library is still in
+> pre-release, install with `pip install --pre pulso-co`.
 
 ### Quickstart
 
 ```python
-import pulso-co as pulso 
+import pulso
 
 # 1. See what's available
 available = pulso.list_available()          # all months
@@ -346,10 +419,41 @@ df_expanded = pulso.expand(df, weight="peso_expansion")
 | `cache_clear(level)` | ✅ stable | Clear raw / parsed / harmonized / all |
 | `cache_path()` | ✅ stable | Absolute path to cache root |
 | `data_version()` | ✅ stable | Registry data version (e.g. `"2026.04"`) |
-| `list_variables()` | 🚧 planned | List canonical harmonized variables |
-| `describe_variable(name)` | 🚧 planned | Variable definition + comparability notes |
-| `describe_harmonization(variable)` | 🚧 planned | Per-epoch mapping details |
-| `describe(module, year)` | 🚧 planned | Module metadata + epoch info |
+| `list_variables(harmonized)` | ✅ stable | DataFrame of canonical harmonized variables |
+| `describe_variable(name)` | ✅ stable | Variable definition + comparability notes |
+| `describe_harmonization(variable)` | ✅ stable | Per-epoch mapping details |
+| `describe(module, year)` | ✅ stable | Module metadata + epoch info |
+| `list_validated_range()` | ✅ stable | Sorted `[(year, month), ...]` of validated entries |
+| `validation_status()` | ✅ stable | DataFrame with full registry validation status |
+
+### Validation
+
+```python
+import pulso
+
+# Which months are validated end-to-end?
+pulso.list_validated_range()
+# → [(2007, 12), (2015, 6), (2021, 12), (2022, 1), (2024, 6)]
+
+# Full registry status (validated + unvalidated)
+status = pulso.validation_status()
+status[status.validated]            # only validated
+status[~status.validated].head(5)   # first unvalidated
+
+# By default pulso is permissive (loads with one aggregated UserWarning):
+df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
+
+# To enforce strict validation (raise on unvalidated entries):
+try:
+    df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+except pulso.DataNotValidatedError as exc:
+    # Every exception class is exported at the top-level namespace.
+    print(f"Unvalidated: {exc}")
+```
+
+> The `allow_unvalidated` parameter was deprecated in v1.0.0rc2 — use
+> `strict` instead. Mapping: `allow_unvalidated=True ↔ strict=False`.
+> See [`DEPRECATIONS.md`](DEPRECATIONS.md).
 
 ### Local cache
 
@@ -393,7 +497,7 @@ Before using results in a publication, please read [`docs/caveats.md`](docs/cave
 
 ### Status
 
-Current version: **v1.0.0-rc1** (release candidate). Available on [TestPyPI](https://test.pypi.org/project/pulso/).
+Current version: **v1.0.0rc2** (release candidate). Available on [PyPI](https://pypi.org/project/pulso-co/) as `pulso-co`.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
@@ -403,7 +507,7 @@ Current version: **v1.0.0-rc1** (release candidate). Available on [TestPyPI](htt
 | 3 | Full GEIH coverage (2006–present) | ✅ |
 | 3.5 | Empalme loader + smoothing | ✅ |
 | 4 | Technical debt + Shape A normalization | ✅ |
-| 5 | PyPI release | 🚧 |
+| 5 | PyPI release | ✅ |
 
 See [`CHANGELOG.md`](CHANGELOG.md) for details.
 

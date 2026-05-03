@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from pathlib import Path
-
-    import pytest
 
 
 def test_cache_path_uses_env_var(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -104,3 +104,13 @@ def test_cache_clear_level(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> N
     info = cache_info()
     assert info["by_level"]["raw"]["n_files"] == 0  # type: ignore[index]
     assert info["by_level"]["parsed"]["n_files"] == 1  # type: ignore[index]
+
+
+def test_cache_clear_invalid_level_raises(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """m-8: passing an unknown level used to silently no-op; now raises CacheError."""
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(tmp_path / "cache"))
+    from pulso._utils.cache import cache_clear
+    from pulso._utils.exceptions import CacheError
+
+    with pytest.raises(CacheError, match="Unknown cache level"):
+        cache_clear("raw_zips")  # type: ignore[arg-type]

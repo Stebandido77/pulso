@@ -28,16 +28,42 @@ from pulso._config.registry import (
     describe_variable,
     list_available,
     list_modules,
+    list_validated_range,
     list_variables,
+    validation_status,
 )
 from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
 from pulso._utils.cache import cache_clear, cache_info, cache_path
+from pulso._utils.exceptions import (
+    CacheError,
+    ChecksumMismatchError,
+    ConfigError,
+    DataNotAvailableError,
+    DataNotValidatedError,
+    DownloadError,
+    HarmonizationError,
+    MergeError,
+    ModuleNotAvailableError,
+    ParseError,
+    PulsoError,
+)
 
-__version__ = "1.0.0rc1"
+__version__ = "1.0.0rc2"
 
 __all__ = [
+    "CacheError",
+    "ChecksumMismatchError",
+    "ConfigError",
+    "DataNotAvailableError",
+    "DataNotValidatedError",
+    "DownloadError",
+    "HarmonizationError",
+    "MergeError",
+    "ModuleNotAvailableError",
+    "ParseError",
+    "PulsoError",
     "__version__",
     "cache_clear",
     "cache_info",
@@ -49,8 +75,10 @@ __all__ = [
     "expand",
     "list_available",
     "list_modules",
+    "list_validated_range",
     "list_variables",
     "load",
     "load_empalme",
     "load_merged",
+    "validation_status",
 ]

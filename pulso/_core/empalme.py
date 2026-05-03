@@ -21,12 +21,20 @@ from typing import TYPE_CHECKING
 import requests
 
 from pulso._config.epochs import get_epoch
+from pulso._core.downloader import verify_checksum
 from pulso._core.parser import MODULE_KEYWORDS_GEIH1, _read_csv_with_fallback
 from pulso._utils.cache import cache_path
 from pulso._utils.columns import _normalize_dane_columns
-from pulso._utils.exceptions import DataNotAvailableError, DownloadError, ParseError
+from pulso._utils.exceptions import (
+    ChecksumMismatchError,
+    DataNotAvailableError,
+    DownloadError,
+    ParseError,
+)
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -91,29 +99,14 @@ def _get_empalme_entry(year: int) -> dict:
 # ── Download ─────────────────────────────────────────────────────────────────
 
 
-def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
-    """Download (or retrieve from cache) the annual Empalme ZIP for *year*.
-
-    Cache location: ``~/.cache/pulso/empalme/{year}.zip``
-
-    Raises:
-        ValueError: year out of empalme range.
-        DataNotAvailableError: year=2020 (ZIP not published).
-        DownloadError: network failure.
-    """
-    entry = _get_empalme_entry(year)
-
-    dest = cache_path() / "empalme" / f"{year}.zip"
-
-    if dest.exists():
-        logger.debug("Empalme %d: using cached file %s", year, dest)
-        return dest
-
-    url: str = entry["download_url"]
-    dest.parent.mkdir(parents=True, exist_ok=True)
+def _stream_to_file(
+    url: str,
+    dest: Path,
+    show_progress: bool,
+    desc: str,
+) -> None:
+    """Stream a GET response to *dest* via a sibling .tmp file (atomic replace)."""
     tmp = dest.with_suffix(".tmp")
-
-    logger.info("Downloading Empalme %d from %s", year, url)
     try:
         response = requests.get(url, stream=True, timeout=120, headers={"User-Agent": "pulso/1.0"})
         response.raise_for_status()
@@ -124,7 +117,7 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
 
             with (
                 tmp.open("wb") as f,
-                tqdm(total=total, unit="B", unit_scale=True, desc=f"empalme-{year}") as bar,
+                tqdm(total=total, unit="B", unit_scale=True, desc=desc) as bar,
             ):
                 for chunk in response.iter_content(chunk_size=65536):
                     f.write(chunk)
@@ -136,9 +129,66 @@ def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
     except requests.RequestException as exc:
         if tmp.exists():
             tmp.unlink()
-        raise DownloadError(f"Download failed for Empalme {year}: {exc}") from exc
+        raise DownloadError(f"Download failed for {desc}: {exc}") from exc
 
     tmp.replace(dest)
+
+
+def download_empalme_zip(year: int, show_progress: bool = True) -> Path:
+    """Download (or retrieve from cache) the annual Empalme ZIP for *year*.
+
+    Cache location: ``~/.cache/pulso/empalme/{year}.zip``
+
+    SHA-256 verification:
+        When the registry entry has a recorded ``checksum_sha256`` (years
+        2010-2019 in production), the cached file is verified on every
+        access and the freshly-downloaded file is verified once. A cached
+        file with a mismatched checksum is removed and re-downloaded; if
+        the second download still mismatches, ``ChecksumMismatchError``
+        is raised. When the registry has no checksum (e.g. years for which
+        DANE has not yet published one), verification is skipped with an
+        INFO log entry.
+
+    Raises:
+        ValueError: year out of empalme range.
+        DataNotAvailableError: year=2020 (ZIP not published).
+        DownloadError: network failure.
+        ChecksumMismatchError: downloaded ZIP fails SHA-256 verification.
+    """
+    entry = _get_empalme_entry(year)
+
+    dest = cache_path() / "empalme" / f"{year}.zip"
+    expected_sha: str | None = entry.get("checksum_sha256")
+
+    if dest.exists():
+        if verify_checksum(dest, expected_sha):
+            logger.debug("Empalme %d: using cached file %s", year, dest)
+            return dest
+        logger.warning(
+            "Empalme %d: cached file %s failed checksum verification — re-downloading.",
+            year,
+            dest,
+        )
+        dest.unlink()
+
+    url: str = entry["download_url"]
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    logger.info("Downloading Empalme %d from %s", year, url)
+    _stream_to_file(url, dest, show_progress=show_progress, desc=f"empalme-{year}")
+
+    if expected_sha is None:
+        logger.info(
+            "No checksum recorded for Empalme %d — downloaded file accepted "
+            "without SHA-256 verification.",
+            year,
+        )
+    elif not verify_checksum(dest, expected_sha):
+        dest.unlink()
+        raise ChecksumMismatchError(
+            f"Checksum mismatch after downloading Empalme {year}: expected {expected_sha}."
+        )
+
     return dest
 
 
@@ -231,14 +281,23 @@ def _load_empalme_month_merged(
     area: str = "total",
     harmonize: bool = True,
     variables: list[str] | None = None,
+    modules: list[str] | None = None,
 ) -> pd.DataFrame:
     """Load one empalme month, all modules merged.  Used by the apply_smoothing path.
 
     Downloads the annual ZIP (uses cache) and extracts only the requested
     month's sub-ZIP to a temp file — the other 11 months' bytes are never read.
 
+    Args:
+        modules: Optional subset of canonical module names to parse. If None,
+            every module discoverable in the sub-ZIP is parsed (legacy
+            behaviour). When provided explicitly, only those modules are
+            parsed; modules absent from the sub-ZIP are reported via
+            ``ParseError`` rather than silently dropped.
+
     Raises:
-        ParseError: sub-ZIP for *month* not found, or all modules fail to parse.
+        ParseError: sub-ZIP for *month* not found, all modules fail to parse,
+            or an explicitly-requested module is missing from the sub-ZIP.
     """
     from pulso._core.harmonizer import harmonize_dataframe
     from pulso._core.merger import merge_modules
@@ -261,15 +320,31 @@ def _load_empalme_month_merged(
         tmp.write(inner_bytes)
         tmp_path = Path(tmp.name)
 
+    # Decide the working set of modules. If the user provided an explicit list,
+    # honour it (M-1 fix); otherwise parse every module key from the registry.
+    target_modules = list(modules) if modules is not None else list(MODULE_KEYWORDS_GEIH1)
+
     try:
         module_dfs: dict[str, pd.DataFrame] = {}
-        for mod_name in MODULE_KEYWORDS_GEIH1:
+        for mod_name in target_modules:
             try:
                 df = _parse_empalme_module(tmp_path, mod_name)
                 df = _apply_area_filter(df, area)
                 module_dfs[mod_name] = df
             except Exception as exc:
-                logger.debug("Empalme %d-%02d: skipping module %r — %s", year, month, mod_name, exc)
+                if modules is not None:
+                    # Explicit request: surface the failure instead of dropping.
+                    raise ParseError(
+                        f"Empalme {year}-{month:02d}: requested module "
+                        f"{mod_name!r} could not be parsed: {exc}"
+                    ) from exc
+                logger.debug(
+                    "Empalme %d-%02d: skipping module %r — %s",
+                    year,
+                    month,
+                    mod_name,
+                    exc,
+                )
 
         if not module_dfs:
             raise ParseError(f"No modules could be parsed for Empalme {year}-{month:02d}.")
@@ -287,31 +362,16 @@ def _load_empalme_month_merged(
 # ── Public API ────────────────────────────────────────────────────────────────
 
 
-def load_empalme(
+def _load_empalme_single_year(
     year: int,
-    module: str | None = None,
-    area: str = "total",
-    harmonize: bool = True,
+    module: str | None,
+    area: str,
+    harmonize: bool,
 ) -> pd.DataFrame:
-    """Load all 12 months of GEIH Empalme data for *year*, stacked vertically.
+    """Load all 12 months of empalme data for a single year.
 
-    Args:
-        year: Year in 2010-2019.  2020 raises DataNotAvailableError (ZIP not
-            published); years outside 2010-2020 raise ValueError.
-        module: Canonical module name to load alone (e.g. ``'ocupados'``).
-            If None, all available modules are loaded and merged at persona level.
-        area: ``'cabecera'``, ``'resto'``, or ``'total'``.
-        harmonize: If True, apply variable_map.json transforms.
-
-    Returns:
-        DataFrame with all 12 months stacked.  ``year`` and ``month`` columns
-        are always added.
-
-    Raises:
-        ValueError: year outside 2010-2020.
-        DataNotAvailableError: year=2020 (ZIP not published by DANE).
-        DownloadError: network failure.
-        ParseError: cannot parse a module from the sub-ZIP.
+    Internal helper extracted so the public ``load_empalme`` can iterate
+    over a year iterable and stack the results.
     """
     import pandas as pd
 
@@ -386,4 +446,77 @@ def load_empalme(
 
     if not frames:
         return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
+
+
+def load_empalme(
+    year: int | range | Iterable[int],
+    module: str | None = None,
+    area: str = "total",
+    harmonize: bool = True,
+) -> pd.DataFrame:
+    """Load GEIH Empalme data for one or more years, stacked vertically.
+
+    Args:
+        year: A single ``int`` in 2010-2019, a ``range`` (e.g.
+            ``range(2010, 2020)``), or any iterable of ints. Year 2020 is in
+            the registry but the ZIP has not been published — it raises
+            ``DataNotAvailableError``. Years outside 2010-2020 raise
+            ``ValueError``.
+        module: Canonical module name to load alone (e.g. ``'ocupados'``).
+            If None, all available modules are loaded and merged at persona level.
+        area: ``'cabecera'``, ``'resto'``, or ``'total'``.
+        harmonize: If True, apply variable_map.json transforms.
+
+    Returns:
+        DataFrame with every loaded month stacked. ``year`` and ``month``
+        columns are always added so multi-year stacks remain unambiguous.
+
+    Raises:
+        ValueError: any year outside 2010-2020, or empty iterable.
+        TypeError: ``year`` is bool, str, or non-iterable of unsupported type.
+        DataNotAvailableError: any requested year=2020 (ZIP not published).
+        DownloadError: network failure.
+        ParseError: cannot parse a module from the sub-ZIP.
+    """
+    import pandas as pd
+
+    # Local normalisation: accept int/range/iterable, reject bool/str/empty.
+    # Out-of-range years raise ``ValueError`` (not ``PulsoError``) to preserve
+    # the rc1 contract documented in ``test_load_empalme_invalid_year_raises``.
+    if isinstance(year, bool):
+        raise TypeError(f"year must be int, range, or iterable, not bool (got {year!r}).")
+    if isinstance(year, str):
+        raise TypeError(f"year must be int, range, or iterable of ints, not str (got {year!r}).")
+    if isinstance(year, int):
+        years = [year]
+    elif isinstance(year, range):
+        years = list(year)
+    else:
+        try:
+            years = sorted({int(y) for y in year})
+        except (TypeError, ValueError) as exc:
+            raise TypeError(
+                f"year must be int, range, or iterable of ints (got {type(year).__name__})."
+            ) from exc
+
+    if not years:
+        raise ValueError(f"year cannot be empty (got {year!r}).")
+    for y in years:
+        if y < EMPALME_YEAR_MIN or y > EMPALME_YEAR_MAX:
+            raise ValueError(
+                f"Empalme data is only available for years "
+                f"{EMPALME_YEAR_MIN}-{EMPALME_YEAR_MAX}. Got {y}."
+            )
+
+    frames: list[pd.DataFrame] = []
+    for y in years:
+        df = _load_empalme_single_year(y, module=module, area=area, harmonize=harmonize)
+        if len(df) > 0:
+            frames.append(df)
+
+    if not frames:
+        return pd.DataFrame()
+    if len(frames) == 1:
+        return frames[0]
     return pd.concat(frames, ignore_index=True)

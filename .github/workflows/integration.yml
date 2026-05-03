@@ -1,0 +1,77 @@
+name: Integration Tests
+
+# Integration tests hit real DANE URLs and download large ZIPs. They are
+# not run on every PR (the CI workflow handles unit tests only). This
+# workflow runs on a weekly schedule and on manual dispatch.
+#
+# To run a specific test or set of markers, use the workflow_dispatch
+# inputs.
+
+on:
+  schedule:
+    # Mondays 04:00 UTC — DANE rarely publishes overnight.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      pytest_args:
+        description: 'Extra args passed to pytest (e.g. "-k user_use_cases")'
+        required: false
+        default: ""
+      include_slow:
+        description: "Include @slow tests (June full history, all months 2007-2026)"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: Integration tests (real DANE data)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      # Cache the downloaded ZIPs across runs so the suite is not a
+      # repeat-offender against the DANE download endpoint.
+      - name: Restore pulso ZIP cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pulso
+          key: pulso-cache-${{ hashFiles('pulso/data/sources.json') }}
+          restore-keys: |
+            pulso-cache-
+
+      - name: Run integration tests
+        env:
+          PYTEST_ADDOPTS: "${{ inputs.pytest_args }}"
+          INCLUDE_SLOW: "${{ inputs.include_slow }}"
+        run: |
+          set -euo pipefail
+          MARKERS="integration"
+          if [[ "${INCLUDE_SLOW:-false}" != "true" ]]; then
+            MARKERS="$MARKERS and not slow"
+          fi
+          pytest tests/integration/ \
+            --run-integration \
+            -m "$MARKERS" \
+            -v ${PYTEST_ADDOPTS:-}
+
+      - name: Upload pulso cache for debugging (failure only)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulso-cache-debug
+          path: ~/.cache/pulso/
+          retention-days: 3
+          if-no-files-found: ignore

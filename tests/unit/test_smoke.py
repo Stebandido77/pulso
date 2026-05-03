@@ -17,6 +17,7 @@ def test_public_api_exports() -> None:
     expected = {
         "load",
         "load_merged",
+        "load_empalme",
         "list_available",
         "list_modules",
         "list_variables",
@@ -32,3 +33,37 @@ def test_public_api_exports() -> None:
     assert expected.issubset(set(pulso.__all__))
     for name in expected:
         assert hasattr(pulso, name), f"pulso.{name} is not exported"
+
+
+def test_top_level_exception_imports() -> None:
+    """C-2: every exception class is reachable at the top level."""
+    import pulso
+
+    expected = (
+        "PulsoError",
+        "ConfigError",
+        "DataNotAvailableError",
+        "DataNotValidatedError",
+        "ModuleNotAvailableError",
+        "DownloadError",
+        "ChecksumMismatchError",
+        "ParseError",
+        "HarmonizationError",
+        "MergeError",
+        "CacheError",
+    )
+    for name in expected:
+        assert hasattr(pulso, name), f"pulso.{name} is not exported"
+        assert name in pulso.__all__, f"{name} missing from pulso.__all__"
+
+
+def test_top_level_exception_hierarchy() -> None:
+    """C-2: exception hierarchy is preserved under the top-level alias."""
+    import pulso
+
+    assert issubclass(pulso.DataNotValidatedError, pulso.PulsoError)
+    assert issubclass(pulso.DataNotAvailableError, pulso.PulsoError)
+    assert issubclass(pulso.ChecksumMismatchError, pulso.DownloadError)
+    assert issubclass(pulso.DownloadError, pulso.PulsoError)
+    assert issubclass(pulso.HarmonizationError, pulso.PulsoError)
+    assert issubclass(pulso.MergeError, pulso.PulsoError)
