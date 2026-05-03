@@ -126,3 +126,36 @@ def test_validate_module_missing_raises() -> None:
 
     with pytest.raises(ModuleNotAvailableError, match="nonexistent"):
         validate_module("nonexistent", ["ocupados", "inactivos"])
+
+
+# ── Commit 10: type validation (m-2, m-3) ──────────────────────────────
+
+
+def test_validate_year_month_rejects_bool_year() -> None:
+    """m-2: bool is not a valid year (Python treats True/False as 1/0)."""
+    from pulso._utils.validation import validate_year_month
+
+    with pytest.raises(TypeError, match="bool"):
+        validate_year_month(True, 6)  # type: ignore[arg-type]
+
+
+def test_validate_year_month_rejects_bool_month() -> None:
+    from pulso._utils.validation import validate_year_month
+
+    with pytest.raises(TypeError, match="bool"):
+        validate_year_month(2024, True)  # type: ignore[arg-type]
+
+
+def test_validate_year_month_rejects_str_year() -> None:
+    """m-3: str must fail upfront with a clear message, not crash mid-iteration."""
+    from pulso._utils.validation import validate_year_month
+
+    with pytest.raises(TypeError, match="str"):
+        validate_year_month("2024", 6)  # type: ignore[arg-type]
+
+
+def test_validate_year_month_rejects_str_month() -> None:
+    from pulso._utils.validation import validate_year_month
+
+    with pytest.raises(TypeError, match="str"):
+        validate_year_month(2024, "6")  # type: ignore[arg-type]

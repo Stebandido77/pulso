@@ -4,8 +4,8 @@
 > *Python library to load GEIH microdata from Colombia's DANE.*
 
 [![CI](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml/badge.svg)](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/pulso.svg)](https://pypi.org/project/pulso/)
-[![Python](https://img.shields.io/pypi/pyversions/pulso.svg)](https://pypi.org/project/pulso/)
+[![PyPI version](https://img.shields.io/pypi/v/pulso-co.svg)](https://pypi.org/project/pulso-co/)
+[![Python](https://img.shields.io/pypi/pyversions/pulso-co.svg)](https://pypi.org/project/pulso-co/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -183,7 +183,7 @@ Antes de usar los resultados en una publicación, lee [`docs/caveats.md`](docs/c
 
 ### Estado del proyecto
 
-Versión actual: **v1.0.0-rc1** (release candidate). Disponible en [TestPyPI](https://test.pypi.org/project/pulso/).
+Versión actual: **v1.0.0rc2** (release candidate). Disponible en [PyPI](https://pypi.org/project/pulso-co/) como `pulso-co`.
 
 | Fase | Descripción | Estado |
 |------|-------------|--------|
@@ -193,7 +193,7 @@ Versión actual: **v1.0.0-rc1** (release candidate). Disponible en [TestPyPI](ht
 | 3 | Cobertura GEIH completa (2006–presente) | ✅ |
 | 3.5 | Empalme loader + apply_smoothing | ✅ |
 | 4 | Deuda técnica + normalización Shape A | ✅ |
-| 5 | Release en PyPI | 🚧 |
+| 5 | Release en PyPI | ✅ |
 
 Ver [`CHANGELOG.md`](CHANGELOG.md) para más detalles.
 
@@ -303,7 +303,7 @@ Year 2020 exists in DANE's catalog but the ZIP has not been published; `load_emp
 ### Installation
 
 ```bash
-pip install pulso
+pip install pulso-co
 ```
 
 ### Quickstart
@@ -393,7 +393,7 @@ Before using results in a publication, please read [`docs/caveats.md`](docs/cave
 
 ### Status
 
-Current version: **v1.0.0-rc1** (release candidate). Available on [TestPyPI](https://test.pypi.org/project/pulso/).
+Current version: **v1.0.0rc2** (release candidate). Available on [PyPI](https://pypi.org/project/pulso-co/) as `pulso-co`.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
@@ -403,7 +403,7 @@ Current version: **v1.0.0-rc1** (release candidate). Available on [TestPyPI](htt
 | 3 | Full GEIH coverage (2006–present) | ✅ |
 | 3.5 | Empalme loader + smoothing | ✅ |
 | 4 | Technical debt + Shape A normalization | ✅ |
-| 5 | PyPI release | 🚧 |
+| 5 | PyPI release | ✅ |
 
 See [`CHANGELOG.md`](CHANGELOG.md) for details.
 

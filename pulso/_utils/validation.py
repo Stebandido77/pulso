@@ -26,15 +26,31 @@ def validate_year_month(
     Valida y normaliza los inputs de año/mes en una lista de tuplas ordenadas.
 
     Args:
-        year: Single int, a range, or an iterable of ints.
+        year: Single int, a range, or an iterable of ints. ``bool`` is
+            rejected explicitly (Python treats True/False as 1/0).
         month: Single int, a list of ints, or None (= all 12 months).
+            ``str`` and ``bool`` are rejected explicitly.
 
     Returns:
         Sorted list of (year, month) tuples.
 
     Raises:
+        TypeError: If ``year`` or ``month`` is of an unsupported type
+            (str, bool, ...).
         PulsoError: If any year or month value is out of range.
     """
+    # ── Type validation upfront so cryptic mid-iteration errors are avoided ──
+    # Note: bool is a subclass of int in Python; reject it explicitly so that
+    # `validate_year_month(True, 6)` does not silently load year=1.
+    if isinstance(year, bool):
+        raise TypeError("year must be int, range, or iterable of ints, not bool.")
+    if isinstance(year, str):
+        raise TypeError(f"year must be int, range, or iterable of ints, not str (got {year!r}).")
+    if isinstance(month, bool):
+        raise TypeError("month must be int, list[int], or None, not bool.")
+    if isinstance(month, str):
+        raise TypeError(f"month must be int, list[int], or None, not str (got {month!r}).")
+
     if isinstance(year, int):
         years = [year]
     elif isinstance(year, range):

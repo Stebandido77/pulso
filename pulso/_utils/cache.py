@@ -74,8 +74,20 @@ def cache_clear(level: CacheLevel = "all") -> None:
     Elimina archivos en caché en el nivel especificado.
 
     Args:
-        level: Which layer to clear. 'all' removes every cached file.
+        level: Which layer to clear. ``'all'`` removes every cached file.
+            Must be one of ``'raw'``, ``'parsed'``, ``'harmonized'``,
+            ``'all'``.
+
+    Raises:
+        CacheError: ``level`` is not a recognised cache level. Previously
+            this silently no-op'd when an unknown string was passed.
     """
+    from pulso._utils.exceptions import CacheError
+
+    valid = (*_LEVELS, "all")
+    if level not in valid:
+        raise CacheError(f"Unknown cache level {level!r}. Valid choices: {list(valid)}.")
+
     root = cache_path()
     if level == "all":
         shutil.rmtree(root, ignore_errors=True)
