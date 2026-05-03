@@ -28,7 +28,9 @@ from pulso._config.registry import (
     describe_variable,
     list_available,
     list_modules,
+    list_validated_range,
     list_variables,
+    validation_status,
 )
 from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
@@ -73,8 +75,10 @@ __all__ = [
     "expand",
     "list_available",
     "list_modules",
+    "list_validated_range",
     "list_variables",
     "load",
     "load_empalme",
     "load_merged",
+    "validation_status",
 ]

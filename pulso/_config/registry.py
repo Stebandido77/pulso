@@ -80,6 +80,68 @@ def data_version() -> str:
     return str(_load_sources()["metadata"]["data_version"])
 
 
+def list_validated_range() -> list[tuple[int, int]]:
+    """Return the (year, month) pairs for entries with ``validated=True``.
+
+    Validated entries may not be contiguous — production has 5 validated
+    months scattered across 2007-2024. Use ``validation_status()`` for the
+    full registry including non-validated entries.
+
+    Returns:
+        Sorted list of ``(year, month)`` tuples. Empty list if no entries
+        are currently flagged as validated.
+
+    Example:
+        >>> pulso.list_validated_range()
+        [(2007, 12), (2015, 6), (2021, 12), (2022, 1), (2024, 6)]
+    """
+    sources = _load_sources()
+    pairs: list[tuple[int, int]] = []
+    for key, record in sources["data"].items():
+        if record.get("validated"):
+            pairs.append((int(key[:4]), int(key[5:7])))
+    pairs.sort()
+    return pairs
+
+
+def validation_status() -> pd.DataFrame:
+    """Return the full validation status of every entry in the registry.
+
+    Columns:
+        - ``year``: int
+        - ``month``: int
+        - ``validated``: bool
+        - ``checksum_sha256``: str or None
+        - ``validated_at``: ISO 8601 datetime str or None (matches the
+          ``validated_at`` field name in sources.schema.json)
+        - ``modules``: list of module names available for the period
+
+    Example:
+        >>> df = pulso.validation_status()
+        >>> df[df.validated].shape[0] == len(pulso.list_validated_range())
+        True
+    """
+    import pandas as pd
+
+    sources = _load_sources()
+    rows: list[dict[str, Any]] = []
+    for key, record in sources["data"].items():
+        rows.append(
+            {
+                "year": int(key[:4]),
+                "month": int(key[5:7]),
+                "validated": bool(record.get("validated")),
+                "checksum_sha256": record.get("checksum_sha256"),
+                "validated_at": record.get("validated_at"),
+                "modules": list(record.get("modules", {}).keys()),
+            }
+        )
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(["year", "month"]).reset_index(drop=True)
+    return df
+
+
 def list_available(year: int | None = None) -> pd.DataFrame:
     """List which (year, month) entries exist in the registry.
 
