@@ -140,12 +140,34 @@ def list_variables(harmonized: bool = True) -> pd.DataFrame:
     """List harmonized variables defined in variable_map.json.
 
     Args:
-        harmonized: If True, only list variables with at least one mapping.
+        harmonized: If True (default), only list variables with at least one
+            epoch mapping. If False, lists every entry in the variable map
+            (including those with mappings={} — useful for catalog queries).
 
     Returns:
-        DataFrame with variable metadata.
+        DataFrame with columns: variable, type, level, module, description_es,
+        description_en, available_in_epochs (list of epoch keys).
     """
-    raise NotImplementedError("Phase 2")
+    import pandas as pd
+
+    vm = _load_variable_map()
+    rows: list[dict[str, Any]] = []
+    for canonical_name, entry in vm["variables"].items():
+        epochs_for_var = list(entry.get("mappings", {}).keys())
+        if harmonized and not epochs_for_var:
+            continue
+        rows.append(
+            {
+                "variable": canonical_name,
+                "type": entry.get("type", ""),
+                "level": entry.get("level", ""),
+                "module": entry.get("module", ""),
+                "description_es": entry.get("description_es", ""),
+                "description_en": entry.get("description_en", ""),
+                "available_in_epochs": epochs_for_var,
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def describe(module: str, year: int | None = None) -> dict[str, Any]:
@@ -186,9 +208,24 @@ def describe_variable(name: str) -> dict[str, Any]:
         name: Canonical variable name.
 
     Returns:
-        Dict with full variable metadata.
+        Dict with full variable metadata. Includes the canonical name as
+        the first key plus everything from variable_map.json (type, level,
+        module, descriptions, categories, comparability_warning, mappings).
+
+    Raises:
+        ConfigError: variable not in variable_map.json.
     """
-    raise NotImplementedError("Phase 2")
+    vm = _load_variable_map()
+    variables: dict[str, Any] = vm["variables"]
+    if name not in variables:
+        available = sorted(variables.keys())
+        raise ConfigError(
+            f"Variable {name!r} not found in variable_map.json. "
+            f"Available ({len(available)}): {available}."
+        )
+    result: dict[str, Any] = {"canonical_name": name}
+    result.update(variables[name])
+    return result
 
 
 def describe_harmonization(variable: str) -> pd.DataFrame:
@@ -198,6 +235,38 @@ def describe_harmonization(variable: str) -> pd.DataFrame:
         variable: Canonical variable name.
 
     Returns:
-        DataFrame with columns: epoch, source_variable, transform, source_doc.
+        DataFrame with one row per epoch where the variable is mapped.
+        Columns: epoch, source_variable, transform, source_doc, notes.
+
+    Raises:
+        ConfigError: variable not in variable_map.json.
     """
-    raise NotImplementedError("Phase 2")
+    import pandas as pd
+
+    vm = _load_variable_map()
+    variables: dict[str, Any] = vm["variables"]
+    if variable not in variables:
+        available = sorted(variables.keys())
+        raise ConfigError(
+            f"Variable {variable!r} not found in variable_map.json. "
+            f"Available ({len(available)}): {available}."
+        )
+
+    rows: list[dict[str, Any]] = []
+    mappings: dict[str, Any] = variables[variable].get("mappings", {})
+    for epoch_key, mapping in mappings.items():
+        transform = mapping.get("transform")
+        if isinstance(transform, dict):
+            transform_repr = transform.get("op", str(transform))
+        else:
+            transform_repr = str(transform)
+        rows.append(
+            {
+                "epoch": epoch_key,
+                "source_variable": mapping.get("source_variable"),
+                "transform": transform_repr,
+                "source_doc": mapping.get("source_doc"),
+                "notes": mapping.get("notes"),
+            }
+        )
+    return pd.DataFrame(rows)

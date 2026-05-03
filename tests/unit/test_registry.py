@@ -241,12 +241,16 @@ def test_describe_with_year_includes_epoch_context() -> None:
     assert ctx["key"] == "geih_2021_present"
 
 
-def test_phase2_functions_raise_not_implemented() -> None:
+def test_phase2_functions_now_implemented() -> None:
+    """v1.0.0rc2 (Commit 8, M-4): list_variables, describe_variable, and
+    describe_harmonization are no longer NotImplementedError stubs."""
     from pulso._config.registry import describe_harmonization, describe_variable, list_variables
 
-    with pytest.raises(NotImplementedError):
-        list_variables()
-    with pytest.raises(NotImplementedError):
-        describe_variable("edad")
-    with pytest.raises(NotImplementedError):
-        describe_harmonization("edad")
+    df = list_variables()
+    assert len(df) > 0
+
+    info = describe_variable("edad")
+    assert info["canonical_name"] == "edad"
+
+    chain = describe_harmonization("edad")
+    assert len(chain) > 0
