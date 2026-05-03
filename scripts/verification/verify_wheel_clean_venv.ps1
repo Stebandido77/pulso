@@ -1,12 +1,21 @@
 # Crear venv limpio, instalar wheel, correr smoke test, limpiar.
-# Uso: .\verify_wheel_clean_venv.ps1
+# Uso (desde cualquier cwd):
+#   .\scripts\verification\verify_wheel_clean_venv.ps1
 $ErrorActionPreference = "Stop"
 $cleanVenv = "$env:TEMP\test-rc2-$(Get-Random)"
-$wheelPath = "dist\pulso_co-1.0.0rc2-py3-none-any.whl"
+
+# Resolve project root from this script's location: scripts/verification/<this>.ps1
+$projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$wheelPath = Join-Path $projectRoot "dist\pulso_co-1.0.0rc2-py3-none-any.whl"
+$smokeScriptSrc = Join-Path $PSScriptRoot "verify_wheel_smoke.py"
 
 if (-not (Test-Path $wheelPath)) {
     Write-Host "ERROR: wheel no existe en $wheelPath" -ForegroundColor Red
     Write-Host "Construir con: python -m build" -ForegroundColor Yellow
+    exit 1
+}
+if (-not (Test-Path $smokeScriptSrc)) {
+    Write-Host "ERROR: smoke script no existe en $smokeScriptSrc" -ForegroundColor Red
     exit 1
 }
 
@@ -38,7 +47,6 @@ Write-Host "=== Smoke test ===" -ForegroundColor Cyan
 # is the temp directory (not the project root). Otherwise Python
 # imports the source `pulso/` package next to the script instead of
 # the installed wheel.
-$smokeScriptSrc = (Resolve-Path "verify_wheel_smoke.py").Path
 $smokeScriptDst = Join-Path $env:TEMP "verify_wheel_smoke_isolated.py"
 Copy-Item $smokeScriptSrc $smokeScriptDst -Force
 $savedCwd = Get-Location

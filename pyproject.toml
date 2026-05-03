@@ -97,8 +97,12 @@ exclude = [
     ".gitignore",
     ".ruff_cache",
     ".mypy_cache",
+    ".coverage",
+    ".coverage.*",
     "scripts/_spike_phase35",
     "scripts/scrape_cache",
+    "scripts/verification",      # ad-hoc release verification scripts (not user-facing)
+    "docs/internal",             # audit reports, phase notes, issue drafts (process docs)
     "dist/",
     "build/",
 ]
