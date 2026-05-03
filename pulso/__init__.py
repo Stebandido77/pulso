@@ -10,9 +10,11 @@ Public API:
     pulso.list_modules() -> pd.DataFrame
     pulso.list_variables() -> pd.DataFrame
     pulso.describe(module, year=None) -> dict
+    pulso.describe_column(df, column) -> str
     pulso.describe_variable(name) -> dict
     pulso.describe_harmonization(variable) -> pd.DataFrame
     pulso.expand(df, weight=None) -> pd.DataFrame
+    pulso.list_columns_metadata(df) -> pd.DataFrame
     pulso.cache_info() -> dict
     pulso.cache_clear(level="all") -> None
     pulso.cache_path() -> Path
@@ -49,6 +51,7 @@ from pulso._utils.exceptions import (
     ParseError,
     PulsoError,
 )
+from pulso.metadata.api import describe_column, list_columns_metadata
 
 __version__ = "1.0.0rc2"
 
@@ -70,10 +73,12 @@ __all__ = [
     "cache_path",
     "data_version",
     "describe",
+    "describe_column",
     "describe_harmonization",
     "describe_variable",
     "expand",
     "list_available",
+    "list_columns_metadata",
     "list_modules",
     "list_validated_range",
     "list_variables",
