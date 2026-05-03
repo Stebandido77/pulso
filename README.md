@@ -136,10 +136,37 @@ df_expandido = pulso.expand(df, weight="peso_expansion")
 | `cache_clear(level)` | ✅ estable | Limpia raw / parsed / harmonized / todo |
 | `cache_path()` | ✅ estable | Ruta absoluta al directorio de caché |
 | `data_version()` | ✅ estable | Versión del registro de datos (ej. `"2026.04"`) |
-| `list_variables()` | 🚧 planeada | Listar variables armonizadas canónicas |
-| `describe_variable(name)` | 🚧 planeada | Definición + notas de comparabilidad |
-| `describe_harmonization(variable)` | 🚧 planeada | Detalle del mapeo por época |
-| `describe(module, year)` | 🚧 planeada | Metadatos del módulo + info de época |
+| `list_variables(harmonized)` | ✅ estable | DataFrame de variables canónicas armonizadas |
+| `describe_variable(name)` | ✅ estable | Definición + notas de comparabilidad |
+| `describe_harmonization(variable)` | ✅ estable | Detalle del mapeo por época |
+| `describe(module, year)` | ✅ estable | Metadatos del módulo + info de época |
+| `list_validated_range()` | ✅ estable | Lista ordenada de pares `(año, mes)` validados |
+| `validation_status()` | ✅ estable | DataFrame con estado de validación de cada entrada |
+
+### Validación de datos
+
+```python
+import pulso
+
+# ¿Qué meses están validados end-to-end?
+pulso.list_validated_range()
+# → [(2007, 12), (2015, 6), (2021, 12), (2022, 1), (2024, 6)]
+
+# Estado completo del registro (validados + no validados)
+status = pulso.validation_status()
+status[status.validated]            # solo validados
+status[~status.validated].head(5)   # primeros no validados
+
+# Por defecto pulso es permisivo (carga con UserWarning):
+df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
+
+# Para forzar validación estricta (raise si no está validado):
+df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+```
+
+> El parámetro `allow_unvalidated` está deprecado desde v1.0.0rc2 — usá
+> `strict` en su lugar. Mapping: `allow_unvalidated=True ↔ strict=False`.
+> Ver [`DEPRECATIONS.md`](DEPRECATIONS.md).
 
 ### Caché local
 
@@ -346,10 +373,37 @@ df_expanded = pulso.expand(df, weight="peso_expansion")
 | `cache_clear(level)` | ✅ stable | Clear raw / parsed / harmonized / all |
 | `cache_path()` | ✅ stable | Absolute path to cache root |
 | `data_version()` | ✅ stable | Registry data version (e.g. `"2026.04"`) |
-| `list_variables()` | 🚧 planned | List canonical harmonized variables |
-| `describe_variable(name)` | 🚧 planned | Variable definition + comparability notes |
-| `describe_harmonization(variable)` | 🚧 planned | Per-epoch mapping details |
-| `describe(module, year)` | 🚧 planned | Module metadata + epoch info |
+| `list_variables(harmonized)` | ✅ stable | DataFrame of canonical harmonized variables |
+| `describe_variable(name)` | ✅ stable | Variable definition + comparability notes |
+| `describe_harmonization(variable)` | ✅ stable | Per-epoch mapping details |
+| `describe(module, year)` | ✅ stable | Module metadata + epoch info |
+| `list_validated_range()` | ✅ stable | Sorted `[(year, month), ...]` of validated entries |
+| `validation_status()` | ✅ stable | DataFrame with full registry validation status |
+
+### Validation
+
+```python
+import pulso
+
+# Which months are validated end-to-end?
+pulso.list_validated_range()
+# → [(2007, 12), (2015, 6), (2021, 12), (2022, 1), (2024, 6)]
+
+# Full registry status (validated + unvalidated)
+status = pulso.validation_status()
+status[status.validated]            # only validated
+status[~status.validated].head(5)   # first unvalidated
+
+# By default pulso is permissive (loads with one aggregated UserWarning):
+df = pulso.load(year=range(2007, 2025), month=6, module="ocupados")
+
+# To enforce strict validation (raise on unvalidated entries):
+df = pulso.load(year=2007, month=12, module="ocupados", strict=True)
+```
+
+> The `allow_unvalidated` parameter was deprecated in v1.0.0rc2 — use
+> `strict` instead. Mapping: `allow_unvalidated=True ↔ strict=False`.
+> See [`DEPRECATIONS.md`](DEPRECATIONS.md).
 
 ### Local cache
 
