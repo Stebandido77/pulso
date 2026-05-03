@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pulso._utils.exceptions import (
     CacheError,
+    ChecksumMismatchError,
     ConfigError,
     DataNotAvailableError,
     DataNotValidatedError,
@@ -49,6 +50,7 @@ def test_all_errors_are_catchable_as_pulso_error() -> None:
         DataNotValidatedError("v"),
         ModuleNotAvailableError("m"),
         DownloadError("d"),
+        ChecksumMismatchError("cm"),
         ParseError("p"),
         HarmonizationError("h"),
         MergeError("e"),
@@ -56,6 +58,13 @@ def test_all_errors_are_catchable_as_pulso_error() -> None:
     ]
     for err in errors:
         assert isinstance(err, PulsoError), f"{type(err)} not a PulsoError"
+
+
+def test_checksum_mismatch_is_download_error() -> None:
+    """ChecksumMismatchError must remain catchable via the broader DownloadError."""
+    err = ChecksumMismatchError("hash differs")
+    assert isinstance(err, DownloadError)
+    assert isinstance(err, PulsoError)
 
 
 def test_harmonization_error_can_chain_cause() -> None:

@@ -13,7 +13,12 @@ if TYPE_CHECKING:
 
 from pulso._config.registry import _load_sources
 from pulso._utils.cache import cache_path
-from pulso._utils.exceptions import DataNotAvailableError, DataNotValidatedError, DownloadError
+from pulso._utils.exceptions import (
+    ChecksumMismatchError,
+    DataNotAvailableError,
+    DataNotValidatedError,
+    DownloadError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -135,6 +140,6 @@ def download_zip(
         )
     elif not verify_checksum(dest, checksum):
         dest.unlink()
-        raise DownloadError(f"Checksum mismatch after download for {key}.")
+        raise ChecksumMismatchError(f"Checksum mismatch after download for {key}.")
 
     return dest
