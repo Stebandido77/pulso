@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 _SOURCES: dict[str, Any] | None = None
 _EPOCHS: dict[str, Any] | None = None
 _VARIABLE_MAP: dict[str, Any] | None = None
+_VARIABLE_MODULE_MAP: dict[str, Any] | None = None
 
 
 def _data_dir() -> Path:
@@ -67,6 +68,23 @@ def _load_variable_map() -> dict[str, Any]:
             d / "variable_map.json", d / "schemas" / "variable_map.schema.json"
         )
     return _VARIABLE_MAP
+
+
+def _load_variable_module_map() -> dict[str, Any]:
+    """Load and validate variable_module_map.json against its schema.
+
+    Returns the parsed mapping ``{canonical_name: [module_name, ...]}``.
+    Cached at the module level — set ``_VARIABLE_MODULE_MAP = None`` in
+    tests to force a reload.
+    """
+    global _VARIABLE_MODULE_MAP
+    if _VARIABLE_MODULE_MAP is None:
+        d = _data_dir()
+        _VARIABLE_MODULE_MAP = _load_json_validated(
+            d / "variable_module_map.json",
+            d / "schemas" / "variable_module_map.schema.json",
+        )
+    return _VARIABLE_MODULE_MAP
 
 
 def data_version() -> str:

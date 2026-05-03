@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
-from pulso._config.registry import _load_variable_map
+from pulso._config.registry import _load_variable_map, _load_variable_module_map
 from pulso._utils.exceptions import ConfigError, HarmonizationError
 
 if TYPE_CHECKING:
@@ -35,14 +35,40 @@ logger = logging.getLogger(__name__)
 def _iter_relevant_variables(
     epoch: Epoch,
     variables: list[str] | None,
+    modules: list[str] | None = None,
 ) -> Generator[tuple[str, dict[str, Any]], None, None]:
-    """Yield (canonical_name, variable_entry) for variables applicable to epoch."""
+    """Yield (canonical_name, variable_entry) for variables applicable to epoch.
+
+    When ``modules`` is provided (the loader supplies the working module
+    list), canonical variables whose ``variable_module_map`` applicability
+    set is disjoint from ``modules`` are silently skipped — they cannot
+    apply to the loaded data and would otherwise be enumerated in the
+    aggregated 'skipped during harmonization' UserWarning. When
+    ``modules`` is None, no module-applicability filtering is performed
+    (legacy behaviour, e.g. for direct calls or fixture-based tests).
+    """
     vm = _load_variable_map()
+    applicability: dict[str, list[str]] | None = None
+    if modules is not None:
+        applicability = _load_variable_module_map().get("applicability", {})
+
+    target_modules = set(modules) if modules is not None else None
+
     for canonical_name, entry in vm["variables"].items():
         if variables is not None and canonical_name not in variables:
             continue
         if epoch.key not in entry.get("mappings", {}):
             continue
+        if applicability is not None and target_modules is not None:
+            allowed = applicability.get(canonical_name)
+            # If a canonical is missing from the applicability table, fall
+            # back to the entry's `module` field (preserves the existing
+            # behaviour for any future canonical not yet curated).
+            if allowed is None:
+                fallback = entry.get("module")
+                allowed = [fallback] if fallback else []
+            if not target_modules.intersection(allowed):
+                continue
         yield canonical_name, entry
 
 
@@ -338,6 +364,7 @@ def harmonize_dataframe(
     epoch: Epoch,
     variables: list[str] | None = None,
     keep_raw: bool = True,
+    modules: list[str] | None = None,
 ) -> pd.DataFrame:
     """Harmonize multiple variables from variable_map for the given epoch.
 
@@ -347,6 +374,13 @@ def harmonize_dataframe(
     recorded in ``result.attrs["_skipped_variables"]`` so the orchestrator
     can aggregate them into a single end-of-load ``UserWarning`` instead of
     emitting one warning per period.
+
+    If `modules` is provided, the harmonizer additionally consults the
+    per-canonical applicability table in ``variable_module_map.json`` and
+    silently skips variables that cannot apply to any of the loaded
+    modules. Such variables are NOT recorded in
+    ``_skipped_variables`` — they're filtered out before harmonization
+    is attempted, so they do not appear in the aggregated warning.
 
     If keep_raw=True (default), preserves ALL original raw columns alongside
     the canonical harmonized columns. This is the recommended default so
@@ -358,7 +392,7 @@ def harmonize_dataframe(
     canonical_series_list: list[pd.Series] = []
     skipped: list[str] = []
 
-    for canonical_name, entry in _iter_relevant_variables(epoch, variables):
+    for canonical_name, entry in _iter_relevant_variables(epoch, variables, modules):
         try:
             series = harmonize_variable(df, canonical_name, entry, epoch)
             canonical_series_list.append(series)

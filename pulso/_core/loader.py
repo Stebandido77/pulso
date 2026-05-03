@@ -327,7 +327,7 @@ def load(
             if harmonize:
                 from pulso._core.harmonizer import harmonize_dataframe
 
-                df = harmonize_dataframe(df, epoch)
+                df = harmonize_dataframe(df, epoch, modules=[module])
                 period_skipped = _drain_skipped_variables(df)
                 if period_skipped:
                     skipped_per_period.append(period_skipped)
@@ -618,7 +618,13 @@ def load_merged(
             merged = merge_modules(module_dfs, epoch, level="persona", how="outer")
 
             if harmonize:
-                merged = harmonize_dataframe(merged, epoch, variables=variables)
+                # Pass the actual modules that participated so the harmonizer
+                # can filter canonicals to only those whose applicability
+                # intersects this set.
+                merged_modules = list(module_dfs.keys())
+                merged = harmonize_dataframe(
+                    merged, epoch, variables=variables, modules=merged_modules
+                )
                 period_skipped = _drain_skipped_variables(merged)
                 if period_skipped:
                     skipped_per_period.append(period_skipped)
