@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pulso-co.dev/schemas/variable_module_map-1.0.0.json",
+  "title": "Per-canonical module applicability table",
+  "description": "Maps each canonical variable name (defined in variable_map.json) to the list of GEIH modules where the variable's source columns are expected to be present. Used by pulso._core.harmonizer to skip variables that cannot apply to the loaded module BEFORE harmonization is attempted, so they are never enumerated in the aggregated 'skipped during harmonization' UserWarning.",
+  "type": "object",
+  "required": ["metadata", "applicability"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version"],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "description": "Map of canonical variable name -> list of module names. Every key MUST exist as a top-level entry in variable_map.json; every list element MUST exist as a key in sources.json's `modules` block.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

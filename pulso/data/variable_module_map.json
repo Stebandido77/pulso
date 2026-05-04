@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "schema_version": "1.0.0",
+    "description": "Per-canonical applicability table consumed by pulso._core.harmonizer to skip variables that cannot apply to a given module before harmonization is attempted. Curated from variable_map.json's `module` field plus cross-module exceptions (merge keys and expansion factors apply to every module). See docs/internal/AGENT_4_REPORT.md for derivation rationale."
+  },
+  "applicability": {
+    "sexo": ["caracteristicas_generales"],
+    "edad": ["caracteristicas_generales"],
+    "grupo_edad": ["caracteristicas_generales"],
+    "parentesco_jefe": ["caracteristicas_generales"],
+    "estado_civil": ["caracteristicas_generales"],
+    "grupo_etnico": ["caracteristicas_generales"],
+    "area": ["caracteristicas_generales"],
+    "departamento": ["caracteristicas_generales"],
+    "educ_max": ["caracteristicas_generales"],
+    "anios_educ": ["caracteristicas_generales"],
+    "asiste_educ": ["caracteristicas_generales"],
+    "alfabetiza": ["caracteristicas_generales"],
+    "condicion_actividad": ["caracteristicas_generales"],
+    "tipo_desocupacion": ["desocupados"],
+    "busco_trabajo": ["desocupados"],
+    "disponible": ["desocupados"],
+    "tipo_inactividad": ["inactivos"],
+    "posicion_ocupacional": ["ocupados"],
+    "rama_actividad": ["ocupados"],
+    "ocupacion": ["ocupados"],
+    "horas_trabajadas_sem": ["ocupados"],
+    "ingreso_laboral": ["ocupados"],
+    "tiene_contrato": ["ocupados"],
+    "tipo_contrato": ["ocupados"],
+    "cotiza_pension": ["ocupados"],
+    "ingreso_total": ["otros_ingresos"],
+    "vivienda_propia": ["vivienda_hogares"],
+    "hogar_id": [
+      "caracteristicas_generales",
+      "ocupados",
+      "desocupados",
+      "inactivos",
+      "vivienda_hogares",
+      "otros_ingresos",
+      "migracion",
+      "otras_formas_trabajo"
+    ],
+    "peso_expansion": [
+      "caracteristicas_generales",
+      "ocupados",
+      "desocupados",
+      "inactivos",
+      "vivienda_hogares",
+      "otros_ingresos",
+      "migracion",
+      "otras_formas_trabajo"
+    ],
+    "peso_expansion_persona": [
+      "caracteristicas_generales",
+      "ocupados",
+      "desocupados",
+      "inactivos",
+      "vivienda_hogares",
+      "otros_ingresos",
+      "migracion",
+      "otras_formas_trabajo"
+    ]
+  }
+}

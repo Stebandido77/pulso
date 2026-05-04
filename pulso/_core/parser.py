@@ -133,6 +133,68 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
     raise KeyError(f"No item named {path!r} in the archive")
 
 
+# ---------------------------------------------------------------------------
+# Nested ZIP support
+# ---------------------------------------------------------------------------
+#
+# Some DANE releases (notably 2024-03 and 2024-04 GEIH) wrap the actual data
+# files inside *another* ZIP layer.  The outer archive contains only
+# ``CSV.zip``, ``DTA.zip``, ``SAV.zip`` entries; the user-facing CSVs live
+# inside the matching format-named inner ZIP.  The helper below transparently
+# descends one level so callers don't have to special-case the layout.
+
+_FORMAT_TO_NESTED_NAME: dict[str, str] = {
+    "csv": "CSV.zip",
+    "dta": "DTA.zip",
+    "sav": "SAV.zip",
+}
+
+
+def _is_nested_format_wrapper(zf: zipfile.ZipFile) -> bool:
+    """True when the archive only contains ``CSV.zip``/``DTA.zip``/``SAV.zip`` entries.
+
+    Used to detect the 2024-03/04 nested layout where DANE wraps each
+    format in its own inner ZIP.
+    """
+    names = [n for n in zf.namelist() if not n.endswith("/")]
+    if not names:
+        return False
+    nested_targets = set(_FORMAT_TO_NESTED_NAME.values())
+    return all(n.rsplit("/", 1)[-1] in nested_targets for n in names)
+
+
+def _open_nested_zip(zf: zipfile.ZipFile, format_name: str) -> zipfile.ZipFile:
+    """Open the inner format-named ZIP (CSV.zip / DTA.zip / SAV.zip) for ``format_name``.
+
+    Reads the nested ZIP fully into memory (DANE inner ZIPs are small,
+    ~5-10 MB) and wraps it in a new ``ZipFile`` so the caller can use the
+    full ``zipfile`` API (resolution, ``.open(...)`` member streaming).
+    The caller is responsible for closing the returned object.
+    """
+    target = _FORMAT_TO_NESTED_NAME.get(format_name.lower())
+    if target is None:
+        raise KeyError(
+            f"No known nested wrapper for file_format={format_name!r}; "
+            f"expected one of {sorted(_FORMAT_TO_NESTED_NAME)}."
+        )
+
+    # Outer ZIP entries may live at the root or under a subfolder.
+    # Match by basename (case-sensitive — DANE consistently uses uppercase).
+    inner_member: str | None = None
+    for name in zf.namelist():
+        if name.endswith("/"):
+            continue
+        if name.rsplit("/", 1)[-1] == target:
+            inner_member = name
+            break
+    if inner_member is None:
+        raise KeyError(f"Nested ZIP {target!r} not found in outer archive.")
+
+    with zf.open(inner_member) as fh:
+        inner_bytes = fh.read()
+    return zipfile.ZipFile(io.BytesIO(inner_bytes))
+
+
 def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
 
@@ -239,15 +301,28 @@ def _parse_csv(
 
     Lee un CSV dentro de un ZIP sin extraerlo al disco.
 
+    Transparently handles two layouts:
+        - Direct: outer ZIP contains the CSV at ``inner_path`` (with optional
+          subfolder prefix and case variation, resolved by ``_resolve_zip_path``).
+        - Nested wrapper: outer ZIP contains only ``CSV.zip``/``DTA.zip``/``SAV.zip``
+          (DANE 2024-03 / 2024-04 layout). In that case the matching inner
+          format-named ZIP is opened and the CSV is resolved inside it.
+
     Raises:
         ParseError: If the inner file is missing or malformed.
     """
 
     try:
         with zipfile.ZipFile(zip_path) as zf:
-            resolved = _resolve_zip_path(zf, inner_path)
-            with zf.open(resolved) as fh:
-                raw_bytes = fh.read()
+            if _is_nested_format_wrapper(zf):
+                with _open_nested_zip(zf, "csv") as inner_zf:
+                    resolved = _resolve_zip_path(inner_zf, inner_path)
+                    with inner_zf.open(resolved) as fh:
+                        raw_bytes = fh.read()
+            else:
+                resolved = _resolve_zip_path(zf, inner_path)
+                with zf.open(resolved) as fh:
+                    raw_bytes = fh.read()
     except KeyError as exc:
         raise ParseError(f"File {inner_path!r} not found inside {zip_path.name}.") from exc
     except Exception as exc:

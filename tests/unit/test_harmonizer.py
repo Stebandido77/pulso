@@ -282,7 +282,12 @@ def test_categorical_validation_raises_on_out_of_domain() -> None:
 
 
 def test_harmonize_dataframe_skips_unavailable_variables(caplog: pytest.LogCaptureFixture) -> None:
-    """Variables with missing source columns are skipped with a warning."""
+    """Variables with missing source columns are skipped silently and recorded
+    in ``df.attrs['_skipped_variables']`` so the loader can aggregate across
+    periods. The harmonizer itself emits no per-variable warnings (logger.debug
+    only); the orchestrator is responsible for surfacing one aggregated
+    UserWarning at the end of a multi-period load.
+    """
     df = pd.DataFrame({"P6040": [25, 30, 45]})
     epoch = _epoch(key="geih_2021_present")
 
@@ -291,8 +296,14 @@ def test_harmonize_dataframe_skips_unavailable_variables(caplog: pytest.LogCaptu
 
     assert "P6040" in result.columns
     assert "edad" in result.columns
-    skipped_vars = [rec.message for rec in caplog.records if "Skipping" in rec.message]
-    assert len(skipped_vars) > 0
+    # No per-variable WARNING records — they're DEBUG now.
+    warning_records = [rec for rec in caplog.records if rec.levelno >= logging.WARNING]
+    assert warning_records == [], (
+        f"Expected no WARNING-level records, got {[r.message for r in warning_records]}"
+    )
+    # But the aggregation channel is populated.
+    assert "_skipped_variables" in result.attrs
+    assert len(result.attrs["_skipped_variables"]) > 0
 
 
 def test_harmonize_dataframe_named_variables_only() -> None:
