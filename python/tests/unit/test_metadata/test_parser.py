@@ -8,7 +8,9 @@ import pytest
 
 from pulso.metadata.parser import DDIParseError, parse_ddi
 
-ROOT = Path(__file__).resolve().parents[3]
+# Post-monorepo layout: this test file is at python/tests/unit/test_metadata/,
+# so parents[4] reaches the repo root (where docs/ lives).
+ROOT = Path(__file__).resolve().parents[4]
 SAMPLE_2024 = ROOT / "docs/internal/investigations/dictionaries/samples/geih_2024_ddi.xml"
 SAMPLE_2018 = ROOT / "docs/internal/investigations/dictionaries/samples/geih_2018_ddi.xml"
 

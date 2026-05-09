@@ -1,0 +1,52 @@
+name: Python publish
+
+# Triggered ONLY by tags of the form python-v*. R releases use a separate tag
+# scheme (r-v*) and a separate workflow (r-check.yml -> CRAN submission flow).
+
+on:
+  push:
+    tags:
+      - "python-v*"
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Sync data into pulso/data/
+        run: python scripts/sync_data.py
+      - name: Install build
+        run: pip install build
+      - name: Build sdist + wheel
+        working-directory: python
+        run: python -m build
+      - name: Verify wheel content identity
+        run: |
+          python scripts/wheel_inventory.py python/dist/pulso_co-*.whl > /tmp/built.txt
+          diff docs/internal/r-port/wheel_reference_inventory.txt /tmp/built.txt
+        continue-on-error: false  # publish blocked if wheel drifted unexpectedly
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: python/dist/
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # for PyPI trusted publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        # No `repository_url:` → defaults to PyPI (production).
+        # Trusted publisher must be configured at https://pypi.org/manage/project/pulso-co/settings/publishing/
+        # with the workflow filename and the environment name above.

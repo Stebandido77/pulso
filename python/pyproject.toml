@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.18"]
+requires = ["hatchling==1.29.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -70,11 +70,24 @@ Issues = "https://github.com/Stebandido77/pulso/issues"
 Changelog = "https://github.com/Stebandido77/pulso/blob/main/CHANGELOG.md"
 
 [project.scripts]
-pulso-validate-sources = "scripts.validate_sources:main"
-pulso-add-month = "scripts.add_month:main"
+pulso-validate-sources = "pulso._scripts.validate_sources:main"
+pulso-add-month = "pulso._scripts.add_month:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pulso"]
+# pulso/data/ is gitignored (canonical source is <repo_root>/data/) but the
+# Hatch build hook below copies the JSON data into pulso/data/ at build time.
+# Force-include so Hatch packages those generated files into the wheel.
+artifacts = ["pulso/data/**"]
+
+[tool.hatch.build.targets.wheel.hooks.custom]
+path = "hatch_build.py"
+
+[tool.hatch.build.targets.sdist.hooks.custom]
+path = "hatch_build.py"
+
+[tool.hatch.build.targets.editable.hooks.custom]
+path = "hatch_build.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
