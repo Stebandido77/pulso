@@ -121,6 +121,11 @@ python/build/
 python/*.egg-info/
 
 # R generated artifacts
-r/inst/extdata/
+# Note: r/inst/extdata/ holds 4 bundled JSONs (sources.json, variable_map.json,
+# variable_module_map.json, epochs.json) plus codebook_release.json — all
+# committed (Mini-4B). Only dane_codebook.json (6.6 MB) is excluded; it is
+# lazy-downloaded at runtime to tools::R_user_dir("pulso", "cache") because
+# it exceeds CRAN's 5 MB package size limit.
+r/inst/extdata/dane_codebook.json
 r/.Rcheck/
 r/*.tar.gz
