@@ -8,16 +8,31 @@
 
 ## TL;DR
 
-- 6 public functions total. Only `pulso_load()` ships in v0.1.0 MVP (Mini-4B). The other 5 are designed here but implemented in Agente 5.
+- 9 public functions total. Only `pulso_load()` ships in v0.1.0 MVP (Mini-4B). The other 8 are designed here but implemented in Agente 5.
 - 2 S3 classes: `pulso_dataframe` (tibble subclass) and `pulso_metadata` (list).
-- 4 custom error condition classes, all inheriting from `pulso_error`.
+- 6 custom error condition classes, all inheriting from `pulso_error`.
 - All public symbols use `pulso_*` snake_case prefix per Decision 5.
-- Return type is always tibble per Decision 7. Metadata attached as `attr(df, "pulso_metadata")` per Decision 6.
-- Path resolution dual-mode: installed package via `system.file()`, dev mode falls back to `../data/`.
+- Return type is always tibble per Decision 7 (where the function returns tabular data). Metadata-describer functions return lists for Python parity. Metadata attached as `attr(df, "pulso_metadata")` per Decision 6.
+- Path resolution split by file size: 4 small JSONs (`sources.json`, `variable_map.json`, `variable_module_map.json`, `epochs.json`) bundled via `inst/extdata/`; `dane_codebook.json` (6.6 MB, exceeds CRAN's 5 MB package size limit) lazy-downloaded to `tools::R_user_dir("pulso", "cache")`.
 
 ---
 
-## 1. Public functions (6 total for v0.1.0)
+## 1. Public functions (9 total for v0.1.0)
+
+Quick index (full subsections below):
+
+| §    | Function                            | Status        | Mirrors Python                       |
+|------|-------------------------------------|---------------|--------------------------------------|
+| 1.1  | `pulso_load()`                      | **Mini-4B**   | `pulso.load()`                       |
+| 1.2  | `pulso_load_merged()`               | Agente 5      | `pulso.load_merged()`                |
+| 1.3  | `pulso_describe_column(df, col)`    | Agente 5      | `pulso.describe_column(df, col)`     |
+| 1.4  | `pulso_list_columns_metadata(df)`   | Agente 5      | `pulso.list_columns_metadata(df)`    |
+| 1.5  | `pulso_list_validated_range()`      | Agente 5      | `pulso.list_validated_range()`       |
+| 1.6  | `pulso_validation_status(year, m)`  | Agente 5      | `pulso.validation_status(year, m)`   |
+| 1.7  | `pulso_describe(module, ...)`       | Agente 5      | `pulso.describe(module, ...)`        |
+| 1.8  | `pulso_describe_variable(name)`     | Agente 5      | `pulso.describe_variable(name)`      |
+| 1.9  | `pulso_list_variables(harmonized)`  | Agente 5      | `pulso.list_variables(harmonized)`   |
+
 
 ### 1.1 `pulso_load()` — IMPLEMENT IN MINI-4B
 
@@ -137,6 +152,71 @@ list(
 
 ---
 
+### 1.7 `pulso_describe(module, year = NULL, month = NULL)` — Agente 5
+
+R counterpart to Python's `pulso.describe()` (`python/pulso/_config/registry.py:253`). Three call shapes:
+
+- `pulso_describe(module)` — catalog overview across all registered periods (epochs covering the module, validated count, total period count, harmonized variable count, available period range).
+- `pulso_describe(module, year)` — year overview (epoch, available months, validated months, comparability notes).
+- `pulso_describe(module, year, month)` — specific period detail (epoch, validated flag, sha256 checksum, validated_at, file URL).
+
+**Arguments:**
+- `module` *(character, required)*. Canonical module name. If unknown, the error message includes a `did you mean ...?` suggestion (R equivalent of Python's `difflib.get_close_matches()` — use `utils::adist()`).
+- `year` *(integer or NULL, default NULL)*. Required when `month` is set.
+- `month` *(integer or NULL, default NULL)*. 1–12.
+
+**Returns:** named list. Always contains `module`; remaining keys depend on the call shape.
+
+**Errors:**
+- `pulso_validation_error` — `module` not in registry; `month` passed without `year`.
+- `pulso_data_not_available` — period not in registry.
+- `pulso_module_not_available` — module exists but isn't available for the requested (year, month).
+
+---
+
+### 1.8 `pulso_describe_variable(name)` — Agente 5
+
+R counterpart to Python's `pulso.describe_variable()` (`python/pulso/_config/registry.py:383`).
+
+```r
+pulso_describe_variable(name)
+```
+
+Returns full metadata for a single canonical (harmonized) variable: type, level, module, Spanish/English descriptions, categories (if categorical), comparability warnings, and per-epoch source-variable mappings.
+
+**Arguments:**
+- `name` *(character, required)*. Canonical variable name (matches a key in `data/variable_map.json`).
+
+**Returns:** named list. First element is `canonical_name = name`; remaining elements come from `variable_map.json`. Mirrors the Python dict shape so cross-language users have a parallel mental model.
+
+**Errors:**
+- `pulso_validation_error` — `name` not in `variable_map.json`. Error message lists the available variables.
+
+---
+
+### 1.9 `pulso_list_variables(harmonized = TRUE)` — Agente 5
+
+R counterpart to Python's `pulso.list_variables()` (`python/pulso/_config/registry.py:219`).
+
+```r
+pulso_list_variables(harmonized = TRUE)
+```
+
+Returns a tibble of canonical (harmonized) variables defined in `variable_map.json`.
+
+**Arguments:**
+- `harmonized` *(logical, default TRUE)*. If TRUE, only list variables with at least one epoch mapping. If FALSE, list every entry in the variable map (including catalog-only entries with empty mappings).
+
+**Returns:** tibble with columns:
+
+| variable | type | level | module | description_es | description_en | available_in_epochs |
+
+`available_in_epochs` is a list-column (one character vector per row) — same shape as the Python list values, idiomatic R via `tibble`.
+
+**Errors:** none under normal use. Raises `pulso_metadata_error` if `variable_map.json` is missing or malformed.
+
+---
+
 ## 2. S3 class hierarchy
 
 ### `pulso_dataframe`
@@ -189,10 +269,11 @@ c(<specific>, "pulso_error", "error", "condition")
 
 | Class                          | Raised when                                                                  |
 |-------------------------------|------------------------------------------------------------------------------|
-| `pulso_validation_error`      | argument validation fails (bad year/month/module type or value)              |
+| `pulso_validation_error`      | argument validation fails (bad year/month/module type or value, unknown variable name in `pulso_describe_variable()`, `month` without `year` in `pulso_describe()`) |
 | `pulso_data_not_available`    | (year, month) absent from `sources.json` registry                            |
+| `pulso_module_not_available`  | module exists in registry but not for the requested (year, month) — raised by `pulso_describe(module, year, month)` |
 | `pulso_parse_error`           | zip corrupt, expected CSV missing inside zip, encoding unreadable            |
-| `pulso_metadata_error`        | codebook download failed, codebook parse error, missing column metadata      |
+| `pulso_metadata_error`        | codebook download failed, codebook parse error, missing column metadata, malformed `variable_map.json` |
 | `pulso_merge_error`           | identifier columns missing or inconsistent in `pulso_load_merged()`          |
 
 **Pattern (used everywhere):**
@@ -227,15 +308,41 @@ Internal helpers are NOT exported in NAMESPACE. They live in `r/R/utils-*.R` fil
 
 ## 5. Path resolution strategy
 
-`data/sources.json` and the bundled codebook subset must be reachable both from a development checkout (where `r/` is a sibling of `data/`) and from an installed package (where data has been copied into `inst/extdata/` at build time).
+The repo's `data/` directory holds 5 JSON artifacts that the R package needs at runtime. They split cleanly into two groups by size, and the resolution strategy differs accordingly. CRAN's package size limit is 5 MB total; bundling the codebook would blow past it on its own.
 
-**Resolution order, implemented in `.resolve_data_path(filename)`:**
+### 5.1 Per-file strategy
 
-1. `system.file("extdata", filename, package = "pulso")` — installed package case. If non-empty string, return it.
-2. `fs::path_real(file.path(rprojroot::find_package_root_file(), "..", "data", filename))` — dev-mode fallback when running `devtools::load_all()` or `R CMD check` against the source tree. *(Note: rprojroot is base R via `tools` from R 4.0+, so no extra dep needed; or use `here::here()` via Suggests if it simplifies.)*
-3. Error: `pulso_data_not_available` with a message pointing to the missing file.
+| File                          | Size  | Strategy                                                       | Why                                                                          |
+|-------------------------------|-------|----------------------------------------------------------------|------------------------------------------------------------------------------|
+| `sources.json`                | 300K  | **Bundle** in `r/inst/extdata/`                                | Needed on first call; small; changes infrequently (per release)              |
+| `variable_map.json`           | 37K   | **Bundle** in `r/inst/extdata/`                                | Required by `pulso_describe_variable()` and `pulso_list_variables()`         |
+| `variable_module_map.json`    | 2.3K  | **Bundle** in `r/inst/extdata/`                                | Required by harmonization in `pulso_load(harmonize = TRUE)`                  |
+| `epochs.json`                 | 3.1K  | **Bundle** in `r/inst/extdata/`                                | Required by `pulso_describe(module, year)` epoch lookup                      |
+| `dane_codebook.json`          | 6.6M  | **Lazy download** to `tools::R_user_dir("pulso", "cache")`     | Exceeds CRAN's 5 MB total package size limit; only needed for metadata mode  |
 
-**Build-time data sync.** `r/inst/extdata/` is populated at build time by copying selected files from `data/`. The script that does this is `scripts/sync_data_to_r.R`, referenced by the existing CI workflow but **not yet present in the repo** — it is a known follow-up for Agente 6. For Mini-4B development it is acceptable to manually copy `data/sources.json` into `r/inst/extdata/` and add it to `.gitignore` for `r/inst/extdata/` to avoid duplication; the build hook (Agente 6) will replace this manual step.
+Bundled total: ~342 KB — well within CRAN limits even with package source overhead.
+
+### 5.2 Bundled files — resolution order
+
+Implemented in `.resolve_bundled_path(filename)`:
+
+1. `system.file("extdata", filename, package = "pulso")` — installed package case. If the returned string is non-empty (i.e., the file exists), return it.
+2. Dev-mode fallback: walk up from the calling file's location (or `getwd()`) until a directory named `data/` containing `sources.json` is found. This handles `devtools::load_all()` and `R CMD check` against the source tree without needing `here` or `rprojroot` as a hard dep.
+3. Error: `pulso_metadata_error` with a message pointing to the missing file and how to fix it (`devtools::load_all()` from repo root, or reinstall package).
+
+### 5.3 Lazy-download codebook — resolution order
+
+Implemented in `.resolve_codebook_path()` (Agente 5):
+
+1. Check `tools::R_user_dir("pulso", "cache")/codebook/dane_codebook.json`. If present and not stale (TTL check, default 30 days), return it.
+2. If absent or stale: download from a stable GitHub Release asset URL (e.g., `https://github.com/Stebandido77/pulso/releases/download/data-vYYYY.MM/dane_codebook.json`), verify SHA256 against a value pinned in `inst/extdata/codebook_release.json` (small, bundled), write to cache, return path.
+3. If offline and no cache present: raise `pulso_metadata_error` with a message instructing the user how to run `pulso_codebook_download()` (Agente 5) when online, or how to point the cache to a manually-downloaded file.
+
+Codebook download is opt-in — only triggered by functions that need it (`pulso_describe_column()`, `pulso_list_columns_metadata()`, and `pulso_load(metadata = TRUE)`). Core functions like `pulso_load(metadata = FALSE)` never trigger a codebook download.
+
+### 5.4 Build-time sync
+
+`r/inst/extdata/` is populated at build time by copying the 4 small files from `data/`. The script that does this is `scripts/sync_data_to_r.R`, referenced by the existing CI workflow but **not yet present in the repo** — it is a known follow-up for Agente 6. For Mini-4B development it is acceptable to manually copy the files into `r/inst/extdata/` and gitignore that directory; the build hook (Agente 6) will replace the manual step.
 
 ---
 
@@ -283,6 +390,9 @@ This resolves to:
 | `pulso.list_columns_metadata(df)` → DataFrame        | `pulso_list_columns_metadata(df)` → tibble               |
 | `pulso.list_validated_range()` → DataFrame           | `pulso_list_validated_range()` → tibble                  |
 | `pulso.validation_status(2024, 6)` → dict            | `pulso_validation_status(2024, 6)` → list                |
+| `pulso.describe(module, year, month)` → dict         | `pulso_describe(module, year, month)` → list             |
+| `pulso.describe_variable(name)` → dict               | `pulso_describe_variable(name)` → list                   |
+| `pulso.list_variables(harmonized=True)` → DataFrame  | `pulso_list_variables(harmonized = TRUE)` → tibble       |
 | `class PulsoDataNotAvailable(Exception)`             | condition class `pulso_data_not_available`               |
 | `class PulsoParseError(Exception)`                   | condition class `pulso_parse_error`                      |
 | `class PulsoValidationError(Exception)`              | condition class `pulso_validation_error`                 |
@@ -291,12 +401,12 @@ This resolves to:
 
 ---
 
-## 8. Open questions for human approval
+## 8. Open questions for human approval — RESOLVED
 
-These are the same 3 decisions called out in Mini-4A's PR description:
+The 3 decisions originally posed in Mini-4A's PR description have been resolved by the user; this section documents the resolution so future agents have the audit trail.
 
-1. **API surface complete?** Are the 6 public functions above the right v0.1.0 surface, or should anything be added/removed/renamed before Mini-4B and Agente 5 lock in?
-2. **Signatures locked?** In particular: `pulso_load(metadata = FALSE)` defaults to no metadata; should it default to `TRUE` for parity with the Python side, or is opt-in correct for performance reasons?
-3. **Path resolution approach?** Dual-mode (`system.file()` first, then `../data/` fallback) plus a future `scripts/sync_data_to_r.R` build hook — acceptable, or should we adopt a different strategy (e.g., always copy at install time and never read from `../data/`)?
+1. **API surface complete?** **Resolved: 9 functions, not 6.** The user added `pulso_list_variables()`, `pulso_describe_variable()`, and `pulso_describe()` for full parity with the Python `_config/registry.py` API (Python `pulso.list_variables`, `pulso.describe_variable`, `pulso.describe`). All three are now documented in §1.7–§1.9.
+2. **Signatures locked?** **Resolved: `pulso_load(metadata = FALSE)` default confirmed.** Opt-in metadata kept for Python parity (Python's `load()` does not attach column metadata by default either) and for performance — codebook lookup is non-trivial.
+3. **Path resolution approach?** **Resolved: differentiated by file size.** The 4 small JSONs are bundled in `inst/extdata/`; `dane_codebook.json` (6.6 MB, exceeds CRAN's 5 MB package size limit) is lazy-downloaded to `tools::R_user_dir("pulso", "cache")`. Full per-file table and resolution orders are in §5.
 
-Mini-4B and Agente 5 must not begin until these three are resolved.
+Mini-4B may begin once PR #55 is merged to `feat/r-port`.

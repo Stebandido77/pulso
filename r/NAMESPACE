@@ -8,7 +8,10 @@
 # Expected exports for v0.1.0 (see docs/internal/r-port/05_r_api_design_final.md):
 #   - pulso_load                       (Mini-4B)
 #   - pulso_load_merged                (Agente 5)
+#   - pulso_describe                   (Agente 5)
 #   - pulso_describe_column            (Agente 5)
+#   - pulso_describe_variable          (Agente 5)
 #   - pulso_list_columns_metadata      (Agente 5)
 #   - pulso_list_validated_range       (Agente 5)
+#   - pulso_list_variables             (Agente 5)
 #   - pulso_validation_status          (Agente 5)
