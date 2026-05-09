@@ -1,31 +1,27 @@
 #' Load GEIH microdata for a single year-month-module
 #'
 #' Downloads and parses microdata from Colombia's Gran Encuesta Integrada
-#' de Hogares (GEIH), published by DANE. This is the MVP version for
-#' v0.1.0 supporting single year/month/module loads.
+#' de Hogares (GEIH), published by DANE.
 #'
-#' @param year Integer. Year of the survey (e.g., 2024). Must be in
-#'   2007 to current year.
-#' @param month Integer. Month of the survey (1-12).
-#' @param module Character. Module name. Common values: "ocupados",
-#'   "vivienda", "caracteristicas_generales", "desocupados", etc.
-#' @param area Character or NULL. Optional area filter ("urbano"/"rural").
-#'   NULL means all areas. Currently NOT IMPLEMENTED in v0.1.0 (planned
-#'   for v0.2.0).
-#' @param harmonize Logical. Whether to apply harmonization rules.
-#'   Default TRUE. v0.1.0 applies basic type coercion only; full
-#'   harmonization in v0.2.0+.
-#' @param cache Logical. Whether to cache downloaded data on disk.
-#'   Default TRUE. Cache location: tools::R_user_dir("pulso", "cache").
-#' @param metadata Logical. Whether to attach DANE metadata to the result.
-#'   Default FALSE for Python parity. NOT IMPLEMENTED in v0.1.0 MVP
-#'   (planned for v0.2.0).
+#' @param year Integer. Year (2007 to current year).
+#' @param month Integer. Month (1-12).
+#' @param module Character. Module name (e.g., "ocupados").
+#' @param area Character or NULL. Optional area filter. NOT IMPLEMENTED in v0.1.0.
+#' @param harmonize Logical. Whether to apply harmonization. Default TRUE.
+#' @param cache Logical. Whether to cache downloads. Default TRUE.
+#' @param metadata Logical. Whether to attach DANE metadata to result.
+#'   Default FALSE for Python parity. When TRUE, attaches metadata via
+#'   `attr(df, "pulso_metadata")` and triggers lazy download of codebook
+#'   on first call.
 #'
-#' @return A tibble with the microdata.
+#' @return A tibble with the microdata. If metadata = TRUE, the tibble
+#'   has an attribute "pulso_metadata" with structured column info.
 #'
 #' @examples
 #' \dontrun{
-#' df <- pulso_load(year = 2024, month = 6, module = "ocupados")
+#' df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+#'                  metadata = TRUE)
+#' cat(pulso_describe_column(df, "P6020"))
 #' }
 #'
 #' @export
@@ -41,14 +37,8 @@ pulso_load <- function(year, month, module,
 
   if (!is.null(area)) {
     cli::cli_warn(c(
-      "{.arg area} is not implemented in v0.1.0 MVP",
-      "i" = "Planned for v0.2.0. Returning all areas."
-    ))
-  }
-  if (metadata) {
-    cli::cli_warn(c(
-      "{.arg metadata = TRUE} is not implemented in v0.1.0 MVP",
-      "i" = "Planned for v0.2.0. Returning data without metadata."
+      "{.arg area} is not implemented in v0.1.0",
+      "i" = "Returning all areas. Planned for v0.2.0."
     ))
   }
 
@@ -72,5 +62,19 @@ pulso_load <- function(year, month, module,
     names(df) <- tolower(gsub("[^[:alnum:]_]", "_", names(df)))
   }
 
-  tibble::as_tibble(df)
+  result <- tibble::as_tibble(df)
+
+  if (metadata) {
+    column_metadata <- .compose_dataframe_metadata(result, year, month, module)
+
+    attr(result, "pulso_metadata") <- list(
+      column_metadata = column_metadata,
+      source_year = year,
+      source_month = month,
+      source_module = module,
+      source_epoch = .get_epoch_for_year(year)
+    )
+  }
+
+  result
 }
