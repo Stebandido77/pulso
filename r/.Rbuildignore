@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.github$
+^docs$
+^\.\./docs$
+^\.\./scripts$
+^\.\./python$
+^\.\./data$
+^\.\./README\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^pkgdown$

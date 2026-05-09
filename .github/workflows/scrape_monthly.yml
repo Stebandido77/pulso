@@ -20,19 +20,27 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Sync data into pulso/data/
+        run: python scripts/sync_data.py
+
       - name: Install package with scraper extras
+        working-directory: python
         run: pip install -e ".[dev,scraper]"
 
       - name: Run scraper
         id: scrape
         run: |
-          python scripts/agent_scraper.py --output pulso/data/sources.json --report scrape_report.md
+          python python/scripts/agent_scraper.py --output data/sources.json --report scrape_report.md
           echo "report<<EOF" >> $GITHUB_OUTPUT
           cat scrape_report.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
 
+      - name: Re-sync canonical data into pulso/data/ before validation
+        run: python scripts/sync_data.py
+
       - name: Validate updated sources.json
+        working-directory: python
         run: pytest tests/unit/test_schemas.py -v
 
       - name: Open PR with changes

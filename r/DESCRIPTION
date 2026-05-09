@@ -1,0 +1,29 @@
+Package: pulso
+Title: Load GEIH Microdata from Colombia's DANE
+Version: 0.0.0.9000
+Authors@R:
+    person("pulso contributors", , , "noreply@example.com",
+           role = c("aut", "cre"))
+Description: R interface to GEIH (Gran Encuesta Integrada de Hogares)
+    microdata from Colombia's DANE. Companion to the Python package
+    'pulso-co'.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: false
+Imports:
+    tibble,
+    vctrs,
+    rlang,
+    cli,
+    haven,
+    httr2,
+    jsonlite
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    dplyr,
+    tidyr,
+    srvyr
+Config/testthat/edition: 3
+RoxygenNote: 7.3.2
