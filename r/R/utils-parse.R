@@ -4,6 +4,7 @@
 #' @param module Module name (e.g., "ocupados").
 #'
 #' @return data.frame with the CSV contents.
+#' @importFrom utils read.csv unzip
 #' @noRd
 .parse_module_csv <- function(zip_path, module) {
   zip_contents <- utils::unzip(zip_path, list = TRUE)$Name

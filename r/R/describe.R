@@ -15,6 +15,7 @@
 #' cat(pulso_describe_column(df, "P6020"))
 #' }
 #'
+#' @importFrom utils head
 #' @export
 pulso_describe_column <- function(df, column) {
   if (!is.character(column) || length(column) != 1) {

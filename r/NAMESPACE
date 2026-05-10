@@ -3,4 +3,3 @@
 export(pulso_describe_column)
 export(pulso_list_columns_metadata)
 export(pulso_load)
-importFrom("utils", "head", "read.csv", "unzip")
