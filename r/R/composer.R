@@ -47,7 +47,8 @@
 
   if (!is.null(curator_entry) && !is.null(codebook_entry)) {
     result$source <- "merged"
-    result$label <- curator_entry$description_es %||% codebook_entry$label %||% column_code
+    result$label <- curator_entry$description_es %||%
+      codebook_entry$label %||% column_code
     result$description_es <- curator_entry$description_es
     result$description_en <- curator_entry$description_en
     result$categories <- curator_entry$categories
@@ -68,8 +69,10 @@
     result$canonical_name <- canonical
 
   } else if (!is.null(codebook_entry)) {
-    has_categories <- !is.null(codebook_entry$categories) && length(codebook_entry$categories) > 0
-    has_question_text <- !is.null(codebook_entry$question_text) && nchar(codebook_entry$question_text) > 0
+    has_categories <- !is.null(codebook_entry$categories) &&
+      length(codebook_entry$categories) > 0
+    has_question_text <- !is.null(codebook_entry$question_text) &&
+      nchar(codebook_entry$question_text) > 0
 
     if (!has_categories && !has_question_text) {
       result$source <- "codebook (skeletal)"
@@ -103,7 +106,8 @@
   column_metadata <- list()
 
   for (col_name in names(df)) {
-    column_metadata[[col_name]] <- .compose_column_metadata(col_name, year, module)
+    column_metadata[[col_name]] <-
+      .compose_column_metadata(col_name, year, module)
   }
 
   column_metadata
