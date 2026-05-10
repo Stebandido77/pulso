@@ -1,0 +1,120 @@
+---
+title: "Getting started with pulso"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with pulso}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Loading GEIH microdata with pulso
+
+`pulso` provides programmatic access to Colombia's Gran Encuesta
+Integrada de Hogares (GEIH), the household labor force survey
+published monthly by DANE (Departamento Administrativo Nacional
+de Estadística).
+
+## Quick start
+
+```{r}
+library(pulso)
+
+df <- pulso_load(year = 2024, month = 6, module = "ocupados")
+```
+
+The result is a tibble with the survey microdata. By default, all
+columns are returned with their original DANE codes (e.g., P6020,
+P3271).
+
+## Accessing variable metadata
+
+Pass `metadata = TRUE` to get DANE codebook information attached
+to the result:
+
+```{r}
+df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+                 metadata = TRUE)
+```
+
+You can describe individual columns:
+
+```{r}
+cat(pulso_describe_column(df, "P6020"))
+```
+
+Or list metadata for all columns:
+
+```{r}
+metadata_summary <- pulso_list_columns_metadata(df)
+print(metadata_summary)
+```
+
+## What is GEIH?
+
+GEIH is Colombia's primary labor market survey, conducted monthly
+since 2007. It collects data on:
+
+- Labor force participation (employed, unemployed, inactive)
+- Wages and informal employment
+- Demographic characteristics (age, sex, education)
+- Household composition
+
+Microdata is freely published by DANE in monthly zip files.
+`pulso` automates the download, parsing, and harmonization across
+the four GEIH design epochs (2007-2018, 2019-2023, 2024-present,
+plus the historical ECH 2000-2006).
+
+## Comparison with the Python package
+
+`pulso` (R) mirrors the API of `pulso-co` (Python). For example:
+
+```python
+# Python
+import pulso
+df = pulso.load(year=2024, month=6, module="ocupados", metadata=True)
+print(pulso.describe_column(df, "P6020"))
+```
+
+```{r}
+# R
+library(pulso)
+df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+                 metadata = TRUE)
+cat(pulso_describe_column(df, "P6020"))
+```
+
+Both packages share the same canonical data files (sources.json,
+variable_map.json, dane_codebook.json) via the monorepo at
+https://github.com/Stebandido77/pulso.
+
+## Caching
+
+Downloaded microdata is cached at
+`tools::R_user_dir("pulso", "cache")` to avoid re-downloading.
+Pass `cache = FALSE` to force re-download.
+
+## Coverage and limitations
+
+This is `pulso` v0.1.0. Currently supported:
+
+- Single year/month/module loads via `pulso_load()`
+- Metadata access via `pulso_describe_column()` and
+  `pulso_list_columns_metadata()`
+- Coverage: 2007 to present
+
+Planned for v0.2.0+:
+
+- `pulso_load_merged()` for multi-period loads
+- Area filtering (urbano/rural)
+- Full harmonization across epochs
+- Validation status checks
+
+See the GitHub issues for roadmap and known limitations.
