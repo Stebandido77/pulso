@@ -1,3 +1,28 @@
+#' Normalize DANE zip filename encoding to UTF-8
+#'
+#' DANE monthly zips are created with legacy DOS/Windows zip tools that
+#' default to the CP437 codepage for filenames and do NOT set the zip's
+#' UTF-8 flag bit. R's utils::unzip(list=TRUE) returns those names with
+#' Encoding() == "unknown" on Linux/Mac. Naive comparison against the
+#' UTF-8 paths from sources.json fails, and tolower() / basename() can
+#' crash on invalid multibyte sequences under C locale.
+#'
+#' Byte 0xa1 in CP437 decodes to 'í' ("Características"); in latin1 it
+#' decodes to '¡' (wrong). Always use CP437 for DANE filenames.
+#' @noRd
+.normalize_zip_names <- function(zip_contents) {
+  unknown <- Encoding(zip_contents) == "unknown"
+  if (any(unknown)) {
+    zip_contents[unknown] <- iconv(
+      zip_contents[unknown],
+      from = "CP437",
+      to = "UTF-8",
+      sub = "?"
+    )
+  }
+  zip_contents
+}
+
 #' Detect DANE nested-zip wrapper layout (2024-03, 2024-04)
 #'
 #' Some DANE releases wrap data files inside a second zip layer; the outer
@@ -5,38 +30,38 @@
 #' implement the descent in v0.1.0 — callers get a clear deferral error.
 #' @noRd
 .is_nested_zip_wrapper <- function(zip_contents) {
+  zip_contents <- .normalize_zip_names(zip_contents)
   entries <- zip_contents[!grepl("/$", zip_contents)]
   if (length(entries) == 0) return(FALSE)
-  basenames <- basename(entries)
-  all(basenames %in% c("CSV.zip", "DTA.zip", "SAV.zip"))
+  all(basename(entries) %in% c("CSV.zip", "DTA.zip", "SAV.zip"))
 }
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' DANE monthly zips are created on Windows and carry latin1-encoded
-#' filenames without the UTF-8 flag bit. R's utils::unzip(list=TRUE)
-#' returns those names as a character vector with Encoding() == "unknown"
-#' on Linux/Mac, which breaks naive %in% comparison against the UTF-8
-#' strings loaded from sources.json. We normalize both sides to UTF-8
-#' before comparison and use a locale-safe regex for case-insensitive
-#' basename fallback (tolower() crashes on invalid multibyte sequences
-#' under C locale).
+#' Returns the ORIGINAL name from zip_contents (not the normalized form)
+#' so that utils::unzip(files = ...) can match against the zip's central
+#' directory bytes during extraction. Comparison uses normalized UTF-8
+#' strings and a locale-safe PCRE pattern (no tolower()).
 #' @noRd
 .resolve_zip_path <- function(zip_contents, inner_path) {
-  unknown <- Encoding(zip_contents) == "unknown"
-  if (any(unknown)) Encoding(zip_contents[unknown]) <- "latin1"
-  zip_contents <- enc2utf8(zip_contents)
+  zip_normalized <- .normalize_zip_names(zip_contents)
 
-  inner_path <- enc2utf8(inner_path)
+  if (Encoding(inner_path) == "unknown") {
+    inner_path <- iconv(inner_path, from = "CP437", to = "UTF-8", sub = "?")
+  }
 
-  if (inner_path %in% zip_contents) return(inner_path)
+  idx <- match(inner_path, zip_normalized)
+  if (!is.na(idx)) return(zip_contents[idx])
 
   base_target <- basename(inner_path)
   pattern <- paste0("(?i)^\\Q", base_target, "\\E$")
-  entries <- zip_contents[!grepl("/$", zip_contents)]
 
-  for (name in entries) {
-    if (grepl(pattern, basename(name), perl = TRUE)) return(name)
+  for (i in seq_along(zip_normalized)) {
+    name_norm <- zip_normalized[i]
+    if (grepl("/$", name_norm)) next
+    if (grepl(pattern, basename(name_norm), perl = TRUE)) {
+      return(zip_contents[i])
+    }
   }
 
   NULL
@@ -45,7 +70,9 @@
 #' Read a single CSV from inside a zip
 #'
 #' Extracts to a temp dir and reads with latin-1 encoding + ";" separator
-#' (DANE convention). Resolves the inner path case-insensitively.
+#' (DANE convention). Discovers the on-disk path via dir_ls() to handle
+#' encoding mismatches between the zip's central directory and the
+#' platform's filesystem encoding.
 #' @noRd
 .read_single_csv_from_zip <- function(zip_path, inner_path) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
@@ -62,11 +89,20 @@
   fs::dir_create(temp_dir)
   on.exit(fs::dir_delete(temp_dir), add = TRUE)
 
-  utils::unzip(zip_path, files = resolved, exdir = temp_dir)
-  csv_path <- fs::path(temp_dir, resolved)
+  suppressWarnings(
+    utils::unzip(zip_path, files = resolved, exdir = temp_dir)
+  )
+
+  extracted <- fs::dir_ls(temp_dir, recurse = TRUE, type = "file")
+  if (length(extracted) == 0) {
+    abort_parse_error(sprintf(
+      "Failed to extract '%s' from zip %s",
+      inner_path, basename(zip_path)
+    ))
+  }
 
   utils::read.csv(
-    csv_path,
+    extracted[1],
     sep = ";",
     fileEncoding = "latin1",
     stringsAsFactors = FALSE,
