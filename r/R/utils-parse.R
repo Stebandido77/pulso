@@ -110,21 +110,106 @@
   )
 }
 
+#' Shape A module keyword index (GEIH-1 era, 2007-2020)
+#'
+#' Ported from python/pulso/_core/parser.py:39 (MODULE_KEYWORDS_GEIH1).
+#' DANE filenames in Shape A zips drift across years (typos, missing
+#' accents, spacing variants), so sources.json strings cannot be used
+#' for literal matching. Keyword discovery against this index is the
+#' Python parity behavior — preserves the 2007 typo "Caractericas"
+#' (missing 't') and the no-accent fallback for older fixtures.
+#' @noRd
+.MODULE_KEYWORDS_GEIH1 <- list(
+  caracteristicas_generales = c(
+    "Características generales",
+    "Caracteristicas generales",
+    "Caractericas generales"
+  ),
+  ocupados             = "Ocupados",
+  desocupados          = "Desocupados",
+  inactivos            = "Inactivos",
+  vivienda_hogares     = "Vivienda y Hogares",
+  otros_ingresos       = "Otros ingresos",
+  otras_formas_trabajo = "Otras actividades y ayudas",
+  fuerza_de_trabajo    = "Fuerza de trabajo"
+)
+
+#' Locate Cabecera and Resto files for a module inside a Shape A zip
+#'
+#' Mirrors python/pulso/_core/parser.py:62 (find_shape_a_files). Scans
+#' the zip entries for filenames whose basename starts with "cabecera"
+#' or "resto" (case-insensitive) AND contains a module keyword on a
+#' word boundary. Files starting with "Area" or any other prefix are
+#' silently dropped — they're auxiliary metadata, not the module data.
+#'
+#' Returns the ORIGINAL byte strings from zip_contents (not normalized)
+#' so utils::unzip(files = ...) can match against the zip's central
+#' directory bytes for extraction.
+#' @noRd
+.find_shape_a_files <- function(zip_contents, module_name) {
+  zip_normalized <- .normalize_zip_names(zip_contents)
+  keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
+  if (is.null(keywords)) keywords <- module_name
+
+  cabecera <- NULL
+  resto    <- NULL
+
+  for (i in seq_along(zip_normalized)) {
+    name_norm <- zip_normalized[i]
+    if (grepl("/$", name_norm)) next
+
+    base <- basename(name_norm)
+
+    if (grepl("(?i)^cabecera", base, perl = TRUE)) {
+      prefix <- "cabecera"
+    } else if (grepl("(?i)^resto", base, perl = TRUE)) {
+      prefix <- "resto"
+    } else {
+      next
+    }
+
+    matched <- FALSE
+    for (kw in keywords) {
+      pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\b")
+      if (grepl(pattern, base, perl = TRUE)) {
+        matched <- TRUE
+        break
+      }
+    }
+    if (!matched) next
+
+    if (prefix == "cabecera") {
+      cabecera <- zip_contents[i]
+    } else {
+      resto <- zip_contents[i]
+    }
+  }
+
+  list(cabecera = cabecera, resto = resto)
+}
+
 #' Parse a module CSV from a DANE monthly zip
 #'
 #' Dispatches on the module spec shape from sources.json:
-#'   Shape A (geih_2006_2020 era): {cabecera, resto} → two CSVs, concat
-#'     with synthetic CLASE column (1 = cabecera, 2 = resto).
-#'   Shape B (geih_2021_present era): {file} → single CSV, read directly.
+#'   Shape A (geih_2006_2020 era): {cabecera, resto} keys signal this
+#'     shape; actual filenames are recovered via keyword-based discovery
+#'     against the zip contents (mirrors Python's find_shape_a_files).
+#'     The sources.json paths for Shape A are aspirational only — real
+#'     DANE filenames drift across years (typos, spacing, encoding).
+#'     The two CSVs are concatenated with a synthetic CLASE column
+#'     (1 = cabecera, 2 = resto).
+#'   Shape B (geih_2021_present era): {file} → single CSV, read directly
+#'     from the literal sources.json path. 2021+ filenames are stable.
 #'
 #' Nested-zip layout (DANE 2024-03 / 2024-04) is deferred to v0.2.0; we
 #' detect and raise pulso_parse_error.
 #'
 #' @param zip_path Path to outer zip file (already downloaded).
 #' @param module_spec Named list from sources.json for the requested module
-#'   and period — either list(file = "...") or list(cabecera = "...",
-#'   resto = "...").
-#' @param module_name Character. Module name for error messages.
+#'   and period — either list(file = "...") (Shape B) or
+#'   list(cabecera = "...", resto = "...") (Shape A — keys signal shape,
+#'   values are aspirational and ignored at runtime).
+#' @param module_name Character. Module name for keyword lookup + errors.
 #' @param year Integer. Period year for error messages.
 #' @param month Integer. Period month for error messages.
 #'
@@ -146,9 +231,18 @@
   }
 
   if (!is.null(module_spec$cabecera) && !is.null(module_spec$resto)) {
-    df_c <- .read_single_csv_from_zip(zip_path, module_spec$cabecera)
+    files <- .find_shape_a_files(zip_contents, module_name)
+    if (is.null(files$cabecera) || is.null(files$resto)) {
+      keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
+      if (is.null(keywords)) keywords <- module_name
+      abort_parse_error(sprintf(
+        "Shape A files for module '%s' (%d-%02d) not found in zip. Tried keywords: %s",
+        module_name, year, month, paste(keywords, collapse = ", ")
+      ))
+    }
+    df_c <- .read_single_csv_from_zip(zip_path, files$cabecera)
     df_c$CLASE <- 1L
-    df_r <- .read_single_csv_from_zip(zip_path, module_spec$resto)
+    df_r <- .read_single_csv_from_zip(zip_path, files$resto)
     df_r$CLASE <- 2L
     return(rbind(df_c, df_r))
   }

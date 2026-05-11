@@ -29,11 +29,9 @@ test_that("pulso_load happy path returns tibble", {
   # theoretical mappings that haven't all been empirically verified
   # against the data. See followup on issue #61.
   expect_gt(ncol(df), 50)
+  # testthat::expect_gt() doesn't accept info=; use label= or comment only.
   p_coded <- grep("^[Pp][0-9]", names(df), value = TRUE)
-  expect_gt(
-    length(p_coded), 0,
-    info = "Module 'ocupados' should return a DataFrame containing P-coded DANE variables"
-  )
+  expect_gt(length(p_coded), 0)
 })
 
 test_that("pulso_load distinguishes ocupados from desocupados", {
