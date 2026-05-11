@@ -13,22 +13,30 @@
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' Order: (1) exact, (2) latin-1 → UTF-8 reinterpretation, (3)
-#' case-insensitive basename match across all entries.
+#' DANE monthly zips are created on Windows and carry latin1-encoded
+#' filenames without the UTF-8 flag bit. R's utils::unzip(list=TRUE)
+#' returns those names as a character vector with Encoding() == "unknown"
+#' on Linux/Mac, which breaks naive %in% comparison against the UTF-8
+#' strings loaded from sources.json. We normalize both sides to UTF-8
+#' before comparison and use a locale-safe regex for case-insensitive
+#' basename fallback (tolower() crashes on invalid multibyte sequences
+#' under C locale).
 #' @noRd
 .resolve_zip_path <- function(zip_contents, inner_path) {
+  unknown <- Encoding(zip_contents) == "unknown"
+  if (any(unknown)) Encoding(zip_contents[unknown]) <- "latin1"
+  zip_contents <- enc2utf8(zip_contents)
+
+  inner_path <- enc2utf8(inner_path)
+
   if (inner_path %in% zip_contents) return(inner_path)
 
-  fixed <- tryCatch(
-    iconv(inner_path, from = "latin1", to = "UTF-8"),
-    error = function(e) inner_path
-  )
-  if (!is.na(fixed) && fixed %in% zip_contents) return(fixed)
-
-  target <- tolower(basename(inner_path))
+  base_target <- basename(inner_path)
+  pattern <- paste0("(?i)^\\Q", base_target, "\\E$")
   entries <- zip_contents[!grepl("/$", zip_contents)]
+
   for (name in entries) {
-    if (tolower(basename(name)) == target) return(name)
+    if (grepl(pattern, basename(name), perl = TRUE)) return(name)
   }
 
   NULL

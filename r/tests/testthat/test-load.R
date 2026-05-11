@@ -21,10 +21,12 @@ test_that("pulso_load happy path returns tibble", {
 
   expect_s3_class(df, "tbl_df")
   expect_gt(nrow(df), 100)
-  # Post-Mini-5A: ocupados module is the real ~150-column ocupados frame,
-  # not the 37-column No-ocupados file that the fuzzy-grep used to return.
+  # Post-Mini-5A: ocupados module is the real ocupados frame, not the
+  # 37-column No-ocupados file that the fuzzy-grep used to return.
   expect_gt(ncol(df), 50)
-  expect_true("p6020" %in% names(df))
+  # P3271 (sexo) is the post-OIT replacement for the classic P6020.
+  # Per variable_map.json the rename happened with the 2018 frame redesign.
+  expect_true("p3271" %in% names(df))
 })
 
 test_that("pulso_load distinguishes ocupados from desocupados", {
