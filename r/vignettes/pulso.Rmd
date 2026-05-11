@@ -24,7 +24,7 @@ de Estadística).
 
 ## Quick start
 
-```{r}
+```{r, eval=FALSE}
 library(pulso)
 
 df <- pulso_load(year = 2024, month = 6, module = "ocupados")
@@ -39,20 +39,20 @@ P3271).
 Pass `metadata = TRUE` to get DANE codebook information attached
 to the result:
 
-```{r}
+```{r, eval=FALSE}
 df <- pulso_load(year = 2024, month = 6, module = "ocupados",
                  metadata = TRUE)
 ```
 
 You can describe individual columns:
 
-```{r}
+```{r, eval=FALSE}
 cat(pulso_describe_column(df, "p6020"))
 ```
 
 Or list metadata for all columns:
 
-```{r}
+```{r, eval=FALSE}
 metadata_summary <- pulso_list_columns_metadata(df)
 print(metadata_summary)
 ```
@@ -83,7 +83,7 @@ df = pulso.load(year=2024, month=6, module="ocupados", metadata=True)
 print(pulso.describe_column(df, "P6020"))
 ```
 
-```{r}
+```{r, eval=FALSE}
 # R
 library(pulso)
 df <- pulso_load(year = 2024, month = 6, module = "ocupados",
