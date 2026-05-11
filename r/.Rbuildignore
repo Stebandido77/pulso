@@ -10,3 +10,6 @@
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^pkgdown$
+^vignettes/.*\.html$
+^vignettes/.*_cache$
+^vignettes/.*_files$

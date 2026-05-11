@@ -43,7 +43,7 @@ pulso_load <- function(year, month, module,
   }
 
   source_info <- .resolve_source(year, month)
-  url <- source_info$url
+  url <- source_info$download_url
 
   if (is.null(url)) {
     abort_data_not_available(year, month)
