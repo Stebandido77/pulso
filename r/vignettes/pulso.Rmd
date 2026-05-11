@@ -47,7 +47,7 @@ df <- pulso_load(year = 2024, month = 6, module = "ocupados",
 You can describe individual columns:
 
 ```{r}
-cat(pulso_describe_column(df, "P6020"))
+cat(pulso_describe_column(df, "p6020"))
 ```
 
 Or list metadata for all columns:
@@ -88,7 +88,7 @@ print(pulso.describe_column(df, "P6020"))
 library(pulso)
 df <- pulso_load(year = 2024, month = 6, module = "ocupados",
                  metadata = TRUE)
-cat(pulso_describe_column(df, "P6020"))
+cat(pulso_describe_column(df, "p6020"))
 ```
 
 Both packages share the same canonical data files (sources.json,
