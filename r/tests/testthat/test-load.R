@@ -48,6 +48,7 @@ test_that("pulso_load distinguishes ocupados from desocupados", {
 })
 
 test_that("pulso_load Shape A (2020-06) concatenates cabecera + resto", {
+  skip("Shape A single-CSV-with-CLASE variant deferred to Mini-5B (issue #61)")
   skip_on_cran()
   skip_if_offline()
 
@@ -59,6 +60,7 @@ test_that("pulso_load Shape A (2020-06) concatenates cabecera + resto", {
 })
 
 test_that("pulso_load Shape A (2020-06) keeps CLASE after harmonize", {
+  skip("Shape A single-CSV-with-CLASE variant deferred to Mini-5B (issue #61)")
   skip_on_cran()
   skip_if_offline()
 
