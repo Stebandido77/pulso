@@ -7,8 +7,8 @@
 #' UTF-8 paths from sources.json fails, and tolower() / basename() can
 #' crash on invalid multibyte sequences under C locale.
 #'
-#' Byte 0xa1 in CP437 decodes to 'í' ("Características"); in latin1 it
-#' decodes to '¡' (wrong). Always use CP437 for DANE filenames.
+#' Byte 0xa1 in CP437 is i-acute ("Caracteristicas"); latin1 misreads it as
+#' inverted-exclamation (wrong). Always use CP437 for DANE filenames.
 #' @noRd
 .normalize_zip_names <- function(zip_contents) {
   unknown <- Encoding(zip_contents) == "unknown"
@@ -27,7 +27,7 @@
 #'
 #' Some DANE releases wrap data files inside a second zip layer; the outer
 #' archive contains only CSV.zip / DTA.zip / SAV.zip entries. We don't
-#' implement the descent in v0.1.0 — callers get a clear deferral error.
+#' implement the descent in v0.1.0 -- callers get a clear deferral error.
 #' @noRd
 .is_nested_zip_wrapper <- function(zip_contents) {
   zip_contents <- .normalize_zip_names(zip_contents)
@@ -116,12 +116,12 @@
 #' DANE filenames in Shape A zips drift across years (typos, missing
 #' accents, spacing variants), so sources.json strings cannot be used
 #' for literal matching. Keyword discovery against this index is the
-#' Python parity behavior — preserves the 2007 typo "Caractericas"
+#' Python parity behavior -- preserves the 2007 typo "Caractericas"
 #' (missing 't') and the no-accent fallback for older fixtures.
 #' @noRd
 .MODULE_KEYWORDS_GEIH1 <- list(
   caracteristicas_generales = c(
-    "Características generales",
+    "Caracter\u00edsticas generales",
     "Caracteristicas generales",
     "Caractericas generales"
   ),
@@ -140,7 +140,7 @@
 #' the zip entries for filenames whose basename starts with "cabecera"
 #' or "resto" (case-insensitive) AND contains a module keyword on a
 #' word boundary. Files starting with "Area" or any other prefix are
-#' silently dropped — they're auxiliary metadata, not the module data.
+#' silently dropped -- they're auxiliary metadata, not the module data.
 #'
 #' Returns the ORIGINAL byte strings from zip_contents (not normalized)
 #' so utils::unzip(files = ...) can match against the zip's central
@@ -194,11 +194,11 @@
 #'   Shape A (geih_2006_2020 era): {cabecera, resto} keys signal this
 #'     shape; actual filenames are recovered via keyword-based discovery
 #'     against the zip contents (mirrors Python's find_shape_a_files).
-#'     The sources.json paths for Shape A are aspirational only — real
+#'     The sources.json paths for Shape A are aspirational only -- real
 #'     DANE filenames drift across years (typos, spacing, encoding).
 #'     The two CSVs are concatenated with a synthetic CLASE column
 #'     (1 = cabecera, 2 = resto).
-#'   Shape B (geih_2021_present era): {file} → single CSV, read directly
+#'   Shape B (geih_2021_present era): {file} -> single CSV, read directly
 #'     from the literal sources.json path. 2021+ filenames are stable.
 #'
 #' Nested-zip layout (DANE 2024-03 / 2024-04) is deferred to v0.2.0; we
@@ -206,8 +206,8 @@
 #'
 #' @param zip_path Path to outer zip file (already downloaded).
 #' @param module_spec Named list from sources.json for the requested module
-#'   and period — either list(file = "...") (Shape B) or
-#'   list(cabecera = "...", resto = "...") (Shape A — keys signal shape,
+#'   and period -- either list(file = "...") (Shape B) or
+#'   list(cabecera = "...", resto = "...") (Shape A -- keys signal shape,
 #'   values are aspirational and ignored at runtime).
 #' @param module_name Character. Module name for keyword lookup + errors.
 #' @param year Integer. Period year for error messages.
