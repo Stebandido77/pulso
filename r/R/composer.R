@@ -11,7 +11,7 @@
 #' Epoch name for a year
 #'
 #' Hardcoded to match Python's `pulso/metadata/parser.py::_epoch_for_year`.
-#' Year >= 2021 -> "geih_2021_present"; otherwise "geih_2006_2020".
+#' Year >= 2022 -> "geih_2021_present"; otherwise "geih_2006_2020".
 #' Avoids parsing `epochs.json$epochs[*]$date_range` strings on every call.
 #'
 #' @noRd
@@ -20,7 +20,14 @@
     abort_validation_error(sprintf("Invalid year for epoch lookup: %s",
                                    paste(deparse(year), collapse = "")))
   }
-  if (year >= 2021) "geih_2021_present" else "geih_2006_2020"
+  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  if (year < 2006 || year > current_year + 1) {
+    abort_validation_error(sprintf(
+      "Year %d is out of range for pulso (valid: 2006-%d)",
+      year, current_year + 1
+    ))
+  }
+  if (year >= 2022) "geih_2021_present" else "geih_2006_2020"
 }
 
 #' Compose metadata for a single column

@@ -49,6 +49,41 @@ test_that(".get_epoch_for_year fails for invalid year inputs", {
   )
 })
 
+test_that(".get_epoch_for_year returns correct epoch at 2021/2022 boundary", {
+  expect_equal(pulso:::.get_epoch_for_year(2021), "geih_2006_2020")
+  expect_equal(pulso:::.get_epoch_for_year(2022), "geih_2021_present")
+})
+
+test_that(".get_epoch_for_year raises error for out-of-range years", {
+  expect_error(
+    pulso:::.get_epoch_for_year(2005),
+    class = "pulso_validation_error"
+  )
+  expect_error(
+    pulso:::.get_epoch_for_year(2200),
+    class = "pulso_validation_error"
+  )
+})
+
+test_that(".get_epoch_for_year accepts 2006 as lower boundary", {
+  expect_equal(pulso:::.get_epoch_for_year(2006), "geih_2006_2020")
+})
+
+test_that(".find_canonical_name resolves scalar source_variable", {
+  skip_on_cran()
+  # sexo maps to scalar "P3271" in geih_2021_present (variable_map.json verified)
+  result <- pulso:::.find_canonical_name("P3271", "geih_2021_present")
+  expect_equal(result, "sexo")
+})
+
+test_that(".find_canonical_name resolves list-valued source_variable", {
+  skip_on_cran()
+
+  # "ingreso_total" has source_variable = ["INGLABO", "P7500S1A1", ...] in geih_2021_present
+  result <- pulso:::.find_canonical_name("INGLABO", "geih_2021_present")
+  expect_equal(result, "ingreso_total")
+})
+
 test_that("%||% operator returns first non-null/non-empty value", {
   expect_equal(pulso:::`%||%`("a", "b"), "a")
   expect_equal(pulso:::`%||%`(NULL, "b"), "b")
