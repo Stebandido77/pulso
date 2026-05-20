@@ -79,8 +79,10 @@ test_that(".find_canonical_name resolves scalar source_variable", {
 test_that(".find_canonical_name resolves list-valued source_variable", {
   skip_on_cran()
 
-  # "ingreso_total" has source_variable = ["INGLABO", "P7500S1A1", ...] in geih_2021_present
-  result <- pulso:::.find_canonical_name("INGLABO", "geih_2021_present")
+  # P7500S1A1 appears only inside ingreso_total's list in geih_2021_present.
+  # INGLABO is NOT used here: it also maps to ingreso_laboral (scalar) which
+  # comes first in variable_map iteration order, making it a wrong test case.
+  result <- pulso:::.find_canonical_name("P7500S1A1", "geih_2021_present")
   expect_equal(result, "ingreso_total")
 })
 
