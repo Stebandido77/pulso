@@ -21,7 +21,62 @@ test_that("pulso_load happy path returns tibble", {
 
   expect_s3_class(df, "tbl_df")
   expect_gt(nrow(df), 100)
-  expect_gt(ncol(df), 5)
+  # Post-Mini-5A: ocupados is the real ocupados frame, not the 37-column
+  # No-ocupados file that the fuzzy-grep used to return. The original bug
+  # was "ocupados returns 37 admin-only columns"; assert against that
+  # specifically (P-coded variables present, plenty of them) without
+  # naming any one variable — the Curator's variable_map.json carries
+  # theoretical mappings that haven't all been empirically verified
+  # against the data. See followup on issue #61.
+  expect_gt(ncol(df), 50)
+  # testthat::expect_gt() doesn't accept info=; use label= or comment only.
+  p_coded <- grep("^[Pp][0-9]", names(df), value = TRUE)
+  expect_gt(length(p_coded), 0)
+})
+
+test_that("pulso_load distinguishes ocupados from desocupados", {
+  skip_on_cran()
+  skip_if_offline()
+
+  df_ocup <- pulso_load(year = 2024, month = 6, module = "ocupados")
+  df_des  <- pulso_load(year = 2024, month = 6, module = "desocupados")
+
+  # Different physical CSVs ⇒ different schemas. The pre-Mini-5A bug
+  # silently returned the same DataFrame for both because the substring
+  # "ocupados" matched both files and csv_match[1] picked one.
+  expect_false(identical(sort(names(df_ocup)), sort(names(df_des))))
+})
+
+test_that("pulso_load Shape A (2020-06) concatenates cabecera + resto", {
+  skip("Shape A single-CSV-with-CLASE variant deferred to Mini-5B (issue #61)")
+  skip_on_cran()
+  skip_if_offline()
+
+  df <- pulso_load(year = 2020, month = 6, module = "ocupados",
+                   harmonize = FALSE)
+
+  expect_true("CLASE" %in% names(df))
+  expect_setequal(unique(df$CLASE), c(1L, 2L))
+})
+
+test_that("pulso_load Shape A (2020-06) keeps CLASE after harmonize", {
+  skip("Shape A single-CSV-with-CLASE variant deferred to Mini-5B (issue #61)")
+  skip_on_cran()
+  skip_if_offline()
+
+  df <- pulso_load(year = 2020, month = 6, module = "ocupados")
+  expect_true("clase" %in% names(df))
+})
+
+test_that("pulso_load defers nested-zip layout (2024-03) with parse_error", {
+  skip_on_cran()
+  skip_if_offline()
+
+  expect_error(
+    pulso_load(year = 2024, month = 3, module = "ocupados"),
+    class = "pulso_parse_error",
+    regexp = "nested-zip"
+  )
 })
 
 test_that("pulso_load with metadata=TRUE attaches pulso_metadata attr", {

@@ -49,14 +49,14 @@ pulso_load <- function(year, month, module,
     abort_data_not_available(year, month)
   }
 
+  module_spec <- source_info$modules[[module]]
+  if (is.null(module_spec)) {
+    abort_module_not_available(module, year, month)
+  }
+
   zip_path <- .download_zip(url, year, month, use_cache = cache)
 
-  df <- tryCatch(
-    .parse_module_csv(zip_path, module),
-    pulso_module_not_available = function(e) {
-      abort_module_not_available(module, year, month)
-    }
-  )
+  df <- .parse_module_csv(zip_path, module_spec, module, year, month)
 
   if (harmonize) {
     names(df) <- tolower(gsub("[^[:alnum:]_]", "_", names(df)))
