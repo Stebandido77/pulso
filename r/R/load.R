@@ -31,9 +31,9 @@ pulso_load <- function(year, month, module,
                        cache = TRUE,
                        metadata = FALSE) {
 
+  .validate_module(module)
   .validate_year(year)
   .validate_month(month)
-  .validate_module(module)
 
   if (!is.null(area)) {
     cli::cli_warn(c(

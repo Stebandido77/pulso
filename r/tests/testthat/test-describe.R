@@ -28,6 +28,29 @@ test_that("pulso_describe_column returns message for df without metadata", {
   expect_match(result, "no metadata")
 })
 
+test_that("pulso_describe_column is case-insensitive", {
+  df <- tibble::tibble(p6020 = 1:3, otro = 4:6)
+
+  # exact lowercase match
+  result_lower <- pulso_describe_column(df, "p6020")
+  expect_type(result_lower, "character")
+  expect_match(result_lower, "no metadata")
+
+  # uppercase version should also work
+  result_upper <- pulso_describe_column(df, "P6020")
+  expect_type(result_upper, "character")
+  expect_match(result_upper, "no metadata")
+})
+
+test_that("pulso_describe_column is case-insensitive when df column is uppercase", {
+  df <- tibble::tibble(P6020 = 1:3, otro = 4:6)
+
+  # real-world case: pulso_load without harmonize returns uppercase DANE codes
+  result <- pulso_describe_column(df, "p6020")
+  expect_type(result, "character")
+  expect_match(result, "no metadata")
+})
+
 test_that("pulso_describe_column returns formatted text with metadata", {
   skip_on_cran()
   skip_if_offline()

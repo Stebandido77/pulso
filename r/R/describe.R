@@ -22,13 +22,15 @@ pulso_describe_column <- function(df, column) {
     abort_validation_error("`column` must be a single character string")
   }
 
-  if (!column %in% names(df)) {
+  match_col <- names(df)[tolower(names(df)) == tolower(column)]
+  if (length(match_col) == 0) {
     abort_validation_error(
       sprintf("Column '%s' is not in the DataFrame (have %d columns; first few: %s)",
               column, ncol(df),
               paste(utils::head(names(df), 5), collapse = ", "))
     )
   }
+  column <- match_col[1]
 
   metadata <- attr(df, "pulso_metadata")
   if (is.null(metadata)) {

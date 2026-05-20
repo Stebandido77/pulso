@@ -47,9 +47,13 @@
 
     if (!is.null(var_def$mappings[[epoch_name]])) {
       mapping <- var_def$mappings[[epoch_name]]
-      if (identical(mapping$source_variable, column_code)) {
-        return(canonical_name)
+      sv <- mapping$source_variable
+      matched <- if (is.list(sv) || (is.character(sv) && length(sv) > 1)) {
+        column_code %in% unlist(sv, use.names = FALSE)
+      } else {
+        identical(sv, column_code)
       }
+      if (matched) return(canonical_name)
     }
   }
 

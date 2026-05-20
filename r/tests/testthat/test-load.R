@@ -11,6 +11,13 @@ test_that("pulso_load validates inputs before any download", {
     pulso_load(year = 2024, month = 6, module = ""),
     class = "pulso_validation_error"
   )
+  # module is validated first; invalid module with invalid year raises
+  # pulso_validation_error from .validate_module, not .validate_year
+  expect_error(
+    pulso_load(year = 9999, month = 6, module = ""),
+    regexp = "module",
+    class = "pulso_validation_error"
+  )
 })
 
 test_that("pulso_load happy path returns tibble", {
