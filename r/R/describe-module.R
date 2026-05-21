@@ -57,7 +57,7 @@ pulso_describe <- function(module) {
   lines <- c(
     sprintf("Module: %s", module),
     sprintf("Level: %s", mod_info$level %||% "unknown"),
-    sprintf("Description: %s", mod_info$description_es %||% "—"),
+    sprintf("Description: %s", mod_info$description_es %||% "(none)"),
     sprintf("Available in epochs: %s",
             paste(unlist(mod_info$available_in %||% list(), use.names = FALSE), collapse = ", "))
   )
