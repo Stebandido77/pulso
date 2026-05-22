@@ -2,8 +2,10 @@
 
 export(pulso_describe)
 export(pulso_describe_column)
+export(pulso_describe_variable)
 export(pulso_list_columns_metadata)
 export(pulso_list_validated_range)
+export(pulso_list_variables)
 export(pulso_load)
 export(pulso_load_merged)
 export(pulso_validation_status)
