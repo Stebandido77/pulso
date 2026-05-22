@@ -13,9 +13,9 @@ pulso_validation_status(year, month)
 }
 \value{
 A one-row tibble with columns: \code{year}, \code{month},
-  \code{epoch}, \code{validated}, \code{validated_by},
-  \code{validated_at}, \code{source_url}, \code{file_size_mb},
-  \code{modules_available}, \code{checksum_sha256}.
+\code{epoch}, \code{validated}, \code{validated_by},
+\code{validated_at}, \code{source_url}, \code{file_size_mb},
+\code{modules_available}, \code{checksum_sha256}.
 }
 \description{
 Returns structured metadata about a specific year-month entry in the

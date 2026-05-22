@@ -19,7 +19,6 @@ Returns the registry entries for which the downloaded data has been
 manually validated against DANE published figures.
 }
 \examples{
-\donttest{
 pulso_list_validated_range()
-}
+
 }
