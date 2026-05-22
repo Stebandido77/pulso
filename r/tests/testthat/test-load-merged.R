@@ -52,3 +52,10 @@ test_that("pulso_load_merged metadata=TRUE attaches attr", {
                           metadata = TRUE)
   expect_false(is.null(attr(df, "pulso_metadata")))
 })
+
+test_that("pulso_load_merged errors on modules with NA values", {
+  expect_error(
+    pulso_load_merged(2024, 6, c("ocupados", NA, "caracteristicas_generales")),
+    class = "pulso_validation_error"
+  )
+})
