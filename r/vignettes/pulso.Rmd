@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = TRUE
 )
 ```
 
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 `pulso` provides programmatic access to Colombia's Gran Encuesta
 Integrada de Hogares (GEIH), the household labor force survey
 published monthly by DANE (Departamento Administrativo Nacional
-de Estadística).
+de Estadistica).
 
 ## Quick start
 
@@ -55,6 +55,32 @@ Or list metadata for all columns:
 ```{r, eval=FALSE}
 metadata_summary <- pulso_list_columns_metadata(df)
 print(metadata_summary)
+```
+
+## Exploring the variable catalog
+
+pulso ships a canonical variable catalog (`variable_map.json`) that
+maps harmonized variable names to their epoch-specific DANE source
+codes. These catalog functions work offline -- no data download needed.
+
+List all canonical variables (first 10 rows):
+
+```{r}
+library(pulso)
+vars <- pulso_list_variables()
+head(vars[, c("canonical_name", "module", "has_warning")], 10)
+```
+
+Describe a single canonical variable and its epoch mappings:
+
+```{r}
+cat(pulso_describe_variable("sexo"))
+```
+
+Describe a survey module (reads `sources.json` bundled in the package):
+
+```{r}
+cat(pulso_describe("ocupados"))
 ```
 
 ## What is GEIH?
@@ -103,18 +129,26 @@ Pass `cache = FALSE` to force re-download.
 
 ## Coverage and limitations
 
-This is `pulso` v0.1.0. Currently supported:
+`pulso` v0.1.0 supports the following:
 
 - Single year/month/module loads via `pulso_load()`
-- Metadata access via `pulso_describe_column()` and
+- Multi-module persona-level merges via `pulso_load_merged()`
+- Column metadata via `pulso_describe_column()` and
   `pulso_list_columns_metadata()`
-- Coverage: 2007 to present
+- Module discovery via `pulso_describe()`
+- Canonical variable catalog via `pulso_describe_variable()` and
+  `pulso_list_variables()`
+- Validation status queries via `pulso_validation_status()` and
+  `pulso_list_validated_range()`
+- Coverage: 2007-01 to present (sources.json)
 
-Planned for v0.2.0+:
+Known limitations:
 
-- `pulso_load_merged()` for multi-period loads
-- Area filtering (urbano/rural)
-- Full harmonization across epochs
-- Validation status checks
+- Curator entries in `variable_map.json` are theoretical mappings
+  pending empirical verification. Use `has_warning` from
+  `pulso_list_variables()` to identify these entries.
+- Nested-zip periods (2024-03, 2024-04) are deferred to v0.2.0.
+- Mixed-level merges (persona + hogar) in `pulso_load_merged()` are
+  deferred to v0.2.0.
 
 See the GitHub issues for roadmap and known limitations.

@@ -58,3 +58,19 @@ test_that("pulso_validation_status NA fields are NA for unvalidated period", {
   expect_true(is.na(result$checksum_sha256))
   expect_false(is.na(result$source_url))
 })
+
+test_that("pulso_validation_status works for earliest available period (2007-01)", {
+  # 2007-01 is the first period in sources.json
+  result <- pulso_validation_status(2007, 1)
+  expect_s3_class(result, "tbl_df")
+  expect_equal(result$year, 2007L)
+  expect_equal(result$month, 1L)
+})
+
+test_that("pulso_validation_status errors on future year (current year + 1)", {
+  future_year <- as.integer(format(Sys.Date(), "%Y")) + 1L
+  expect_error(
+    pulso_validation_status(future_year, 6),
+    class = "pulso_validation_error"
+  )
+})

@@ -20,3 +20,15 @@ test_that("pulso_describe errors on invalid module type", {
   expect_error(pulso_describe(123), class = "pulso_validation_error")
   expect_error(pulso_describe(""),  class = "pulso_validation_error")
 })
+
+test_that("pulso_describe output lists harmonized variable count", {
+  result <- pulso_describe("ocupados")
+  expect_match(result, "Harmonized variables", fixed = TRUE)
+  expect_match(result, "\\d+")  # count of canonical variables
+})
+
+test_that("pulso_describe includes epoch information", {
+  result <- pulso_describe("caracteristicas_generales")
+  expect_match(result, "Available in epochs", fixed = TRUE)
+  expect_match(result, "geih", ignore.case = TRUE)
+})
