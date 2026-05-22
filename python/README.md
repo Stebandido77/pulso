@@ -3,47 +3,10 @@
 > **El pulso del mercado laboral colombiano.**  
 > *Python library to load GEIH microdata from Colombia's DANE.*
 
-[![Python CI](https://github.com/Stebandido77/pulso/actions/workflows/python-ci.yml/badge.svg)](https://github.com/Stebandido77/pulso/actions/workflows/python-ci.yml)
+[![CI](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml/badge.svg)](https://github.com/Stebandido77/pulso/actions/workflows/ci.yml)
 [![PyPI version](https://img.shields.io/pypi/v/pulso-co.svg)](https://pypi.org/project/pulso-co/)
 [![Python](https://img.shields.io/pypi/pyversions/pulso-co.svg)](https://pypi.org/project/pulso-co/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
----
-
-## Monorepo layout
-
-This repository hosts both the Python and (in-progress) R implementations:
-
-| Path | Purpose |
-|---|---|
-| [`python/`](python/) | Python package `pulso-co` (importable as `pulso`). See [`python/README.md`](python/README.md) for a short pointer; user-facing docs are below. |
-| [`r/`](r/) | R package `pulso` (under construction — Agente 5 implementation pending). |
-| [`data/`](data/) | Canonical JSON data (sources catalog, codebook, schemas). Both languages read from here at build time. |
-| [`scripts/`](scripts/) | Cross-language helpers (`sync_data.py`, `wheel_inventory.py`, ...). |
-
-### Quick install
-
-```bash
-# Python (stable)
-pip install pulso-co
-
-# R (planned)
-# remotes::install_github("Stebandido77/pulso", subdir = "r")
-```
-
-### Developer setup
-
-```bash
-# Linux/macOS
-make dev-install   # runs sync_data.py + pip install -e python[dev]
-make test
-
-# Windows (PowerShell)
-./make.ps1 dev-install
-./make.ps1 test
-```
-
-`python/pulso/data/` and `r/inst/extdata/` are gitignored build artifacts — `make dev-install` (or `python scripts/sync_data.py`) populates them from the canonical `data/` tree.
 
 ---
 

@@ -1,0 +1,7 @@
+{
+  "url": "https://github.com/Stebandido77/pulso/releases/download/python-v1.0.0/dane_codebook.json",
+  "sha256": "dfbfd8546fb07f161cc65fa2c085d17f7c0585f9889c10f2e99338d69ccc9c81",
+  "size_bytes": 6853633,
+  "schema_version": "1.0",
+  "note": "Lazy-downloaded by pulso R package on first metadata access. NOT YET IMPLEMENTED in v0.1.0 MVP."
+}

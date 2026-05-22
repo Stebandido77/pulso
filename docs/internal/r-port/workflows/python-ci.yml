@@ -1,0 +1,128 @@
+name: Python CI
+
+# Replaces the previous root-level ci.yml. Scoped to changes under python/ or
+# data/ so R-only PRs don't trigger Python CI.
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "docs/**"
+    paths:
+      - "python/**"
+      - "data/**"
+      - "scripts/sync_data.py"
+      - ".github/workflows/python-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "python/**"
+      - "data/**"
+      - "scripts/sync_data.py"
+      - ".github/workflows/python-ci.yml"
+
+concurrency:
+  group: python-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: python  # ALL `run:` steps execute here unless overridden
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: pip install "ruff>=0.4"
+      - name: Sync data into pulso/data/
+        working-directory: ${{ github.workspace }}
+        run: python scripts/sync_data.py
+      - name: Ruff check
+        run: ruff check pulso tests scripts
+      - name: Ruff format check
+        run: ruff format --check pulso tests scripts
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Sync data into pulso/data/
+        working-directory: ${{ github.workspace }}
+        run: python scripts/sync_data.py
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Mypy
+        run: mypy pulso
+        continue-on-error: true  # type-check is advisory
+
+  test:
+    name: Test (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Sync data into pulso/data/
+        working-directory: ${{ github.workspace }}
+        run: python scripts/sync_data.py
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run tests
+        run: pytest -v --cov=pulso --cov-report=xml
+      - name: Upload coverage
+        if: matrix.python == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          files: python/coverage.xml
+        continue-on-error: true
+
+  validate-data:
+    name: Validate JSON data files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Sync data into pulso/data/
+        working-directory: ${{ github.workspace }}
+        run: python scripts/sync_data.py
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Validate sources.json, epochs.json, variable_map.json
+        run: pytest tests/unit/test_schemas.py -v
+
+  wheel-identity:
+    name: Wheel content identity gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install build
+        run: pip install build
+      - name: Build wheel
+        run: python -m build --wheel
+      - name: Compare to reference inventory
+        working-directory: ${{ github.workspace }}
+        run: |
+          python scripts/wheel_inventory.py python/dist/pulso_co-*.whl > /tmp/now.txt
+          diff docs/internal/r-port/wheel_reference_inventory.txt /tmp/now.txt

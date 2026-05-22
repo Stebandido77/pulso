@@ -39,7 +39,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Sync data into pulso/data/
+        run: python scripts/sync_data.py
+
       - name: Install package
+        working-directory: python
         run: pip install -e ".[dev]"
 
       # Cache the downloaded ZIPs across runs so the suite is not a
@@ -48,11 +52,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pulso
-          key: pulso-cache-${{ hashFiles('pulso/data/sources.json') }}
+          key: pulso-cache-${{ hashFiles('data/sources.json') }}
           restore-keys: |
             pulso-cache-
 
       - name: Run integration tests
+        working-directory: python
         env:
           PYTEST_ADDOPTS: "${{ inputs.pytest_args }}"
           INCLUDE_SLOW: "${{ inputs.include_slow }}"

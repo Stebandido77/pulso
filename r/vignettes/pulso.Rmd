@@ -1,0 +1,154 @@
+---
+title: "Getting started with pulso"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with pulso}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE
+)
+```
+
+# Loading GEIH microdata with pulso
+
+`pulso` provides programmatic access to Colombia's Gran Encuesta
+Integrada de Hogares (GEIH), the household labor force survey
+published monthly by DANE (Departamento Administrativo Nacional
+de Estadistica).
+
+## Quick start
+
+```{r, eval=FALSE}
+library(pulso)
+
+df <- pulso_load(year = 2024, month = 6, module = "ocupados")
+```
+
+The result is a tibble with the survey microdata. By default, all
+columns are returned with their original DANE codes (e.g., P6020,
+P3271).
+
+## Accessing variable metadata
+
+Pass `metadata = TRUE` to get DANE codebook information attached
+to the result:
+
+```{r, eval=FALSE}
+df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+                 metadata = TRUE)
+```
+
+You can describe individual columns:
+
+```{r, eval=FALSE}
+cat(pulso_describe_column(df, "p6020"))
+```
+
+Or list metadata for all columns:
+
+```{r, eval=FALSE}
+metadata_summary <- pulso_list_columns_metadata(df)
+print(metadata_summary)
+```
+
+## Exploring the variable catalog
+
+pulso ships a canonical variable catalog (`variable_map.json`) that
+maps harmonized variable names to their epoch-specific DANE source
+codes. These catalog functions work offline -- no data download needed.
+
+List all canonical variables (first 10 rows):
+
+```{r}
+library(pulso)
+vars <- pulso_list_variables()
+head(vars[, c("canonical_name", "module", "has_warning")], 10)
+```
+
+Describe a single canonical variable and its epoch mappings:
+
+```{r}
+cat(pulso_describe_variable("sexo"))
+```
+
+Describe a survey module (reads `sources.json` bundled in the package):
+
+```{r}
+cat(pulso_describe("ocupados"))
+```
+
+## What is GEIH?
+
+GEIH is Colombia's primary labor market survey, conducted monthly
+since 2007. It collects data on:
+
+- Labor force participation (employed, unemployed, inactive)
+- Wages and informal employment
+- Demographic characteristics (age, sex, education)
+- Household composition
+
+Microdata is freely published by DANE in monthly zip files.
+`pulso` automates the download, parsing, and harmonization across
+the four GEIH design epochs (2007-2018, 2019-2023, 2024-present,
+plus the historical ECH 2000-2006).
+
+## Comparison with the Python package
+
+`pulso` (R) mirrors the API of `pulso-co` (Python). For example:
+
+```python
+# Python
+import pulso
+df = pulso.load(year=2024, month=6, module="ocupados", metadata=True)
+print(pulso.describe_column(df, "P6020"))
+```
+
+```{r, eval=FALSE}
+# R
+library(pulso)
+df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+                 metadata = TRUE)
+cat(pulso_describe_column(df, "p6020"))
+```
+
+Both packages share the same canonical data files (sources.json,
+variable_map.json, dane_codebook.json) via the monorepo at
+https://github.com/Stebandido77/pulso.
+
+## Caching
+
+Downloaded microdata is cached at
+`tools::R_user_dir("pulso", "cache")` to avoid re-downloading.
+Pass `cache = FALSE` to force re-download.
+
+## Coverage and limitations
+
+`pulso` v0.1.0 supports the following:
+
+- Single year/month/module loads via `pulso_load()`
+- Multi-module persona-level merges via `pulso_load_merged()`
+- Column metadata via `pulso_describe_column()` and
+  `pulso_list_columns_metadata()`
+- Module discovery via `pulso_describe()`
+- Canonical variable catalog via `pulso_describe_variable()` and
+  `pulso_list_variables()`
+- Validation status queries via `pulso_validation_status()` and
+  `pulso_list_validated_range()`
+- Coverage: 2007-01 to present (sources.json)
+
+Known limitations:
+
+- Curator entries in `variable_map.json` are theoretical mappings
+  pending empirical verification. Use `has_warning` from
+  `pulso_list_variables()` to identify these entries.
+- Nested-zip periods (2024-03, 2024-04) are deferred to v0.2.0.
+- Mixed-level merges (persona + hogar) in `pulso_load_merged()` are
+  deferred to v0.2.0.
+
+See the GitHub issues for roadmap and known limitations.

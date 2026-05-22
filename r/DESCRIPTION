@@ -1,0 +1,37 @@
+Package: pulso
+Title: Load Microdata from Colombia's GEIH (DANE)
+Version: 0.1.0
+Authors@R:
+    person("Esteban", "Labastidas", , "estebanlabastidas123@gmail.com",
+           role = c("aut", "cre"))
+Description: Programmatic access to microdata from Colombia's Gran
+    Encuesta Integrada de Hogares (GEIH), published by DANE. Provides
+    a tidy interface to download, parse, and harmonize labor market
+    surveys from 2007 to present. R companion to the pulso-co Python
+    package.
+License: MIT + file LICENSE
+URL: https://github.com/Stebandido77/pulso
+BugReports: https://github.com/Stebandido77/pulso/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    httr2 (>= 1.0.0),
+    jsonlite (>= 1.8.0),
+    tibble (>= 3.2.0),
+    rlang (>= 1.1.0),
+    cli (>= 3.6.0),
+    fs (>= 1.6.0),
+    digest (>= 0.6.0)
+Suggests:
+    haven (>= 2.5.0),
+    vctrs (>= 0.6.0),
+    dplyr,
+    tidyr,
+    testthat (>= 3.2.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

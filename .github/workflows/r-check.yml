@@ -1,0 +1,89 @@
+name: R CRAN check
+
+# Stricter R checks targeted at CRAN submission readiness.
+# Triggered manually OR on tags of the form r-v* (release candidate).
+# r-ci.yml runs lighter R CMD check on every push; this workflow runs the
+# full --as-cran gauntlet.
+
+on:
+  push:
+    tags:
+      - "r-v*"
+  workflow_dispatch:
+    inputs:
+      r_version:
+        description: "R version to check against"
+        required: false
+        default: "release"
+      run_revdep:
+        description: "Run revdepcheck (slow, only for CRAN submission)"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: r-cran-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cran-check:
+    name: R CMD check --as-cran (${{ matrix.config.os }})
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: ubuntu-latest,  r: "release" }
+          - { os: ubuntu-latest,  r: "devel"   }
+          - { os: macos-latest,   r: "release" }
+          - { os: windows-latest, r: "release" }
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      _R_CHECK_CRAN_INCOMING_: TRUE
+      _R_CHECK_FORCE_SUGGESTS_: TRUE
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: r
+          extra-packages: |
+            any::rcmdcheck
+            any::testthat
+            any::knitr
+            any::rmarkdown
+          needs: check
+
+      - name: Sync canonical data into r/inst/extdata/
+        run: Rscript scripts/sync_data_to_r.R
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          working-directory: r
+          upload-snapshots: true
+          args: 'c("--as-cran", "--no-manual")'
+          error-on: '"note"'  # CRAN reviewers want NOTE-clean
+
+  revdep:
+    name: Reverse dependency check
+    runs-on: ubuntu-latest
+    if: ${{ inputs.run_revdep == true }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with: { r-version: release, use-public-rspm: true }
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: r
+          extra-packages: any::revdepcheck
+      - name: Run revdep
+        working-directory: r
+        run: Rscript -e 'revdepcheck::revdep_check(num_workers = 2, timeout = as.difftime(60, units = "mins"))'
+        # Skipped by default; only run before CRAN submission.
