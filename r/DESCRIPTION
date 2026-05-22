@@ -31,8 +31,7 @@ Suggests:
     tidyr,
     testthat (>= 3.2.0),
     knitr,
-    rmarkdown,
-    rhub
+    rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0

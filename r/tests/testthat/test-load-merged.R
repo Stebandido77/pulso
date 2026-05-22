@@ -36,6 +36,7 @@ test_that("pulso_load_merged errors on mixed levels (Q4=A)", {
 })
 
 test_that("pulso_load_merged returns merged tibble for 2 persona modules", {
+  skip_on_cran()
   skip_on_ci()
   df <- pulso_load_merged(2024, 6, c("ocupados", "caracteristicas_generales"))
   expect_s3_class(df, "tbl_df")
@@ -47,6 +48,7 @@ test_that("pulso_load_merged returns merged tibble for 2 persona modules", {
 })
 
 test_that("pulso_load_merged metadata=TRUE attaches attr", {
+  skip_on_cran()
   skip_on_ci()
   df <- pulso_load_merged(2024, 6, c("ocupados", "caracteristicas_generales"),
                           metadata = TRUE)
