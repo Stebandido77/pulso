@@ -70,12 +70,13 @@
 
 #' Read a single CSV from inside a zip
 #'
-#' Extracts to a temp dir and reads with latin-1 encoding and auto-detected
-#' separator via data.table::fread() (DANE files vary between ";" and ","
-#' across years). Discovers the on-disk path via dir_ls() to handle
-#' encoding mismatches between the zip's central directory and the
-#' platform's filesystem encoding.
-#' Uses zip::unzip() for Unicode/tilde filename support on Windows.
+#' Lists with utils::unzip() (returns raw CP437 bytes that
+#' .normalize_zip_names() can convert reliably). Extracts with
+#' zip::unzip() WITHOUT a files= filter: passing CP437 bytes fails on
+#' macOS (invalid UTF-8 for filesystem path) and passing UTF-8 fails
+#' everywhere (byte mismatch against zip's CP437 central directory).
+#' Extracting all lets zip::unzip() handle CP437->UTF-8 conversion
+#' internally; the target CSV is then located by normalized basename.
 #' @noRd
 .read_single_csv_from_zip <- function(zip_path, inner_path) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
@@ -92,10 +93,13 @@
   fs::dir_create(temp_dir)
   on.exit(fs::dir_delete(temp_dir), add = TRUE)
 
-  zip::unzip(zip_path, files = resolved, exdir = temp_dir)
+  zip::unzip(zip_path, exdir = temp_dir)
 
-  extracted <- fs::dir_ls(temp_dir, recurse = TRUE, type = "file")
-  if (length(extracted) == 0) {
+  target_base <- tolower(basename(resolved))
+  extracted   <- fs::dir_ls(temp_dir, recurse = TRUE, type = "file")
+  matched     <- extracted[tolower(basename(extracted)) == target_base]
+
+  if (length(matched) == 0) {
     abort_parse_error(sprintf(
       "Failed to extract '%s' from zip %s",
       inner_path, basename(zip_path)
@@ -103,7 +107,7 @@
   }
 
   data.table::fread(
-    file         = extracted[1],
+    file         = matched[[1]],
     sep          = "auto",
     header       = TRUE,
     encoding     = "Latin-1",
@@ -203,10 +207,18 @@
   temp_dir <- tempfile("pulso_shape_c_")
   dir.create(temp_dir)
   on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE)
-  zip::unzip(zip_path, files = csv_name, exdir = temp_dir)
-  extracted <- list.files(temp_dir, recursive = TRUE, full.names = TRUE)
+  zip::unzip(zip_path, exdir = temp_dir)
+  target_base <- tolower(basename(csv_name))
+  extracted   <- list.files(temp_dir, recursive = TRUE, full.names = TRUE)
+  matched     <- extracted[tolower(basename(extracted)) == target_base]
+  if (length(matched) == 0) {
+    abort_parse_error(sprintf(
+      "Shape C CSV '%s' not found after extracting zip %s",
+      csv_name, basename(zip_path)
+    ))
+  }
   data.table::fread(
-    file         = extracted[[1]],
+    file         = matched[[1]],
     sep          = "auto",
     header       = TRUE,
     encoding     = "Latin-1",
