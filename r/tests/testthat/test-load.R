@@ -145,3 +145,45 @@ test_that("pulso_load warns about not-yet-implemented args", {
     regexp = "area"
   )
 })
+
+test_that("BUG-003: Module with tilde in filename loads on all platforms", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2024, 6, "caracteristicas_generales")
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 0)
+  expect_gt(ncol(df), 5)
+})
+
+test_that("BUG-004: Epoch1 with column variance loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2018, 6, "ocupados")
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 1000)
+})
+
+test_that("BUG-005: 2022-01 with non-semicolon separator loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2022, 1, "ocupados")
+  expect_gt(ncol(df), 1)
+})
+
+test_that("BUG-017: 2013-06 filenames with numeric suffix load", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2013, 6, "ocupados")
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 0)
+})
+
+test_that("BUG-018: 2020 COVID Shape C variant loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2020, 6, "ocupados")
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 1000)
+  df2 <- pulso_load(2020, 12, "ocupados")
+  expect_gt(nrow(df2), 1000)
+})

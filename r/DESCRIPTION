@@ -23,11 +23,13 @@ Imports:
     rlang (>= 1.1.0),
     cli (>= 3.6.0),
     fs (>= 1.6.0),
-    digest (>= 0.6.0)
+    digest (>= 0.6.0),
+    zip (>= 2.0.0),
+    data.table (>= 1.14.0),
+    dplyr (>= 1.0.0)
 Suggests:
     haven (>= 2.5.0),
     vctrs (>= 0.6.0),
-    dplyr,
     tidyr,
     testthat (>= 3.2.0),
     knitr,
