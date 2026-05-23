@@ -53,3 +53,16 @@ abort_module_not_available <- function(module, year, month) {
     month = month
   )
 }
+
+abort_data_not_validated <- function(year, month, ...) {
+  abort_pulso(
+    class = "pulso_data_not_validated",
+    message = sprintf(
+      "Period %d-%02d has not been validated against DANE published figures. Use allow_unvalidated = TRUE to load anyway.",
+      year, month
+    ),
+    year = year,
+    month = month,
+    ...
+  )
+}

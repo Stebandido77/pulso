@@ -13,6 +13,9 @@
 #'   Default FALSE for Python parity. When TRUE, attaches metadata via
 #'   `attr(df, "pulso_metadata")` and triggers lazy download of codebook
 #'   on first call.
+#' @param allow_unvalidated Logical. When FALSE (default), raises
+#'   \code{pulso_data_not_validated} for periods not yet manually validated
+#'   against DANE published figures. Set TRUE to load anyway with a warning.
 #'
 #' @return A tibble with the microdata. If metadata = TRUE, the tibble
 #'   has an attribute "pulso_metadata" with structured column info.
@@ -29,7 +32,8 @@ pulso_load <- function(year, month, module,
                        area = NULL,
                        harmonize = TRUE,
                        cache = TRUE,
-                       metadata = FALSE) {
+                       metadata = FALSE,
+                       allow_unvalidated = FALSE) {
 
   .validate_module(module)
   .validate_year(year)
@@ -52,6 +56,17 @@ pulso_load <- function(year, month, module,
   module_spec <- source_info$modules[[module]]
   if (is.null(module_spec)) {
     abort_module_not_available(module, year, month)
+  }
+
+  if (!isTRUE(source_info$validated)) {
+    if (!isTRUE(allow_unvalidated)) {
+      abort_data_not_validated(year, month)
+    }
+    period_str <- sprintf("%d-%02d", year, month)
+    cli::cli_warn(c(
+      "Period {period_str} has not been validated against DANE published figures.",
+      "i" = "Results may differ from official DANE tables. Proceed with caution."
+    ))
   }
 
   zip_path <- .download_zip(url, year, month, use_cache = cache)
