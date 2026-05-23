@@ -77,7 +77,7 @@
 #' Uses zip::unzip() for Unicode/tilde filename support on Windows.
 #' @noRd
 .read_single_csv_from_zip <- function(zip_path, inner_path) {
-  zip_contents <- zip::zip_list(zip_path)$filename
+  zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
 
   resolved <- .resolve_zip_path(zip_contents, inner_path)
   if (is.null(resolved)) {
@@ -273,7 +273,7 @@
 #' @return data.frame with the CSV contents.
 #' @noRd
 .parse_module_csv <- function(zip_path, module_spec, module_name, year, month) {
-  zip_contents <- zip::zip_list(zip_path)$filename
+  zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
 
   if (.is_nested_zip_wrapper(zip_contents)) {
     abort_parse_error(sprintf(
@@ -295,6 +295,16 @@
       df_c$CLASE <- 1L
       df_r <- .read_single_csv_from_zip(zip_path, files$resto)
       df_r$CLASE <- 2L
+      # DANE CSVs sometimes encode the same column as different types across
+      # Cabecera/Resto files (e.g. RAMA4DP8 as integer vs character).
+      # Coerce shared columns to character when types are incompatible so
+      # that dplyr::bind_rows() (vctrs-backed) doesn't abort.
+      for (.col in intersect(names(df_c), names(df_r))) {
+        if (!identical(class(df_c[[.col]]), class(df_r[[.col]]))) {
+          df_c[[.col]] <- as.character(df_c[[.col]])
+          df_r[[.col]] <- as.character(df_r[[.col]])
+        }
+      }
       return(dplyr::bind_rows(df_c, df_r))
     }
 
