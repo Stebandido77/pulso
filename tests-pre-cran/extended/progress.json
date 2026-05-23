@@ -1,0 +1,107 @@
+{
+  "started_at": "2026-05-23T01:07:00Z",
+  "phase1_started_at": "2026-05-23T01:15:00Z",
+  "phase1_completed_at": "2026-05-23T02:00:00Z",
+  "phase2_started_at": "2026-05-23T02:00:00Z",
+  "phase2_completed_at": "2026-05-23T03:00:00Z",
+  "phase3_started_at": "2026-05-23T04:00:00Z",
+  "phase3_completed_at": "2026-05-23T05:30:00Z",
+  "phase4_started_at": "2026-05-23T06:00:00Z",
+  "phase4_completed_at": "2026-05-23T07:30:00Z",
+  "current_phase": 4,
+  "current_period": null,
+  "current_module": null,
+  "phases": {
+    "1": {
+      "status": "complete",
+      "focus": "SEGFAULT + ECH + epoch1 early 2007-2011",
+      "periods_tested": 6,
+      "modules_tested": 36,
+      "new_bugs_found": 3,
+      "tasks": {
+        "segfault": "complete - not reproducible",
+        "ech": "complete - error messages confirmed",
+        "epoch1_early": "complete - all 36 combos tested",
+        "bug004_scope": "complete - universal with 2 error variants"
+      }
+    },
+    "2": {
+      "status": "complete",
+      "focus": "epoch1 middle 2012-2017",
+      "periods_tested": 6,
+      "modules_tested": 36,
+      "new_bugs_found": 1,
+      "tasks": {
+        "anomaly_2010_06": "complete - was doc error, confirmed BUG-003",
+        "bug004_scope_2012_2017": "complete - universal across all periods",
+        "python_2015_06": "complete - all 6 modules OK",
+        "bug003_scope": "complete - universal for caracgen in epoch1 middle",
+        "module_count": "complete - 6 modules in epoch1, 8 in epoch2"
+      }
+    },
+    "3": {
+      "status": "complete",
+      "focus": "epoch1 late 2018-2021 + epoch2 transition 2022 + scope questions",
+      "periods_tested": 12,
+      "modules_tested": 40,
+      "new_bugs_found": 1,
+      "tasks": {
+        "python_2021_12": "complete - all 6 modules OK, epoch=geih_2006_2020",
+        "shape_c_2020": "complete - NEW BUG-018 - COVID-year flat CSV format",
+        "bug005_scope": "complete - isolated to 2022-01 only (5/8 modules 1-col)",
+        "nested_zip_r_message": "complete - clear message, NOT a bug in R",
+        "bug017_scope": "complete - isolated to 2013-06 only among cached periods",
+        "bug004_epoch1_late": "complete - universal through 2018-2021 (all Variant A)"
+      }
+    },
+    "4": {
+      "status": "complete",
+      "focus": "epoch2 comprehensive 2022-2025 + canonical variables + BUG-008/009/010",
+      "new_bugs_found": 5,
+      "tasks": {
+        "bug003_epoch2_scope": "complete - migracion fails in ALL epoch2 (universal), 2025-06 different error mode",
+        "bug008_harmonize_deep_dive": "complete - Python +13 canonical cols, R +0 (only lowercase)",
+        "bug006_scope": "complete - 16/16 unvalidated epoch2 load silently; 2025 has 202 cols",
+        "bug010_zip_structure": "complete - root cause: sources.json Mojibake in accented paths (NOT zip structure change)",
+        "canonical_vars": "complete - R list_variables 30 vars OK; Python list_variables NotImplementedError",
+        "cvs_typo_2022_12": "complete - confirmed real typo, parser case-insensitive basename match handles it"
+      }
+    }
+  },
+  "global_bug_count": 19,
+  "known_bugs": ["BUG-001","BUG-002","BUG-003","BUG-004","BUG-005","BUG-006","BUG-007","BUG-008","BUG-009","BUG-010","BUG-011","BUG-SEGFAULT"],
+  "new_bugs_discovered": ["BUG-013-scope-extension", "BUG-014-segfault-closed", "BUG-015-allow-unvalidated-R", "BUG-016-bug004-variants", "BUG-017-numeric-suffix-2013-06", "BUG-018-shape-c-2020"],
+  "phase1_summary": {
+    "segfault": "NOT reproducible — exit 0 in all 9 runs (3 scenarios x 3 repetitions)",
+    "ech_python": "PulsoError for 2005 (clear); DataNotAvailableError for 2006; TypeError(BUG-001) for 2007",
+    "ech_r": "pulso_validation_error with clear message for 2005 and 2006; no ECH mention",
+    "python_epoch1_early_success": ["2007-12"],
+    "python_epoch1_early_failures": ["2007-06","2008-06","2009-06","2010-06","2011-06"],
+    "python_failure_reason": "BUG-001 TypeError checksum=null (all non-validated periods)",
+    "r_epoch1_early_failures": "all 36 combinations fail",
+    "r_caracgen_error": "BUG-003: invalid multibyte string at '<a1>sti'",
+    "r_other_modules_error_variantA": "numbers of columns of arguments do not match (2007-06, 2007-12, 2009-06, 2010-06)",
+    "r_other_modules_error_variantB": "names do not match previous names (2008-06, 2011-06)",
+    "allow_unvalidated_r": "NOT supported — pulso_load() has no allow_unvalidated parameter",
+    "validated_periods_total": 5,
+    "validated_periods": ["2007-12","2015-06","2021-12","2022-01","2024-06"],
+    "null_checksum_periods": 225
+  },
+  "phase2_summary": {
+    "anomaly_2010_06": "was documentation error — confirmed BUG-003 identical to all other periods",
+    "bug004_scope": "universal across 2012-2017 — all Shape A periods fail with Variant A",
+    "python_2015_06": "6/6 modules OK — shapes: caracgen(64785,44) ocupados(30136,169) desocupados(3231,46) inactivos(19035,30) vivienda(19032,68) otros_ingresos(52402,43)",
+    "bug003_scope": "universal for caracgen in all epoch1 — affects all periods 2007-2021",
+    "module_count_epoch1": 6,
+    "module_count_epoch2": 8,
+    "bug017": "2013-06 only — Ocupados06.csv suffix, keyword matcher fails — isolated among cached periods"
+  },
+  "phase3_summary": {
+    "python_2021_12": "6/6 OK — epoch=geih_2006_2020, shapes: caracgen(56454,68) ocupados(23745,180) desocupados(3428,49) inactivos(20085,34) vivienda(18139,67) otros_ingresos(47258,52)",
+    "shape_c_2020": "2020-06 and 2020-12 have flat CSV structure (6.Junio/CSV/) — no Cabecera/Resto — all R loads fail Shape A not found. New BUG-018.",
+    "bug005_scope": "isolated to 2022-01 ONLY — 5/8 modules 1-col (ocupados, desocupados, inactivos, otros_ingresos, otras_formas_trabajo); vivienda_hogares=48cols OK; caracgen/migracion=BUG-003",
+    "nested_zip_r": "EXCELLENT error message in R — not a bug. Clear message with version and issue URL.",
+    "bug017_scope": "2013-06 only confirmed. 2012-06, 2013-12, 2014-06, 2014-12 all normal.",
+    "bug004_epoch1_late": "universal — 2018-06, 2018-12, 2019-06, 2019-12, 2021-06, 2021-12 all Variant A"
+  }
+}
