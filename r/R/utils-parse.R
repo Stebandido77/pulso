@@ -38,11 +38,11 @@
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' Returns the UTF-8 normalized name so that zip::unzip(files = ...) can
-#' match against zip entries on all platforms. zip::unzip normalizes the
-#' zip's CP437 entries to UTF-8 internally; passing raw CP437 bytes fails
-#' on macOS. Comparison uses normalized UTF-8 strings and a locale-safe
-#' PCRE pattern (no tolower()).
+#' Returns the *original* (possibly CP437) name from zip_contents so that
+#' base::unz() can do byte-exact matching against the zip central directory.
+#' Comparison is done on normalized UTF-8 strings (locale-safe PCRE, no
+#' tolower()), but the returned value is always zip_contents[i], not the
+#' UTF-8 form.
 #' @noRd
 .resolve_zip_path <- function(zip_contents, inner_path) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -52,7 +52,7 @@
   }
 
   idx <- match(inner_path, zip_normalized)
-  if (!is.na(idx)) return(zip_normalized[idx])
+  if (!is.na(idx)) return(zip_contents[idx])
 
   base_target <- basename(inner_path)
   pattern <- paste0("(?i)^\\Q", base_target, "\\E$")
@@ -61,7 +61,7 @@
     name_norm <- zip_normalized[i]
     if (grepl("/$", name_norm)) next
     if (grepl(pattern, basename(name_norm), perl = TRUE)) {
-      return(zip_normalized[i])
+      return(zip_contents[i])
     }
   }
 
@@ -71,12 +71,11 @@
 #' Read a single CSV from inside a zip
 #'
 #' Lists with utils::unzip() (returns raw CP437 bytes that
-#' .normalize_zip_names() can convert reliably). Extracts with
-#' zip::unzip() WITHOUT a files= filter: passing CP437 bytes fails on
-#' macOS (invalid UTF-8 for filesystem path) and passing UTF-8 fails
-#' everywhere (byte mismatch against zip's CP437 central directory).
-#' Extracting all lets zip::unzip() handle CP437->UTF-8 conversion
-#' internally; the target CSV is then located by normalized basename.
+#' .normalize_zip_names() can convert reliably). Reads with base::unz()
+#' which does byte-exact matching against the zip central directory and
+#' opens an in-memory connection -- no file is written to disk, so macOS
+#' HFS+ UTF-8 filename validation is never triggered.
+#' readLines(encoding="Latin-1") decodes the bytes; fread(text=) parses.
 #' @noRd
 .read_single_csv_from_zip <- function(zip_path, inner_path) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
@@ -89,28 +88,20 @@
     ))
   }
 
-  temp_dir <- tempfile()
-  fs::dir_create(temp_dir)
-  on.exit(fs::dir_delete(temp_dir), add = TRUE)
-
-  zip::unzip(zip_path, exdir = temp_dir)
-
-  target_base <- tolower(basename(resolved))
-  extracted   <- fs::dir_ls(temp_dir, recurse = TRUE, type = "file")
-  matched     <- extracted[tolower(basename(extracted)) == target_base]
-
-  if (length(matched) == 0) {
+  con <- unz(zip_path, resolved)
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
+  if (length(lines) == 0) {
     abort_parse_error(sprintf(
-      "Failed to extract '%s' from zip %s",
+      "Failed to read '%s' from zip %s",
       inner_path, basename(zip_path)
     ))
   }
 
   data.table::fread(
-    file         = matched[[1]],
+    text         = paste(lines, collapse = "\n"),
     sep          = "auto",
     header       = TRUE,
-    encoding     = "Latin-1",
     data.table   = FALSE,
     showProgress = FALSE
   )
@@ -148,8 +139,8 @@
 #' word boundary. Files starting with "Area" or any other prefix are
 #' silently dropped -- they're auxiliary metadata, not the module data.
 #'
-#' Returns UTF-8 normalized names (not raw CP437 bytes) so that callers
-#' can pass them through .resolve_zip_path() or directly to zip::unzip().
+#' Returns the original (possibly CP437) names from zip_contents so
+#' that base::unz() can do byte-exact matching in .read_single_csv_from_zip().
 #' @noRd
 .find_shape_a_files <- function(zip_contents, module_name) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -186,9 +177,9 @@
     if (!matched) next
 
     if (prefix == "cabecera") {
-      cabecera <- zip_normalized[i]
+      cabecera <- zip_contents[i]
     } else {
-      resto <- zip_normalized[i]
+      resto <- zip_contents[i]
     }
   }
 
@@ -201,27 +192,23 @@
 #' for modules that normally have Cabecera/Resto pairs (Shape A). The zip
 #' does NOT contain files prefixed with "Cabecera" or "Resto"; instead a
 #' single CSV matching the module keyword is present.
-#' Uses zip::unzip() for Unicode/tilde filename support on Windows.
+#' Uses base::unz() connection (no file extraction) so CP437 filenames
+#' never touch the filesystem and macOS HFS+ UTF-8 validation is bypassed.
 #' @noRd
 .parse_shape_c <- function(zip_path, csv_name) {
-  temp_dir <- tempfile("pulso_shape_c_")
-  dir.create(temp_dir)
-  on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE)
-  zip::unzip(zip_path, exdir = temp_dir)
-  target_base <- tolower(basename(csv_name))
-  extracted   <- list.files(temp_dir, recursive = TRUE, full.names = TRUE)
-  matched     <- extracted[tolower(basename(extracted)) == target_base]
-  if (length(matched) == 0) {
+  con <- unz(zip_path, csv_name)
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
+  if (length(lines) == 0) {
     abort_parse_error(sprintf(
-      "Shape C CSV '%s' not found after extracting zip %s",
+      "Shape C CSV '%s' not found in zip %s",
       csv_name, basename(zip_path)
     ))
   }
   data.table::fread(
-    file         = matched[[1]],
+    text         = paste(lines, collapse = "\n"),
     sep          = "auto",
     header       = TRUE,
-    encoding     = "Latin-1",
     data.table   = FALSE,
     showProgress = FALSE
   )
@@ -230,8 +217,8 @@
 #' Locate a single keyword-matching CSV in the zip (Shape C fallback)
 #'
 #' Scans zip contents for any CSV whose basename contains the module keyword
-#' on a word boundary (with optional trailing digits). Returns the UTF-8
-#' normalized name (not raw CP437 bytes) for direct use with zip::unzip().
+#' on a word boundary (with optional trailing digits). Returns the original
+#' (possibly CP437) name from zip_contents for byte-exact matching by unz().
 #' @noRd
 .find_shape_c_file <- function(zip_contents, module_name) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -247,7 +234,7 @@
     for (kw in keywords) {
       pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\d*\\b")
       if (grepl(pattern, base, perl = TRUE)) {
-        return(zip_normalized[i])
+        return(zip_contents[i])
       }
     }
   }

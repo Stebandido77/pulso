@@ -18,6 +18,5 @@
 ## usethis namespace: start
 #' @importFrom data.table fread
 #' @importFrom dplyr bind_rows
-#' @importFrom zip unzip
 ## usethis namespace: end
 NULL
