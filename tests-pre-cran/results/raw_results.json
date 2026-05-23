@@ -1,0 +1,648 @@
+{
+  "test_run_date": "2026-05-23",
+  "python_version": "3.12.9",
+  "r_version": "4.5.2",
+  "pulso_python_version": "1.0.0rc1",
+  "pulso_r_version": "0.1.0",
+  "env_notes": "Python package is 1.0.0rc1 (NOT 1.0.0 final). R package is 0.1.0. Windows 11 Home 10.0.26200. Cache: 2001 MB / 54 files pre-existing. R multiline -e blocks with paste/collapse cause segfault; workaround: single-line -e calls used throughout.",
+  "periods_tested": 17,
+  "results_by_period": {
+    "2007-01": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": false,
+      "checksum_sha256": null,
+      "validation_status_python": {"validated": false, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": false, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError: Entry '2007-01' has validated=false. Pass allow_unvalidated=True to load it anyway."},
+          "python_allow_unvalidated": {"shape": null, "p_coded_count": null, "error": "TypeError: 'NoneType' object is not subscriptable (checksum=null in sources.json, downloader.py:84 short=checksum[:16])"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": "both_failed", "columns_match": "both_failed", "differences": ["Python: DataNotValidatedError guard + TypeError when bypassed; R: no guard, fails with rbind error (epoch1 CSV multi-file rbind mismatch)"]}
+        }
+      },
+      "notes": "Unvalidated, cached. Python guards unvalidated correctly but crashes with TypeError on allow_unvalidated=True (BUG-001). R has no validation guard; fails parsing epoch1 ZIP structure (BUG-004)."
+    },
+    "2007-12": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": true,
+      "checksum_sha256": "ec339fca43a262fb...",
+      "validation_status_python": {"validated": true, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": true, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": [26472, 194], "cols_first10": ["DIRECTORIO","SECUENCIA_P","ORDEN","REGIS","P6440","P6450","P6460","P6460S1","P6465S1A1","P6465S2A1"], "p_coded_count": 170, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "columns_match": false, "differences": ["R fails with rbind error for all epoch1 modules (BUG-004). Python OK."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": [65765, 50], "p_coded_count": 31, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "desocupados": {
+          "python": {"shape": [3445, 46], "p_coded_count": 27, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "inactivos": {
+          "python": {"shape": [21502, 28], "p_coded_count": 15, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "vivienda_hogares": {
+          "python": {"shape": [17324, 62], "p_coded_count": 46, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "otros_ingresos": {
+          "python": {"shape": [51419, 34], "p_coded_count": 21, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "migracion": {"not_in_sources": true},
+        "otras_formas_trabajo": {"not_in_sources": true}
+      },
+      "notes": "Validated epoch1. Python works for all 6 modules. R fails ALL with rbind column-count mismatch. Also note: Python emits many 'Skipping variable' warnings for harmonization variables missing from DataFrame (BUG-002)."
+    },
+    "2010-06": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": false,
+      "checksum_sha256": null,
+      "validation_status_python": {"validated": false, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": false, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError: Entry '2010-06' has validated=false. (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python TypeError on allow_unvalidated; R rbind epoch1 failure"]}
+        }
+      },
+      "notes": "Unvalidated epoch1, cached. Both fail but with different errors."
+    },
+    "2013-01": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": false,
+      "checksum_sha256": null,
+      "validation_status_python": {"validated": false, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": false, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python TypeError; R rbind epoch1 failure"]}
+        }
+      },
+      "notes": "Unvalidated epoch1, cached."
+    },
+    "2015-06": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": true,
+      "checksum_sha256": "361f8c4244be9785...",
+      "validation_status_python": {"validated": true, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": true, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": [30136, 169], "p_coded_count": 138, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R fails with rbind on epoch1"]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": [64785, 44], "p_coded_count": 21, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a1>sti'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error on 'Características'  filename in ZIP"]}
+        },
+        "desocupados": {
+          "python": {"shape": [3231, 46], "p_coded_count": 24, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind epoch1"]}
+        },
+        "inactivos": {
+          "python": {"shape": [19035, 30], "p_coded_count": 13, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind epoch1"]}
+        },
+        "vivienda_hogares": {
+          "python": {"shape": [19032, 68], "p_coded_count": 52, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind epoch1"]}
+        },
+        "otros_ingresos": {
+          "python": {"shape": [52402, 43], "p_coded_count": 27, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind epoch1"]}
+        },
+        "migracion": {"not_in_sources": true},
+        "otras_formas_trabajo": {"not_in_sources": true}
+      },
+      "notes": "Validated epoch1. Python OK all 6 modules. R fails all 6 (rbind error on 5, encoding error on caracteristicas_generales)."
+    },
+    "2018-09": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": false,
+      "checksum_sha256": null,
+      "validation_status_python": {"validated": false, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": false, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python TypeError; R rbind epoch1 failure"]}
+        }
+      },
+      "notes": "Unvalidated epoch1, cached."
+    },
+    "2020-06": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": false,
+      "checksum_sha256": null,
+      "validation_status_python": {"validated": false, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": false, "epoch": "geih_2006_2020"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: Shape A files for module 'ocupados' (2020-06) not found in zip. Tried keywords: Ocupados"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python TypeError on unvalidated bypass; R Shape A keyword match failure"]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: Shape A files for module 'caracteristicas_generales' (2020-06) not found in zip. Tried keywords: Características generales, Caracteristicas generales, Caractericas generales"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Both fail, but R gives more informative error about Shape A"]}
+        }
+      },
+      "notes": "Unvalidated Shape-A variant (CLASE column). R gives informative 'Shape A files not found' error - different from expected 'nested' error. Python crashes with TypeError. The Shape A variant is NOT loading in either implementation."
+    },
+    "2021-12": {
+      "in_sources": true,
+      "epoch": "geih_2006_2020",
+      "validated": true,
+      "checksum_sha256": "607ece9b97744df9...",
+      "validation_status_python": {"validated": true, "epoch": "geih_2006_2020"},
+      "validation_status_r": {"validated": true, "epoch": "geih_2006_2020"},
+      "epoch_boundary_correct": true,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": [23745, 180], "p_coded_count": 149, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure on epoch1"]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": [56454, 68], "p_coded_count": 42, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a1>sti'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error"]}
+        },
+        "desocupados": {
+          "python": {"shape": [3428, 49], "p_coded_count": 27, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure"]}
+        },
+        "inactivos": {
+          "python": {"shape": [20085, 34], "p_coded_count": 17, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure"]}
+        },
+        "vivienda_hogares": {
+          "python": {"shape": [18139, 67], "p_coded_count": 51, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure"]}
+        },
+        "otros_ingresos": {
+          "python": {"shape": [47258, 52], "p_coded_count": 36, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: numbers of columns of arguments do not match"},
+          "comparison": {"shape_match": false, "differences": ["R rbind failure"]}
+        },
+        "migracion": {"not_in_sources": true},
+        "otras_formas_trabajo": {"not_in_sources": true}
+      },
+      "notes": "Validated boundary period. Epoch correctly assigned as geih_2006_2020 (PASS). Python OK all modules. R fails all 6."
+    },
+    "2022-01": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": true,
+      "checksum_sha256": "48d6bd634c3c98e4...",
+      "validation_status_python": {"validated": true, "epoch": "geih_2021_present"},
+      "validation_status_r": {"validated": true, "epoch": "geih_2021_present"},
+      "epoch_boundary_correct": true,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": [31819, 212], "p_coded_count": 181, "error": null},
+          "r": {"shape": [31819, 1], "p_coded_count": 0, "error": null, "note": "1-column result: CSV read with wrong separator, all data concatenated in single column name. BUG-005."},
+          "comparison": {"shape_match": false, "columns_match": false, "differences": ["R: 1 col (wrong separator), Python: 212 cols. Same row count. R harmonize=TRUE adds 0 canonical cols vs Python 13."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": [80116, 89], "p_coded_count": 53, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a1>sti'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error on UTF-8 filename in ZIP"]}
+        },
+        "desocupados": {
+          "python": {"shape": [30378, 47], "p_coded_count": 19, "error": null},
+          "r": {"shape": [30378, 1], "p_coded_count": 0, "error": null, "note": "1-column result. BUG-005."},
+          "comparison": {"shape_match": false, "differences": ["R 1 col vs Python 47 cols"]}
+        },
+        "inactivos": {
+          "python": {"shape": [30378, 47], "p_coded_count": 19, "error": null},
+          "r": {"shape": [30378, 1], "p_coded_count": 0, "error": null, "note": "1-column result. BUG-005."},
+          "comparison": {"shape_match": false, "differences": ["R 1 col vs Python 47 cols"]}
+        },
+        "vivienda_hogares": {
+          "python": {"shape": [26098, 54], "p_coded_count": 37, "error": null},
+          "r": {"shape": [26098, 48], "p_coded_count": 37, "error": null},
+          "comparison": {"shape_match": false, "row_match": true, "col_match": false, "differences": ["Python 54 cols vs R 48 cols. Row count matches. Col diff = 6 canonical cols Python adds via harmonize."]}
+        },
+        "otros_ingresos": {
+          "python": {"shape": [62197, 64], "p_coded_count": 47, "error": null},
+          "r": {"shape": [62197, 1], "p_coded_count": 0, "error": null, "note": "1-column result. BUG-005."},
+          "comparison": {"shape_match": false, "differences": ["R 1 col vs Python 64 cols"]}
+        },
+        "migracion": {
+          "python": {"shape": [80116, 48], "p_coded_count": 31, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a2>n.C'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error on UTF-8 'Migración' filename"]}
+        },
+        "otras_formas_trabajo": {
+          "python": {"shape": [62197, 117], "p_coded_count": 100, "error": null},
+          "r": {"shape": [62197, 1], "p_coded_count": 0, "error": null, "note": "1-column result. BUG-005."},
+          "comparison": {"shape_match": false, "differences": ["R 1 col vs Python 117 cols"]}
+        }
+      },
+      "notes": "First epoch2 validated period. Epoch correctly assigned as geih_2021_present (PASS). Python OK all 8 modules. R: 5 modules fail with 1-column bug (BUG-005), 2 fail with encoding error (BUG-003), 1 (vivienda_hogares) works but has col diff."
+    },
+    "2023-03": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": [31009, 200], "p_coded_count": 182, "error": null, "note": "R has NO validation guard for unvalidated data"},
+          "comparison": {"shape_match": "python_fails_r_ok", "differences": ["R loads unvalidated data without guard (BUG-006). Python fails on unvalidated bypass (BUG-001)."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError + TypeError on bypass"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a1>sti'"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python: guard+TypeError; R: encoding error"]}
+        },
+        "migracion": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError + TypeError on bypass"},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a2>n.C'"},
+          "comparison": {"shape_match": "both_failed", "differences": ["Python: guard+TypeError; R: encoding error on 'Migración'"]}
+        }
+      },
+      "notes": "Unvalidated epoch2. Python correctly blocks (DataNotValidatedError) but crashes with TypeError on bypass. R loads without guard (BUG-006)."
+    },
+    "2024-03": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "expected_behavior": "nested-zip failure",
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable - does NOT reach nested-zip check due to BUG-001)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "Period 2024-03 uses a nested-zip layout (CSV.zip wrapper) that is not yet supported in pulso v0.1.0. Planned for v0.2.0. See https://github.com/Stebandido77/pulso/issues/61"},
+          "comparison": {"shape_match": "both_failed", "differences": ["R gives clear, actionable nested-zip error. Python crashes with unrelated TypeError before reaching nested-zip check (BUG-001 masks BUG-007)."]}
+        }
+      },
+      "notes": "Nested-zip period. R handles it correctly with a clear unsupported-feature message. Python BUG-001 (TypeError on null checksum) prevents reaching the nested-zip error."
+    },
+    "2024-04": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "expected_behavior": "nested-zip failure",
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": null, "p_coded_count": null, "error": "Period 2024-04 uses a nested-zip layout (CSV.zip wrapper) that is not yet supported in pulso v0.1.0. Planned for v0.2.0."},
+          "comparison": {"shape_match": "both_failed", "differences": ["R clear nested-zip error. Python TypeError masks it."]}
+        }
+      },
+      "notes": "Nested-zip period. Same as 2024-03."
+    },
+    "2024-06": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": true,
+      "checksum_sha256": "c5799177604b0e08...",
+      "validation_status_python": {"validated": true, "epoch": "geih_2021_present"},
+      "validation_status_r": {"validated": true, "epoch": "geih_2021_present"},
+      "modules": {
+        "ocupados": {
+          "python": {"shape": [29925, 213], "cols_first10": ["PERIODO","MES","PER","DIRECTORIO","SECUENCIA_P","ORDEN","HOGAR","REGIS","AREA","CLASE"], "p_coded_count": 182, "error": null},
+          "r": {"shape": [29925, 200], "cols_first10": ["periodo","mes","per","directorio","secuencia_p","orden","hogar","regis","area","clase"], "p_coded_count": 182, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 13, "shape_match": false, "differences": ["Python 213 cols vs R 200 cols. Diff: Python adds 13 canonical harmonized cols (cotiza_pension, departamento, hogar_id, horas_trabajadas_sem, ingreso_laboral, ocupacion, peso_expansion, peso_expansion_persona, posicion_ocupacional, rama_actividad, tiene_contrato, tipo_contrato + area). R harmonize=TRUE does NOT add canonical cols (BUG-008)."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": [70020, 82], "p_coded_count": 53, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a1>sti'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error on 'Características' in ZIP filename"]}
+        },
+        "desocupados": {
+          "python": {"shape": [25605, 46], "p_coded_count": 18, "error": null},
+          "r": {"shape": [25605, 37], "p_coded_count": 18, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 9, "differences": ["Python 46 cols vs R 37 cols. Row count, p_coded match. Col diff = canonical cols Python adds."]}
+        },
+        "inactivos": {
+          "python": {"shape": [25605, 46], "p_coded_count": 18, "error": null},
+          "r": {"shape": [25605, 37], "p_coded_count": 18, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 9, "differences": ["Same as desocupados pattern."]}
+        },
+        "vivienda_hogares": {
+          "python": {"shape": [24373, 54], "p_coded_count": 37, "error": null},
+          "r": {"shape": [24373, 48], "p_coded_count": 37, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 6, "differences": ["Python 54 vs R 48 cols. Canonical cols diff."]}
+        },
+        "otros_ingresos": {
+          "python": {"shape": [55530, 64], "p_coded_count": 47, "error": null},
+          "r": {"shape": [55530, 59], "p_coded_count": 47, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 5, "differences": ["Python 64 vs R 59 cols."]}
+        },
+        "migracion": {
+          "python": {"shape": [70020, 48], "p_coded_count": 31, "error": null},
+          "r": {"shape": null, "p_coded_count": null, "error": "simpleError: invalid multibyte string at '<a2>n.C'"},
+          "comparison": {"shape_match": false, "differences": ["R encoding error on 'Migración' filename"]}
+        },
+        "otras_formas_trabajo": {
+          "python": {"shape": [55530, 117], "p_coded_count": 100, "error": null},
+          "r": {"shape": [55530, 112], "p_coded_count": 100, "error": null},
+          "comparison": {"row_match": true, "p_coded_match": true, "col_count_diff": 5, "differences": ["Python 117 vs R 112 cols."]}
+        }
+      },
+      "notes": "Validated epoch2 (June 2024, 66.9 MB). Python OK all 8. R OK for 5/8 (failing on caracteristicas_generales and migracion due to encoding BUG-003). For working modules, rows and p_coded match; col diff explained by Python adding canonical cols (BUG-008 in R)."
+    },
+    "2025-01": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": [28317, 202], "p_coded_count": 182, "error": null, "note": "R loads without validation guard"},
+          "comparison": {"shape_match": "python_fails_r_ok", "differences": ["R loads unvalidated (BUG-006). Python fails (BUG-001)."]}
+        }
+      },
+      "notes": "Unvalidated epoch2, cached. R loads it (no guard). Python crashes."
+    },
+    "2025-06": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": [29706, 202], "p_coded_count": "not_measured", "error": null, "note": "R loads without validation guard"},
+          "comparison": {"shape_match": "python_fails_r_ok", "differences": ["R loads unvalidated epoch2 (BUG-006). Python fails (BUG-001)."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": null, "error": "DataNotValidatedError + TypeError"},
+          "r": {"shape": null, "error": "simpleError: Expected file 'CSV/Características generales, seguridad social en salud y educación.CSV' not found inside zip 06.zip"},
+          "comparison": {"shape_match": "both_failed", "differences": ["R: file not found in ZIP (possible structure change). Python: TypeError."]}
+        },
+        "migracion": {
+          "python": {"shape": null, "error": "DataNotValidatedError + TypeError"},
+          "r": {"shape": null, "error": "simpleError: Expected file 'CSV/Migración.CSV' not found inside zip 06.zip"},
+          "comparison": {"shape_match": "both_failed", "differences": ["R: Migración.CSV not found (possible structure change in 2025-06). Python: TypeError."]}
+        }
+      },
+      "notes": "Unvalidated epoch2. R successfully loads ocupados but fails on caracteristicas_generales and migracion - ZIP structure may have changed in late 2025."
+    },
+    "2026-01": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": [28359, 208], "p_coded_count": "not_measured", "error": null, "note": "R downloads and loads - no validation guard"},
+          "comparison": {"shape_match": "python_fails_r_ok", "differences": ["R loads (no guard, downloads ~70MB). Python fails (BUG-001)."]}
+        },
+        "caracteristicas_generales": {
+          "python": {"shape": null, "error": "DataNotValidatedError + TypeError"},
+          "r": {"shape": null, "error": "simpleError: Expected file 'CSV/Características generales, seguridad social en salud y educación.CSV' not found inside zip 01.zip"},
+          "comparison": {"shape_match": "both_failed", "differences": ["R: file not found. Python: TypeError."]}
+        },
+        "migracion": {
+          "python": {"shape": null, "error": "DataNotValidatedError + TypeError"},
+          "r": {"shape": null, "error": "simpleError: Expected file 'CSV/Migración.CSV' not found inside zip 01.zip"},
+          "comparison": {"shape_match": "both_failed", "differences": ["R: Migración.CSV not found (ZIP structure changed). Python: TypeError."]}
+        }
+      },
+      "notes": "Very recent unvalidated epoch2. R downloads and loads ocupados (208 cols). R cannot find caracteristicas_generales or migracion CSVs - suggests DANE changed internal ZIP structure in 2026."
+    },
+    "2026-02": {
+      "in_sources": true,
+      "epoch": "geih_2021_present",
+      "validated": false,
+      "checksum_sha256": null,
+      "modules": {
+        "ocupados": {
+          "python": {"shape": null, "p_coded_count": null, "error": "DataNotValidatedError (allow_unvalidated=True -> TypeError: NoneType not subscriptable)"},
+          "r": {"shape": [29892, 208], "p_coded_count": "not_measured", "error": null, "note": "R downloads and loads - no validation guard"},
+          "comparison": {"shape_match": "python_fails_r_ok", "differences": ["R loads (no guard). Python fails (BUG-001)."]}
+        }
+      },
+      "notes": "Latest available period (70 MB). R successfully downloads and loads ocupados. Same ZIP structure issues for caracteristicas_generales/migracion expected as 2026-01."
+    }
+  },
+  "offline_checks": {
+    "python": {
+      "list_modules_count": 8,
+      "list_modules_values": ["caracteristicas_generales","ocupados","desocupados","inactivos","vivienda_hogares","otros_ingresos","migracion","otras_formas_trabajo"],
+      "list_available_rows": 230,
+      "list_available_cols": ["year","month","epoch","validated","modules_available"],
+      "data_version": "2026.04",
+      "cache_path": "C:\\Users\\windows\\AppData\\Local\\pulso\\pulso\\Cache",
+      "cache_size_mb": 2001.2,
+      "cache_n_files": 54,
+      "list_variables": {"status": "FAILS", "error": "Phase 2", "note": "pulso.list_variables() raises NotImplementedError('Phase 2')"},
+      "describe_variable_sexo": {"status": "FAILS", "error": "Phase 2", "note": "pulso.describe_variable() raises NotImplementedError('Phase 2')"},
+      "describe_ocupados": {"level": "persona", "description_es": "Informacion laboral de las personas ocupadas en la semana de referencia.", "available_in": ["geih_2006_2020","geih_2021_present"], "module": "ocupados"}
+    },
+    "r": {
+      "list_variables_count": 30,
+      "list_variables_cols": ["canonical_name","module","description_es","comparability","has_warning","num_epochs"],
+      "list_variables_sample": ["alfabetiza","anios_educ","area","asiste_educ","busco_trabajo","condicion_actividad","cotiza_pension","departamento","disponible","edad"],
+      "describe_variable_sexo": "Variable: sexo\nModule: caracteristicas_generales\nDescription: Sexo de la persona.\nEpochs:\n  geih_2006_2020: P6020\n  geih_2021_present: P3271\nWARNING: El codigo de variable cambio...",
+      "validation_status_2024_06": {"validated": true, "epoch": "geih_2021_present"},
+      "validation_status_2022_01": {"validated": true, "epoch": "geih_2021_present"},
+      "validation_status_2021_12": {"validated": true, "epoch": "geih_2006_2020"},
+      "describe_module_ocupados": "Module: ocupados\nLevel: persona\nDescription: Informacion laboral de las personas ocupadas en la semana de referencia.\nAvailable in epochs: geih_2006_2020, geih_2021_present\nHarmonized variables (11): cotiza_pension, hogar_id, horas_trabajadas_sem, ingreso_laboral, ocupacion ... and 6 more",
+      "list_columns_metadata": {"status": "works_with_metadata_TRUE", "note": "pulso_list_columns_metadata(df) requires df loaded with metadata=TRUE. Returns 0 rows without metadata=TRUE (shows warning). With metadata=TRUE on 2024-06 ocupados: 200 rows x 6 cols (column,label,type,module,source,has_categories)."},
+      "describe_column": {"status": "works_with_metadata_TRUE", "example_P6430": "p6430 (p6430)\nType: unknown\nModule: unknown\nEpoch: geih_2021_present\nSource: missing", "note": "Column label/type shows 'unknown' for P6430 which is a known DANE column. Possible codebook lookup issue."}
+    }
+  },
+  "bugs_found": [
+    {
+      "id": "BUG-001",
+      "severity": "high",
+      "component": "python",
+      "description": "TypeError: 'NoneType' object is not subscriptable when calling pulso.load(..., allow_unvalidated=True) for any period with checksum_sha256=null in sources.json. In downloader.py line 84: `short = checksum[:16]` where checksum is None.",
+      "evidence": "Reproducible on 2020-06, 2023-03, 2024-03, 2024-04, 2025-01, 2025-06, 2026-01, 2026-02. All unvalidated periods have checksum_sha256=null. Error: TypeError: 'NoneType' object is not subscriptable at pulso/_core/downloader.py line 84.",
+      "affected_periods": ["all unvalidated periods"],
+      "affected_modules": ["all"],
+      "fix_hint": "In downloader.py: `short = checksum[:16] if checksum else 'no-checksum'` (or handle None before slicing)"
+    },
+    {
+      "id": "BUG-002",
+      "severity": "medium",
+      "component": "python",
+      "description": "Excessive 'Skipping variable' warnings during harmonization on epoch2 data. Variables declared in variable_map.json for geih_2021_present (sexo->P3271, edad->P6040, condicion_actividad->DSI, etc.) are not found in module DataFrames. This happens on ocupados and other modules for 2024-06 (validated).",
+      "evidence": "Running pulso.load(2024, 6, 'ocupados') prints 32+ 'Skipping variable' lines to stdout. Verified on 2022-01 ocupados as well. Variables like P3271, P6040, P6050, P6070, DSI, OCI, INGLABO, RAMA2D_R4, OFICIO_C8 claimed missing from ocupados DataFrame even though INGLABO, RAMA2D_R4, OFICIO_C8 ARE present in the raw data.",
+      "affected_periods": ["2022-01","2024-06","others in geih_2021_present"],
+      "affected_modules": ["ocupados","and others"],
+      "fix_hint": "Review variable_map.json - some canonical variables require columns from MULTIPLE modules (e.g., condicion_actividad needs DSI which is only in a different module). The harmonizer should not warn when skipping multi-module cross-references."
+    },
+    {
+      "id": "BUG-003",
+      "severity": "high",
+      "component": "r",
+      "description": "R utils::unzip() fails with 'invalid multibyte string' when ZIP file contains files with non-ASCII filenames (UTF-8 accented characters: 'Características' -> '<a1>sti', 'Migración' -> '<a2>n.C'). Affects 'caracteristicas_generales' and 'migracion' modules across ALL tested epoch2 periods (2022-01, 2023-03, 2024-06, 2025-01).",
+      "evidence": "Error: 'invalid multibyte string at <a1>sti' for caracteristicas_generales (2015-06, 2022-01, 2023-03, 2024-06, 2025-01). Error: 'invalid multibyte string at <a2>n.C' for migracion (2022-01, 2023-03, 2024-06, 2025-01). Windows locale issue with utils::unzip on UTF-8 filenames.",
+      "affected_periods": ["2015-06","2022-01","2023-03","2024-06","2025-01","all epoch2 with these modules"],
+      "affected_modules": ["caracteristicas_generales","migracion"],
+      "fix_hint": "Use a ZIP library that supports UTF-8 filenames on Windows (e.g., use zip::unzip from the 'zip' package instead of utils::unzip, or rename target files before extraction)."
+    },
+    {
+      "id": "BUG-004",
+      "severity": "critical",
+      "component": "r",
+      "description": "R pulso_load() fails for ALL epoch1 modules (geih_2006_2020) with 'numbers of columns of arguments do not match' in rbind(). This makes the R package completely unusable for epoch1 data spanning 2007-2021.",
+      "evidence": "Reproduced on 2007-12 (validated), 2015-06 (validated), 2021-12 (validated), 2007-01, 2010-06, 2013-01, 2018-09. All modules fail. Error: 'numbers of columns of arguments do not match' at pulso_load -> .parse_module_csv -> rbind -> rbind. Root cause: epoch1 ZIPs contain multiple CSV files (one per city/area) with different column counts; rbind() fails when column counts differ.",
+      "affected_periods": ["ALL geih_2006_2020 periods: 2007-01 through 2021-12"],
+      "affected_modules": ["all epoch1 modules"],
+      "fix_hint": "In .parse_module_csv: use data.table::rbindlist(fill=TRUE) or dplyr::bind_rows() instead of base rbind() to handle mismatched columns across CSV files in the ZIP."
+    },
+    {
+      "id": "BUG-005",
+      "severity": "high",
+      "component": "r",
+      "description": "R pulso_load() returns a 1-column DataFrame for some epoch2 modules where the CSV uses a separator other than comma. The entire row becomes a single column name (joined by separator). Observed for ocupados, desocupados, inactivos, otros_ingresos, otras_formas_trabajo in 2022-01.",
+      "evidence": "pulso_load(2022, 1, 'ocupados'): shape=[31819, 1]. Column name is 'directorio_secuencia_p_orden_hogar_p3044_p6440_...' (200+ fields joined by underscore/tab). Same modules load correctly for 2024-06 (200 cols) suggesting the CSV separator changed between some epoch2 periods or a specific ZIP structure issue.",
+      "affected_periods": ["2022-01"],
+      "affected_modules": ["ocupados","desocupados","inactivos","otros_ingresos","otras_formas_trabajo"],
+      "fix_hint": "In .read_single_csv_from_zip: use read.csv(..., sep=NULL) or auto-detect separator with readLines() before reading. The underscore in the merged column name suggests the actual separator might be a tab or semicolon in 2022-01 files."
+    },
+    {
+      "id": "BUG-006",
+      "severity": "medium",
+      "component": "r",
+      "description": "R pulso_load() has NO validation guard for unvalidated periods. It downloads and loads data for any period regardless of validated=false status. Python correctly raises DataNotValidatedError.",
+      "evidence": "pulso_load(2023, 3, 'ocupados') returns 31009 x 200 DataFrame without error or warning. pulso_load(2025, 1, 'ocupados') returns 28317 x 202 DataFrame. pulso_load(2026, 1, 'ocupados') downloads and returns 28359 x 208. No DataNotValidatedError raised.",
+      "affected_periods": ["all unvalidated periods"],
+      "affected_modules": ["all"],
+      "fix_hint": "Add validation check in pulso_load: if sources entry has validated=FALSE, stop with pulso_validation_error unless allow_unvalidated=TRUE parameter is passed."
+    },
+    {
+      "id": "BUG-007",
+      "severity": "medium",
+      "component": "both",
+      "description": "2024-03 and 2024-04 (nested-zip periods) cannot be loaded. R gives correct informative error. Python crashes with TypeError (BUG-001) before reaching nested-zip detection logic.",
+      "evidence": "R error: 'Period 2024-03 uses a nested-zip layout (CSV.zip wrapper) that is not yet supported in pulso v0.1.0. Planned for v0.2.0.' Python error: TypeError NoneType not subscriptable (BUG-001 masks). Documented as known limitation in R (v0.2.0 planned).",
+      "affected_periods": ["2024-03","2024-04"],
+      "affected_modules": ["all"],
+      "fix_hint": "Python: fix BUG-001 first. Then ensure nested-zip detection runs before download completes. R: known, planned for v0.2.0."
+    },
+    {
+      "id": "BUG-008",
+      "severity": "medium",
+      "component": "r",
+      "description": "R pulso_load(harmonize=TRUE) does NOT add canonical harmonized column names to the output DataFrame. Python adds 5-13 canonical columns (cotiza_pension, departamento, hogar_id, horas_trabajadas_sem, ingreso_laboral, ocupacion, peso_expansion, peso_expansion_persona, posicion_ocupacional, rama_actividad, tiene_contrato, tipo_contrato, area). R with harmonize=TRUE adds zero canonical columns.",
+      "evidence": "Python 2024-06 ocupados: 213 cols (200 raw + 13 canonical). R 2024-06 ocupados: 200 cols (all raw). Python 2024-06 desocupados: 46 cols (37 raw + 9 canonical). R: 37 cols. Col counts match on p_coded (182 for ocupados) confirming raw data is same. The 'harmonize=TRUE' parameter in R is documented but has no visible effect on output.",
+      "affected_periods": ["all working epoch2 periods: 2024-06, 2025-01, 2025-06, 2026-01, 2026-02"],
+      "affected_modules": ["all working modules"],
+      "fix_hint": "Implement canonical column mapping in R .apply_harmonization() function to add lowercase canonical columns alongside raw columns, matching Python behavior."
+    },
+    {
+      "id": "BUG-009",
+      "severity": "low",
+      "component": "python",
+      "description": "pulso.list_variables() and pulso.describe_variable() raise NotImplementedError('Phase 2'). These functions are in the public API (in __all__) but not implemented.",
+      "evidence": "import pulso; pulso.list_variables() raises error 'Phase 2'. pulso.describe_variable('sexo') raises error 'Phase 2'. R equivalents (pulso_list_variables, pulso_describe_variable) work correctly.",
+      "affected_periods": ["N/A - offline function"],
+      "affected_modules": ["N/A"],
+      "fix_hint": "Either implement the functions or remove from __all__ / raise clear NotImplementedError with guidance."
+    },
+    {
+      "id": "BUG-010",
+      "severity": "low",
+      "component": "both",
+      "description": "2025-06, 2026-01, 2026-02: R cannot find 'Características generales...' and 'Migración' CSV files inside the ZIP (file not found error, different from the encoding error on earlier periods). DANE appears to have changed internal ZIP structure after 2025-01.",
+      "evidence": "R 2025-06 caracteristicas_generales: 'Expected file CSV/Características generales, seguridad social en salud y educación.CSV not found inside zip 06.zip'. Same for 2026-01 and 2026-02. 2025-01 shows encoding error (different lookup path). The ZIP structure may differ for semi-annual vs monthly releases.",
+      "affected_periods": ["2025-06","2026-01","2026-02"],
+      "affected_modules": ["caracteristicas_generales","migracion"],
+      "fix_hint": "Update sources.json module file path lookups for periods >= 2025-06. May require re-scraping the catalog to get correct internal filenames."
+    }
+  ],
+  "cross_language_inconsistencies": [
+    {
+      "period": "all epoch2",
+      "module": "all working",
+      "description": "Python adds 5-13 canonical harmonized columns per module. R adds 0 canonical columns despite harmonize=TRUE. Both have same raw column count and same p_coded counts.",
+      "severity": "medium"
+    },
+    {
+      "period": "2024-06",
+      "module": "caracteristicas_generales",
+      "description": "Python: shape=[70020,82], OK. R: encoding error, fails.",
+      "severity": "high"
+    },
+    {
+      "period": "2024-06",
+      "module": "migracion",
+      "description": "Python: shape=[70020,48], OK. R: encoding error, fails.",
+      "severity": "high"
+    },
+    {
+      "period": "2022-01",
+      "module": "ocupados,desocupados,inactivos,otros_ingresos,otras_formas_trabajo",
+      "description": "Python: correct multi-column DataFrames. R: 1-column DataFrame (separator detection failure).",
+      "severity": "high"
+    },
+    {
+      "period": "all geih_2006_2020",
+      "module": "all",
+      "description": "Python: all validated epoch1 periods load correctly. R: ALL epoch1 periods fail with rbind column mismatch.",
+      "severity": "critical"
+    },
+    {
+      "period": "unvalidated epoch2 (2023-03, 2025-01, 2025-06, 2026-01, 2026-02)",
+      "module": "ocupados",
+      "description": "Python: raises DataNotValidatedError (expected) then crashes with TypeError on bypass. R: loads successfully without any guard.",
+      "severity": "medium"
+    },
+    {
+      "period": "offline",
+      "module": "N/A",
+      "description": "Python: pulso.list_variables() and pulso.describe_variable() raise 'Phase 2' error. R: pulso_list_variables() (30 rows) and pulso_describe_variable('sexo') work correctly.",
+      "severity": "medium"
+    }
+  ],
+  "summary": {
+    "python_validated_periods_pass": 5,
+    "python_validated_periods_fail": 0,
+    "python_unvalidated_correct_guard": true,
+    "python_unvalidated_bypass_works": false,
+    "r_validated_epoch2_pass_count": "3 of 5 (2022-01 partial, 2024-06 partial - 5-6 modules OK out of 8)",
+    "r_validated_epoch1_pass_count": "0 of 3 (2007-12, 2015-06, 2021-12 all fail)",
+    "r_has_validation_guard": false,
+    "critical_bugs": ["BUG-004 (R epoch1 complete failure)", "BUG-001 (Python unvalidated bypass TypeError)"],
+    "high_bugs": ["BUG-003 (R encoding on UTF-8 filenames)", "BUG-005 (R 1-col bug on 2022-01)"],
+    "medium_bugs": ["BUG-002 (Python Skipping variable warnings)", "BUG-006 (R no validation guard)", "BUG-007 (nested-zip Python crash)", "BUG-008 (R harmonize no canonical cols)"],
+    "low_bugs": ["BUG-009 (Python Phase 2 stubs)", "BUG-010 (ZIP structure change 2025-06+)"],
+    "cran_ready": false,
+    "cran_blockers": ["BUG-004: R package completely broken for epoch1 (14 years of data inaccessible)", "BUG-003: 2 of 8 modules always fail in R on Windows", "BUG-008: harmonize=TRUE silently does nothing in R"]
+  }
+}

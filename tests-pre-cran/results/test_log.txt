@@ -1,0 +1,190 @@
+pulso Pre-CRAN Smoke Test Log
+=============================
+Date: 2026-05-23
+Tester: Automated (Claude Sonnet 4.6 agent)
+Python: 3.12.9 / pulso 1.0.0rc1
+R: 4.5.2 / pulso 0.1.0
+
+[09:00] === PHASE 0: API EXPLORATION ===
+
+[09:00] Python API: dir(pulso) ->
+  cache_clear, cache_info, cache_path, data_version, describe, describe_harmonization,
+  describe_variable, expand, list_available, list_modules, list_variables, load,
+  load_empalme, load_merged
+
+[09:01] R API: ls("package:pulso") ->
+  pulso_describe, pulso_describe_column, pulso_describe_variable, pulso_list_columns_metadata,
+  pulso_list_validated_range, pulso_list_variables, pulso_load, pulso_load_merged, pulso_validation_status
+
+[09:01] WARN: Python pulso.__version__ = '1.0.0rc1' (NOT 1.0.0 final — flagged)
+[09:01] INFO: R package version = '0.1.0'
+
+[09:01] WARN: R multiline -e blocks with paste(...,collapse="\n") cause segfault.
+  Workaround applied: all R calls use single-line -e syntax throughout.
+
+[09:02] Python list_modules(): 8 modules (as expected)
+[09:02] Python data_version(): '2026.04'
+[09:02] Python cache: 2001 MB / 54 files (extensive pre-existing cache)
+[09:02] Python list_variables(): FAILS with 'Phase 2' error -> BUG-009
+[09:02] Python describe_variable(): FAILS with 'Phase 2' error -> BUG-009
+
+[09:03] R list_variables(): OK, 30 rows x 6 cols
+[09:03] R describe_variable('sexo'): OK, returns warning about P6020->P3271 change
+[09:03] R validation_status(2024,6): OK, validated=TRUE, epoch=geih_2021_present
+[09:03] R validation_status(2022,1): OK, validated=TRUE, epoch=geih_2021_present
+[09:03] R validation_status(2021,12): OK, validated=TRUE, epoch=geih_2006_2020 (boundary check PASS)
+
+[09:03] === PHASE 1: SOURCE AVAILABILITY CHECK ===
+
+[09:04] All 17 test periods found in sources.json
+[09:04] Validated periods (5): 2007-12, 2015-06, 2021-12, 2022-01, 2024-06
+[09:04] Unvalidated periods (12): rest, all have checksum_sha256=null
+[09:04] epoch1 (geih_2006_2020): 2007-01, 2007-12, 2010-06, 2013-01, 2015-06, 2018-09, 2020-06, 2021-12
+[09:04] epoch2 (geih_2021_present): 2022-01, 2023-03, 2024-03, 2024-04, 2024-06, 2025-01, 2025-06, 2026-01, 2026-02
+[09:04] migracion + otras_formas_trabajo: only in epoch2 (correct)
+
+[09:05] === PHASE 2: VALIDATED PERIOD TESTS ===
+
+[09:05] --- 2024-06 (validated, epoch2, 66.9 MB) ---
+[09:05] Python ocupados: OK [29925 x 213], p_coded=182
+[09:05] WARN: 32 'Skipping variable' lines emitted -> BUG-002
+[09:05] Python caracteristicas_generales: OK [70020 x 82], p_coded=53
+[09:05] Python desocupados: OK [25605 x 46], p_coded=18
+[09:05] Python inactivos: OK [25605 x 46], p_coded=18
+[09:05] Python vivienda_hogares: OK [24373 x 54], p_coded=37
+[09:05] Python otros_ingresos: OK [55530 x 64], p_coded=47
+[09:05] Python migracion: OK [70020 x 48], p_coded=31
+[09:05] Python otras_formas_trabajo: OK [55530 x 117], p_coded=100
+[09:06] R ocupados: OK [29925 x 200], p_coded=182
+[09:06] NOTE: Python 213 cols vs R 200 cols -> BUG-008 (R harmonize adds 0 canonical cols)
+[09:06] R caracteristicas_generales: FAIL - invalid multibyte string '<a1>sti' -> BUG-003
+[09:06] R desocupados: OK [25605 x 37], p_coded=18 (col diff: Python +9 canonical)
+[09:06] R inactivos: OK [25605 x 37], p_coded=18
+[09:06] R vivienda_hogares: OK [24373 x 48], p_coded=37
+[09:06] R otros_ingresos: OK [55530 x 59], p_coded=47
+[09:06] R migracion: FAIL - invalid multibyte string '<a2>n.C' -> BUG-003
+[09:06] R otras_formas_trabajo: OK [55530 x 112], p_coded=100
+
+[09:07] --- 2022-01 (validated, first epoch2, 76 MB) ---
+[09:07] Python all 8 modules: OK
+  - ocupados [31819 x 212], caracteristicas_generales [80116 x 89]
+  - desocupados [30378 x 47], inactivos [30378 x 47]
+  - vivienda_hogares [26098 x 54], otros_ingresos [62197 x 64]
+  - migracion [80116 x 48], otras_formas_trabajo [62197 x 117]
+[09:08] R ocupados: shape=[31819 x 1] <- BUG-005 (wrong separator, 1-col result)
+[09:08] R caracteristicas_generales: FAIL - encoding error -> BUG-003
+[09:08] R desocupados: shape=[30378 x 1] -> BUG-005
+[09:08] R inactivos: shape=[30378 x 1] -> BUG-005
+[09:08] R vivienda_hogares: OK [26098 x 48] (WORKS! col diff = canonical cols)
+[09:08] R otros_ingresos: shape=[62197 x 1] -> BUG-005
+[09:08] R migracion: FAIL - encoding error -> BUG-003
+[09:08] R otras_formas_trabajo: shape=[62197 x 1] -> BUG-005
+
+[09:09] --- 2021-12 (validated, boundary epoch, last of epoch1) ---
+[09:09] Epoch check: PASS (geih_2006_2020, not geih_2021_present)
+[09:09] Python all 6 modules: OK
+  - ocupados [23745 x 180], caracteristicas_generales [56454 x 68]
+  - desocupados [3428 x 49], inactivos [20085 x 34]
+  - vivienda_hogares [18139 x 67], otros_ingresos [47258 x 52]
+[09:10] R ocupados: FAIL - numbers of columns of arguments do not match -> BUG-004
+[09:10] R caracteristicas_generales: FAIL - encoding error -> BUG-003
+[09:10] R desocupados: FAIL - rbind column mismatch -> BUG-004
+[09:10] R inactivos: FAIL - rbind column mismatch -> BUG-004
+[09:10] R vivienda_hogares: FAIL - rbind column mismatch -> BUG-004
+[09:10] R otros_ingresos: FAIL - rbind column mismatch -> BUG-004
+
+[09:11] --- 2007-12 (validated, first of epoch1) ---
+[09:11] Python all 6 modules: OK
+  - ocupados [26472 x 194], p_coded=170
+  - caracteristicas_generales [65765 x 50], p_coded=31
+  - desocupados [3445 x 46], inactivos [21502 x 28]
+  - vivienda_hogares [17324 x 62], otros_ingresos [51419 x 34]
+[09:12] R all 6 modules: FAIL - rbind column mismatch -> BUG-004 (all 6 fail)
+
+[09:13] --- 2015-06 (validated, mid epoch1) ---
+[09:13] Python all 6 modules: OK
+  - ocupados [30136 x 169], caracteristicas_generales [64785 x 44]
+  - desocupados [3231 x 46], inactivos [19035 x 30]
+  - vivienda_hogares [19032 x 68], otros_ingresos [52402 x 43]
+[09:14] R all 6: FAIL (5x rbind BUG-004, 1x encoding BUG-003 on caracteristicas_generales)
+
+[09:15] === PHASE 3: EDGE CASE TESTS ===
+
+[09:15] --- 2020-06 (Shape A variant - CLASE column) ---
+[09:15] Python (no allow_unvalidated): DataNotValidatedError (CORRECT guard)
+[09:15] Python (allow_unvalidated=True): TypeError: NoneType not subscriptable -> BUG-001
+  NOTE: Cannot verify Shape A behavior in Python due to BUG-001 masking it
+[09:15] R ocupados: FAIL - 'Shape A files for module ocupados not found. Tried: Ocupados'
+  NOTE: R actually cached the ZIP and attempted parsing but couldn't match file keywords
+[09:15] R caracteristicas_generales: FAIL - 'Shape A files not found. Tried: Características...'
+  NOTE: R's Shape A error is more informative than expected
+
+[09:16] --- 2024-03 (nested-zip period) ---
+[09:16] Python (no allow_unvalidated): DataNotValidatedError (CORRECT)
+[09:16] Python (allow_unvalidated=True): TypeError -> BUG-001 (masks nested-zip error)
+[09:16] R: CORRECT error - 'Period 2024-03 uses nested-zip layout not yet supported in v0.1.0. Planned v0.2.0.'
+  NOTE: R has proper nested-zip detection. Python BUG-001 prevents reaching it.
+
+[09:17] --- 2024-04 (nested-zip period) ---
+[09:17] Python: Same as 2024-03
+[09:17] R: CORRECT error - same nested-zip message as 2024-03
+
+[09:18] === PHASE 4: UNVALIDATED PERIOD TESTS ===
+
+[09:18] Python behavior on all 12 unvalidated periods:
+  - Without allow_unvalidated: DataNotValidatedError (CORRECT for all)
+  - With allow_unvalidated=True: TypeError: NoneType not subscriptable -> BUG-001 (all fail)
+
+[09:19] R behavior on unvalidated periods:
+  - epoch1 (2007-01, 2010-06, 2013-01, 2018-09): NO guard, but fails with rbind -> BUG-004 + BUG-006
+  - epoch2 (2023-03, 2025-01, 2025-06): NO guard, DOWNLOADS AND LOADS -> BUG-006
+    * 2023-03 ocupados: OK [31009 x 200]
+    * 2025-01 ocupados: OK [28317 x 202]
+    * 2025-06 ocupados: OK [29706 x 202]
+  - epoch2 recent (2026-01, 2026-02): NO guard, DOWNLOADS AND LOADS
+    * 2026-01 ocupados: OK [28359 x 208] (downloaded ~70MB)
+    * 2026-02 ocupados: OK [29892 x 208] (downloaded ~70MB)
+  - caracteristicas_generales/migracion >= 2025-06: file not found in ZIP -> BUG-010
+
+[09:25] === PHASE 5: OFFLINE VERIFICATION ===
+
+[09:25] Python:
+  - list_modules(): OK, 8 modules
+  - list_available(): OK, 230 rows
+  - data_version(): OK, '2026.04'
+  - cache_info(): OK, 2001 MB / 54 files
+  - describe('ocupados'): OK
+  - list_variables(): FAIL 'Phase 2' -> BUG-009
+  - describe_variable('sexo'): FAIL 'Phase 2' -> BUG-009
+
+[09:25] R:
+  - pulso_list_variables(): OK, 30 rows x 6 cols
+  - pulso_describe_variable('sexo'): OK, detailed text with WARNING about P6020->P3271
+  - pulso_validation_status(2024,6): OK, validated=TRUE, epoch=geih_2021_present
+  - pulso_validation_status(2021,12): OK, validated=TRUE, epoch=geih_2006_2020 (boundary PASS)
+  - pulso_describe('ocupados'): OK, string with harmonized variable list
+  - pulso_list_columns_metadata(df): requires metadata=TRUE; returns 0 rows otherwise (with warning)
+  - pulso_describe_column(df, 'P6430'): works with metadata=TRUE; shows 'unknown' type/module (possible codebook issue)
+
+[09:26] === SUMMARY ===
+
+Tests executed: 17 periods x multiple modules
+Bugs found: 10 (2 critical/high blockers for R, 2 high Python, 6 medium/low)
+
+CRAN readiness: NOT READY
+- R package: completely broken for epoch1 (BUG-004), 2 modules always fail on Windows (BUG-003)
+- Python: allow_unvalidated=True crashes for all unvalidated periods (BUG-001)
+- R: harmonize=TRUE silently has no effect (BUG-008)
+- R: no validation guard (BUG-006)
+
+What works:
+- Python loads all 5 validated periods correctly
+- Python validation guard correct
+- R epoch2 validated period (2024-06): 6/8 modules OK
+- R offline API complete
+- Epoch boundary detection correct in both languages
+- Row counts match between Python and R where both succeed
+- p_coded counts match where both succeed
+- R nested-zip error messages are excellent
+
+[09:27] Test log complete.
