@@ -38,10 +38,11 @@
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' Returns the ORIGINAL name from zip_contents (not the normalized form)
-#' so that utils::unzip(files = ...) can match against the zip's central
-#' directory bytes during extraction. Comparison uses normalized UTF-8
-#' strings and a locale-safe PCRE pattern (no tolower()).
+#' Returns the UTF-8 normalized name so that zip::unzip(files = ...) can
+#' match against zip entries on all platforms. zip::unzip normalizes the
+#' zip's CP437 entries to UTF-8 internally; passing raw CP437 bytes fails
+#' on macOS. Comparison uses normalized UTF-8 strings and a locale-safe
+#' PCRE pattern (no tolower()).
 #' @noRd
 .resolve_zip_path <- function(zip_contents, inner_path) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -51,7 +52,7 @@
   }
 
   idx <- match(inner_path, zip_normalized)
-  if (!is.na(idx)) return(zip_contents[idx])
+  if (!is.na(idx)) return(zip_normalized[idx])
 
   base_target <- basename(inner_path)
   pattern <- paste0("(?i)^\\Q", base_target, "\\E$")
@@ -60,7 +61,7 @@
     name_norm <- zip_normalized[i]
     if (grepl("/$", name_norm)) next
     if (grepl(pattern, basename(name_norm), perl = TRUE)) {
-      return(zip_contents[i])
+      return(zip_normalized[i])
     }
   }
 
@@ -143,9 +144,8 @@
 #' word boundary. Files starting with "Area" or any other prefix are
 #' silently dropped -- they're auxiliary metadata, not the module data.
 #'
-#' Returns the ORIGINAL byte strings from zip_contents (not normalized)
-#' so utils::unzip(files = ...) can match against the zip's central
-#' directory bytes for extraction.
+#' Returns UTF-8 normalized names (not raw CP437 bytes) so that callers
+#' can pass them through .resolve_zip_path() or directly to zip::unzip().
 #' @noRd
 .find_shape_a_files <- function(zip_contents, module_name) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -182,9 +182,9 @@
     if (!matched) next
 
     if (prefix == "cabecera") {
-      cabecera <- zip_contents[i]
+      cabecera <- zip_normalized[i]
     } else {
-      resto <- zip_contents[i]
+      resto <- zip_normalized[i]
     }
   }
 
@@ -218,8 +218,8 @@
 #' Locate a single keyword-matching CSV in the zip (Shape C fallback)
 #'
 #' Scans zip contents for any CSV whose basename contains the module keyword
-#' on a word boundary (with optional trailing digits). Returns the ORIGINAL
-#' byte string from zip_contents or NULL if nothing matches.
+#' on a word boundary (with optional trailing digits). Returns the UTF-8
+#' normalized name (not raw CP437 bytes) for direct use with zip::unzip().
 #' @noRd
 .find_shape_c_file <- function(zip_contents, module_name) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -235,7 +235,7 @@
     for (kw in keywords) {
       pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\d*\\b")
       if (grepl(pattern, base, perl = TRUE)) {
-        return(zip_contents[i])
+        return(zip_normalized[i])
       }
     }
   }
