@@ -129,3 +129,7 @@ python/*.egg-info/
 r/inst/extdata/dane_codebook.json
 r/.Rcheck/
 r/*.tar.gz
+
+# R package build artifacts (root-level, from R CMD build/check)
+*.Rcheck/
+pulso_*.tar.gz
