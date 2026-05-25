@@ -11,7 +11,8 @@ pulso_load(
   area = NULL,
   harmonize = TRUE,
   cache = TRUE,
-  metadata = FALSE
+  metadata = FALSE,
+  allow_unvalidated = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,10 @@ pulso_load(
 Default FALSE for Python parity. When TRUE, attaches metadata via
 \code{attr(df, "pulso_metadata")} and triggers lazy download of codebook
 on first call.}
+
+\item{allow_unvalidated}{Logical. When FALSE (default), raises
+\code{pulso_data_not_validated} for periods not yet manually validated
+against DANE published figures. Set TRUE to load anyway with a warning.}
 }
 \value{
 A tibble with the microdata. If metadata = TRUE, the tibble

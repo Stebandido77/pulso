@@ -16,5 +16,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom data.table fread
+#' @importFrom dplyr bind_rows
 ## usethis namespace: end
 NULL

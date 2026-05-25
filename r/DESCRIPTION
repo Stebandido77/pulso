@@ -1,6 +1,7 @@
 Package: pulso
 Title: Load Microdata from Colombia's GEIH (DANE)
 Version: 0.1.0
+Date: 2026-05-24
 Authors@R:
     person("Esteban", "Labastidas", , "estebanlabastidas123@gmail.com",
            role = c("aut", "cre"))
@@ -23,11 +24,12 @@ Imports:
     rlang (>= 1.1.0),
     cli (>= 3.6.0),
     fs (>= 1.6.0),
-    digest (>= 0.6.0)
+    digest (>= 0.6.0),
+    data.table (>= 1.14.0),
+    dplyr (>= 1.0.0)
 Suggests:
     haven (>= 2.5.0),
     vctrs (>= 0.6.0),
-    dplyr,
     tidyr,
     testthat (>= 3.2.0),
     knitr,

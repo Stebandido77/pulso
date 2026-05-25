@@ -11,6 +11,8 @@
 #' @param harmonize Logical. Whether to lowercase column names. Default TRUE.
 #' @param cache Logical. Whether to cache downloads. Default TRUE.
 #' @param metadata Logical. Whether to attach DANE metadata. Default FALSE.
+#' @param allow_unvalidated Logical. Passed through to each \code{pulso_load()}
+#'   call. Default FALSE.
 #'   When TRUE, metadata is composed from the first module's column index
 #'   as a v0.1.0 approximation (multi-module metadata composition is planned
 #'   for v0.2.0).
@@ -35,7 +37,8 @@
 pulso_load_merged <- function(year, month, modules,
                                harmonize = TRUE,
                                cache = TRUE,
-                               metadata = FALSE) {
+                               metadata = FALSE,
+                               allow_unvalidated = FALSE) {
 
   if (!is.character(modules) || length(modules) == 0) {
     abort_validation_error("'modules' must be a non-empty character vector")
@@ -69,7 +72,8 @@ pulso_load_merged <- function(year, month, modules,
   level <- levels[[1]]
 
   dfs <- lapply(modules, function(m) {
-    pulso_load(year, month, m, harmonize = harmonize, cache = cache, metadata = FALSE)
+    pulso_load(year, month, m, harmonize = harmonize, cache = cache,
+               metadata = FALSE, allow_unvalidated = allow_unvalidated)
   })
   names(dfs) <- modules
 

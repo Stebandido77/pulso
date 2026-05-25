@@ -38,10 +38,11 @@
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' Returns the ORIGINAL name from zip_contents (not the normalized form)
-#' so that utils::unzip(files = ...) can match against the zip's central
-#' directory bytes during extraction. Comparison uses normalized UTF-8
-#' strings and a locale-safe PCRE pattern (no tolower()).
+#' Returns the *original* (possibly CP437) name from zip_contents so that
+#' base::unz() can do byte-exact matching against the zip central directory.
+#' Comparison is done on normalized UTF-8 strings (locale-safe PCRE, no
+#' tolower()), but the returned value is always zip_contents[i], not the
+#' UTF-8 form.
 #' @noRd
 .resolve_zip_path <- function(zip_contents, inner_path) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -69,10 +70,12 @@
 
 #' Read a single CSV from inside a zip
 #'
-#' Extracts to a temp dir and reads with latin-1 encoding + ";" separator
-#' (DANE convention). Discovers the on-disk path via dir_ls() to handle
-#' encoding mismatches between the zip's central directory and the
-#' platform's filesystem encoding.
+#' Lists with utils::unzip() (returns raw CP437 bytes that
+#' .normalize_zip_names() can convert reliably). Reads with base::unz()
+#' which does byte-exact matching against the zip central directory and
+#' opens an in-memory connection -- no file is written to disk, so macOS
+#' HFS+ UTF-8 filename validation is never triggered.
+#' readLines(encoding="Latin-1") decodes the bytes; fread(text=) parses.
 #' @noRd
 .read_single_csv_from_zip <- function(zip_path, inner_path) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
@@ -85,28 +88,22 @@
     ))
   }
 
-  temp_dir <- tempfile()
-  fs::dir_create(temp_dir)
-  on.exit(fs::dir_delete(temp_dir), add = TRUE)
-
-  suppressWarnings(
-    utils::unzip(zip_path, files = resolved, exdir = temp_dir)
-  )
-
-  extracted <- fs::dir_ls(temp_dir, recurse = TRUE, type = "file")
-  if (length(extracted) == 0) {
+  con <- unz(zip_path, resolved)
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
+  if (length(lines) == 0) {
     abort_parse_error(sprintf(
-      "Failed to extract '%s' from zip %s",
+      "Failed to read '%s' from zip %s",
       inner_path, basename(zip_path)
     ))
   }
 
-  utils::read.csv(
-    extracted[1],
-    sep = ";",
-    fileEncoding = "latin1",
-    stringsAsFactors = FALSE,
-    check.names = FALSE
+  data.table::fread(
+    text         = paste(lines, collapse = "\n"),
+    sep          = "auto",
+    header       = TRUE,
+    data.table   = FALSE,
+    showProgress = FALSE
   )
 }
 
@@ -142,9 +139,8 @@
 #' word boundary. Files starting with "Area" or any other prefix are
 #' silently dropped -- they're auxiliary metadata, not the module data.
 #'
-#' Returns the ORIGINAL byte strings from zip_contents (not normalized)
-#' so utils::unzip(files = ...) can match against the zip's central
-#' directory bytes for extraction.
+#' Returns the original (possibly CP437) names from zip_contents so
+#' that base::unz() can do byte-exact matching in .read_single_csv_from_zip().
 #' @noRd
 .find_shape_a_files <- function(zip_contents, module_name) {
   zip_normalized <- .normalize_zip_names(zip_contents)
@@ -170,7 +166,9 @@
 
     matched <- FALSE
     for (kw in keywords) {
-      pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\b")
+      # Allow optional trailing digits so e.g. "Ocupados06.csv" matches
+      # keyword "Ocupados" (DANE appended year suffixes in 2013-06).
+      pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\d*\\b")
       if (grepl(pattern, base, perl = TRUE)) {
         matched <- TRUE
         break
@@ -188,6 +186,61 @@
   list(cabecera = cabecera, resto = resto)
 }
 
+#' Parse a Shape C (COVID-era single-CSV) module from a DANE monthly zip
+#'
+#' Shape C occurs in 2020-06 and 2020-12 where DANE published a single CSV
+#' for modules that normally have Cabecera/Resto pairs (Shape A). The zip
+#' does NOT contain files prefixed with "Cabecera" or "Resto"; instead a
+#' single CSV matching the module keyword is present.
+#' Uses base::unz() connection (no file extraction) so CP437 filenames
+#' never touch the filesystem and macOS HFS+ UTF-8 validation is bypassed.
+#' @noRd
+.parse_shape_c <- function(zip_path, csv_name) {
+  con <- unz(zip_path, csv_name)
+  on.exit(try(close(con), silent = TRUE), add = TRUE)
+  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
+  if (length(lines) == 0) {
+    abort_parse_error(sprintf(
+      "Shape C CSV '%s' not found in zip %s",
+      csv_name, basename(zip_path)
+    ))
+  }
+  data.table::fread(
+    text         = paste(lines, collapse = "\n"),
+    sep          = "auto",
+    header       = TRUE,
+    data.table   = FALSE,
+    showProgress = FALSE
+  )
+}
+
+#' Locate a single keyword-matching CSV in the zip (Shape C fallback)
+#'
+#' Scans zip contents for any CSV whose basename contains the module keyword
+#' on a word boundary (with optional trailing digits). Returns the original
+#' (possibly CP437) name from zip_contents for byte-exact matching by unz().
+#' @noRd
+.find_shape_c_file <- function(zip_contents, module_name) {
+  zip_normalized <- .normalize_zip_names(zip_contents)
+  keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
+  if (is.null(keywords)) keywords <- module_name
+
+  for (i in seq_along(zip_normalized)) {
+    name_norm <- zip_normalized[i]
+    if (grepl("/$", name_norm)) next
+    if (!grepl("\\.csv$", name_norm, ignore.case = TRUE)) next
+
+    base <- basename(name_norm)
+    for (kw in keywords) {
+      pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\d*\\b")
+      if (grepl(pattern, base, perl = TRUE)) {
+        return(zip_contents[i])
+      }
+    }
+  }
+  NULL
+}
+
 #' Parse a module CSV from a DANE monthly zip
 #'
 #' Dispatches on the module spec shape from sources.json:
@@ -200,6 +253,9 @@
 #'     (1 = cabecera, 2 = resto).
 #'   Shape B (geih_2021_present era): {file} -> single CSV, read directly
 #'     from the literal sources.json path. 2021+ filenames are stable.
+#'   Shape C (COVID 2020 variant): module_spec has {cabecera, resto} keys
+#'     but the zip does NOT contain Cabecera/Resto files. A single matching
+#'     CSV is found by keyword search and read directly (no CLASE split).
 #'
 #' Nested-zip layout (DANE 2024-03 / 2024-04) is deferred to v0.2.0; we
 #' detect and raise pulso_parse_error.
@@ -214,7 +270,6 @@
 #' @param month Integer. Period month for error messages.
 #'
 #' @return data.frame with the CSV contents.
-#' @importFrom utils read.csv unzip
 #' @noRd
 .parse_module_csv <- function(zip_path, module_spec, module_name, year, month) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
@@ -232,19 +287,39 @@
 
   if (!is.null(module_spec$cabecera) && !is.null(module_spec$resto)) {
     files <- .find_shape_a_files(zip_contents, module_name)
-    if (is.null(files$cabecera) || is.null(files$resto)) {
-      keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
-      if (is.null(keywords)) keywords <- module_name
-      abort_parse_error(sprintf(
-        "Shape A files for module '%s' (%d-%02d) not found in zip. Tried keywords: %s",
-        module_name, year, month, paste(keywords, collapse = ", ")
-      ))
+
+    if (!is.null(files$cabecera) && !is.null(files$resto)) {
+      # Shape A: Cabecera + Resto pair found
+      df_c <- .read_single_csv_from_zip(zip_path, files$cabecera)
+      if (!any(toupper(names(df_c)) == "CLASE")) df_c$CLASE <- 1L
+      df_r <- .read_single_csv_from_zip(zip_path, files$resto)
+      if (!any(toupper(names(df_r)) == "CLASE")) df_r$CLASE <- 2L
+      # DANE CSVs sometimes encode the same column as different types across
+      # Cabecera/Resto files (e.g. RAMA4DP8 as integer vs character).
+      # Coerce shared columns to character when types are incompatible so
+      # that dplyr::bind_rows() (vctrs-backed) doesn't abort.
+      for (.col in intersect(names(df_c), names(df_r))) {
+        if (!identical(class(df_c[[.col]]), class(df_r[[.col]]))) {
+          df_c[[.col]] <- as.character(df_c[[.col]])
+          df_r[[.col]] <- as.character(df_r[[.col]])
+        }
+      }
+      return(dplyr::bind_rows(df_c, df_r))
     }
-    df_c <- .read_single_csv_from_zip(zip_path, files$cabecera)
-    df_c$CLASE <- 1L
-    df_r <- .read_single_csv_from_zip(zip_path, files$resto)
-    df_r$CLASE <- 2L
-    return(rbind(df_c, df_r))
+
+    # Shape C fallback: module_spec signals Shape A but zip has no
+    # Cabecera/Resto files (COVID periods 2020-06, 2020-12).
+    shape_c_file <- .find_shape_c_file(zip_contents, module_name)
+    if (!is.null(shape_c_file)) {
+      return(.parse_shape_c(zip_path, shape_c_file))
+    }
+
+    keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
+    if (is.null(keywords)) keywords <- module_name
+    abort_parse_error(sprintf(
+      "Shape A/C files for module '%s' (%d-%02d) not found in zip. Tried keywords: %s",
+      module_name, year, month, paste(keywords, collapse = ", ")
+    ))
   }
 
   abort_parse_error(sprintf(

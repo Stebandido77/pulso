@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Getting started with pulso</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting started with pulso</h1>
+
+
+
+<div id="loading-geih-microdata-with-pulso" class="section level1">
+<h1>Loading GEIH microdata with pulso</h1>
+<p><code>pulso</code> provides programmatic access to Colombia’s Gran
+Encuesta Integrada de Hogares (GEIH), the household labor force survey
+published monthly by DANE (Departamento Administrativo Nacional de
+Estadistica).</p>
+<div id="quick-start" class="section level2">
+<h2>Quick start</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(pulso)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># 2024-06 is a validated period -- loads without any warning</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">pulso_load</span>(<span class="at">year =</span> <span class="dv">2024</span>, <span class="at">month =</span> <span class="dv">6</span>, <span class="at">module =</span> <span class="st">&quot;ocupados&quot;</span>)</span></code></pre></div>
+<p>The result is a tibble with the survey microdata. By default, all
+columns are returned with their original DANE codes (e.g., P6020,
+P3271).</p>
+</div>
+<div id="validated-periods-and-the-allow_unvalidated-parameter" class="section level2">
+<h2>Validated periods and the allow_unvalidated parameter</h2>
+<p>pulso maintains a registry of periods that have been manually
+verified against DANE published figures. As of v0.1.0-rc2, <strong>5
+periods are validated</strong>:</p>
+<ul>
+<li>2007-12</li>
+<li>2015-06</li>
+<li>2021-12</li>
+<li>2022-01</li>
+<li>2024-06</li>
+</ul>
+<p>For all other periods, <code>pulso_load()</code> raises a
+<code>pulso_data_not_validated</code> error by default:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Raises pulso_data_not_validated -- 2024-09 is not yet validated</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">pulso_load</span>(<span class="at">year =</span> <span class="dv">2024</span>, <span class="at">month =</span> <span class="dv">9</span>, <span class="at">module =</span> <span class="st">&quot;ocupados&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Explicitly allow unvalidated periods -- emits a visible warning</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">pulso_load</span>(<span class="at">year =</span> <span class="dv">2024</span>, <span class="at">month =</span> <span class="dv">9</span>, <span class="at">module =</span> <span class="st">&quot;ocupados&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>                 <span class="at">allow_unvalidated =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>To check the validation status of a specific period:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">pulso_validation_status</span>(<span class="dv">2024</span>, <span class="dv">6</span>)</span></code></pre></div>
+<p>Or list all validated periods:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">pulso_list_validated_range</span>()</span></code></pre></div>
+</div>
+<div id="accessing-variable-metadata" class="section level2">
+<h2>Accessing variable metadata</h2>
+<p>Pass <code>metadata = TRUE</code> to get DANE codebook information
+attached to the result:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">pulso_load</span>(<span class="at">year =</span> <span class="dv">2024</span>, <span class="at">month =</span> <span class="dv">6</span>, <span class="at">module =</span> <span class="st">&quot;ocupados&quot;</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                 <span class="at">metadata =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>You can describe individual columns:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">pulso_describe_column</span>(df, <span class="st">&quot;p6020&quot;</span>))</span></code></pre></div>
+<p>Or list metadata for all columns:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>metadata_summary <span class="ot">&lt;-</span> <span class="fu">pulso_list_columns_metadata</span>(df)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">print</span>(metadata_summary)</span></code></pre></div>
+</div>
+<div id="exploring-the-variable-catalog" class="section level2">
+<h2>Exploring the variable catalog</h2>
+<p>pulso ships a canonical variable catalog
+(<code>variable_map.json</code>) that maps harmonized variable names to
+their epoch-specific DANE source codes. These catalog functions work
+offline – no data download needed.</p>
+<p>List all canonical variables (first 10 rows):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(pulso)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">pulso_list_variables</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">head</span>(vars[, <span class="fu">c</span>(<span class="st">&quot;canonical_name&quot;</span>, <span class="st">&quot;module&quot;</span>, <span class="st">&quot;has_warning&quot;</span>)], <span class="dv">10</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 3</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    canonical_name      module                    has_warning</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;               &lt;chr&gt;                     &lt;lgl&gt;      </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;  1 alfabetiza          caracteristicas_generales FALSE      </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;  2 anios_educ          caracteristicas_generales TRUE       </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;  3 area                caracteristicas_generales TRUE       </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;  4 asiste_educ         caracteristicas_generales FALSE      </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  5 busco_trabajo       desocupados               TRUE       </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  6 condicion_actividad caracteristicas_generales TRUE       </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  7 cotiza_pension      ocupados                  FALSE      </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;  8 departamento        caracteristicas_generales FALSE      </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt;  9 disponible          desocupados               TRUE       </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; 10 edad                caracteristicas_generales FALSE</span></span></code></pre></div>
+<p>Describe a single canonical variable and its epoch mappings:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">pulso_describe_variable</span>(<span class="st">&quot;sexo&quot;</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; Variable: sexo</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; Module: caracteristicas_generales</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; Description: Sexo de la persona.</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; Epochs:</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;   geih_2006_2020: P6020</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;   geih_2021_present: P3271</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; </span><span class="al">WARNING</span><span class="co">: El código de variable cambió de P6020 (marco 2005) a P3271 (marco 2018). La Phase 1 Curator reportó P6016 como sexo en GEIH-2, pero los datos del June 2024 muestran P6016 con 17+ valores. P3271 (binario 1/2, cubre 70.020 personas) es el candidato confirmado; requiere verificación humana contra el cuestionario DANE.</span></span></code></pre></div>
+<p>Describe a survey module (reads <code>sources.json</code> bundled in
+the package):</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">pulso_describe</span>(<span class="st">&quot;ocupados&quot;</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; Module: ocupados</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; Level: persona</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Description: Información laboral de las personas ocupadas en la semana de referencia.</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; Available in epochs: geih_2006_2020, geih_2021_present</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; Harmonized variables (11): cotiza_pension, hogar_id, horas_trabajadas_sem, ingreso_laboral, ocupacion ... and 6 more</span></span></code></pre></div>
+</div>
+<div id="what-is-geih" class="section level2">
+<h2>What is GEIH?</h2>
+<p>GEIH is Colombia’s primary labor market survey, conducted monthly
+since 2007. It collects data on:</p>
+<ul>
+<li>Labor force participation (employed, unemployed, inactive)</li>
+<li>Wages and informal employment</li>
+<li>Demographic characteristics (age, sex, education)</li>
+<li>Household composition</li>
+</ul>
+<p>Microdata is freely published by DANE in monthly zip files.
+<code>pulso</code> automates the download, parsing, and harmonization
+across the four GEIH design epochs (2007-2018, 2019-2023, 2024-present,
+plus the historical ECH 2000-2006).</p>
+</div>
+<div id="comparison-with-the-python-package" class="section level2">
+<h2>Comparison with the Python package</h2>
+<p><code>pulso</code> (R) mirrors the API of <code>pulso-co</code>
+(Python). For example:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Python</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="im">import</span> pulso</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>df <span class="op">=</span> pulso.load(year<span class="op">=</span><span class="dv">2024</span>, month<span class="op">=</span><span class="dv">6</span>, module<span class="op">=</span><span class="st">&quot;ocupados&quot;</span>, metadata<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="bu">print</span>(pulso.describe_column(df, <span class="st">&quot;P6020&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># R</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">library</span>(pulso)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">pulso_load</span>(<span class="at">year =</span> <span class="dv">2024</span>, <span class="at">month =</span> <span class="dv">6</span>, <span class="at">module =</span> <span class="st">&quot;ocupados&quot;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                 <span class="at">metadata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">pulso_describe_column</span>(df, <span class="st">&quot;p6020&quot;</span>))</span></code></pre></div>
+<p>Both packages share the same canonical data files (sources.json,
+variable_map.json, dane_codebook.json) via the monorepo at <a href="https://github.com/Stebandido77/pulso" class="uri">https://github.com/Stebandido77/pulso</a>.</p>
+</div>
+<div id="caching" class="section level2">
+<h2>Caching</h2>
+<p>Downloaded microdata is cached at
+<code>tools::R_user_dir(&quot;pulso&quot;, &quot;cache&quot;)</code> to avoid
+re-downloading. Pass <code>cache = FALSE</code> to force
+re-download.</p>
+</div>
+<div id="breaking-changes-in-0.1.0-rc2" class="section level2">
+<h2>Breaking changes in 0.1.0-rc2</h2>
+<p>If you used <code>pulso_load()</code> in earlier development
+versions, note that <strong>the default behavior has changed for
+unvalidated periods</strong>:</p>
+<ul>
+<li><strong>Before:</strong> Loaded silently even if data was not
+validated</li>
+<li><strong>After:</strong> Raises <code>pulso_data_not_validated</code>
+unless <code>allow_unvalidated = TRUE</code> is specified</li>
+</ul>
+<p>This change aligns the R package with <code>pulso-co</code> (Python)
+and protects users from inadvertently using unvalidated data.</p>
+</div>
+<div id="coverage-and-limitations" class="section level2">
+<h2>Coverage and limitations</h2>
+<p><code>pulso</code> v0.1.0-rc2 supports the following:</p>
+<ul>
+<li>Single year/month/module loads via <code>pulso_load()</code></li>
+<li>Multi-module persona-level merges via
+<code>pulso_load_merged()</code></li>
+<li>Column metadata via <code>pulso_describe_column()</code> and
+<code>pulso_list_columns_metadata()</code></li>
+<li>Module discovery via <code>pulso_describe()</code></li>
+<li>Canonical variable catalog via
+<code>pulso_describe_variable()</code> and
+<code>pulso_list_variables()</code></li>
+<li>Validation status queries via <code>pulso_validation_status()</code>
+and <code>pulso_list_validated_range()</code></li>
+<li>Coverage: 2007-01 to present (sources.json)</li>
+</ul>
+<p>Known limitations:</p>
+<ul>
+<li>Only 5 of 230 periods are validated. Use
+<code>allow_unvalidated = TRUE</code> for the rest, with awareness that
+results may differ from DANE official tables.</li>
+<li>Curator entries in <code>variable_map.json</code> are theoretical
+mappings pending empirical verification. Use <code>has_warning</code>
+from <code>pulso_list_variables()</code> to identify these entries.</li>
+<li>Nested-zip periods (2024-03, 2024-04) are deferred to v0.2.0.</li>
+<li>Mixed-level merges (persona + hogar) in
+<code>pulso_load_merged()</code> are deferred to v0.2.0.</li>
+<li>ECH epoch (2000-2006) not yet supported. Planned for v0.2.0.</li>
+</ul>
+<p>See the GitHub issues for roadmap and known limitations.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

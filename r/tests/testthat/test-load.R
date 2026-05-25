@@ -80,7 +80,8 @@ test_that("pulso_load defers nested-zip layout (2024-03) with parse_error", {
   skip_if_offline()
 
   expect_error(
-    pulso_load(year = 2024, month = 3, module = "ocupados"),
+    pulso_load(year = 2024, month = 3, module = "ocupados",
+               allow_unvalidated = TRUE),
     class = "pulso_parse_error",
     regexp = "nested-zip"
   )
@@ -143,5 +144,77 @@ test_that("pulso_load warns about not-yet-implemented args", {
   expect_warning(
     pulso_load(year = 2024, month = 6, module = "ocupados", area = "urbano"),
     regexp = "area"
+  )
+})
+
+test_that("BUG-003: Module with tilde in filename loads on all platforms", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2024, 6, "caracteristicas_generales")
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 0)
+  expect_gt(ncol(df), 5)
+})
+
+test_that("BUG-004: Epoch1 with column variance loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2018, 6, "ocupados", allow_unvalidated = TRUE)
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 1000)
+})
+
+test_that("BUG-005: 2022-01 with non-semicolon separator loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2022, 1, "ocupados")
+  expect_gt(ncol(df), 1)
+})
+
+test_that("BUG-017: 2013-06 filenames with numeric suffix load", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2013, 6, "ocupados", allow_unvalidated = TRUE)
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 0)
+})
+
+test_that("BUG-018: 2020 COVID Shape C variant loads", {
+  skip_on_cran()
+  skip_if_offline()
+  df <- pulso_load(2020, 6, "ocupados", allow_unvalidated = TRUE)
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 1000)
+  df2 <- pulso_load(2020, 12, "ocupados", allow_unvalidated = TRUE)
+  expect_gt(nrow(df2), 1000)
+})
+
+test_that("BUG-006: unvalidated period raises pulso_data_not_validated by default", {
+  # 2024-09 is confirmed validated=FALSE in sources.json.
+  # Guard fires before any download so no skip_if_offline() needed.
+  expect_error(
+    pulso_load(year = 2024, month = 9, module = "ocupados"),
+    class = "pulso_data_not_validated"
+  )
+})
+
+test_that("BUG-006: allow_unvalidated=TRUE emits warning and loads data", {
+  skip_on_cran()
+  skip_if_offline()
+  expect_warning(
+    df <- pulso_load(year = 2024, month = 9, module = "ocupados",
+                     allow_unvalidated = TRUE),
+    regexp = "not been validated"
+  )
+  expect_s3_class(df, "data.frame")
+  expect_gt(nrow(df), 0)
+})
+
+test_that("BUG-006: validated period loads without warning", {
+  skip_on_cran()
+  skip_if_offline()
+  # 2024-06 is validated=TRUE; no warning should be emitted.
+  expect_no_warning(
+    pulso_load(year = 2024, month = 6, module = "ocupados")
   )
 })
