@@ -34,6 +34,7 @@ dependencies = [
     "tqdm>=4.66",
     "jsonschema>=4.20",
     "platformdirs>=4.0",
+    "openpyxl>=3.1",
 ]
 
 [project.optional-dependencies]
@@ -78,7 +79,9 @@ packages = ["pulso"]
 # pulso/data/ is gitignored (canonical source is <repo_root>/data/) but the
 # Hatch build hook below copies the JSON data into pulso/data/ at build time.
 # Force-include so Hatch packages those generated files into the wheel.
+# Static fixtures (not generated) live in pulso/ext/ which IS tracked by git.
 artifacts = ["pulso/data/**"]
+include = ["pulso/ext/**"]
 
 [tool.hatch.build.targets.wheel.hooks.custom]
 path = "hatch_build.py"
