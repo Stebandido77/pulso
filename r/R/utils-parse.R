@@ -291,9 +291,9 @@
     if (!is.null(files$cabecera) && !is.null(files$resto)) {
       # Shape A: Cabecera + Resto pair found
       df_c <- .read_single_csv_from_zip(zip_path, files$cabecera)
-      df_c$CLASE <- 1L
+      if (!any(toupper(names(df_c)) == "CLASE")) df_c$CLASE <- 1L
       df_r <- .read_single_csv_from_zip(zip_path, files$resto)
-      df_r$CLASE <- 2L
+      if (!any(toupper(names(df_r)) == "CLASE")) df_r$CLASE <- 2L
       # DANE CSVs sometimes encode the same column as different types across
       # Cabecera/Resto files (e.g. RAMA4DP8 as integer vs character).
       # Coerce shared columns to character when types are incompatible so
