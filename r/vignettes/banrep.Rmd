@@ -25,6 +25,12 @@ When the live Banrep SDMX API (`totoro.banrep.gov.co`) is available,
 `pulso_tpm()` fetches real-time data. If the API is down, a bundled
 snapshot extending to 2026-04-21 is used automatically.
 
+> **Note:** As of this release the Banrep SDMX backend
+> (`totoro.banrep.gov.co`) is undergoing maintenance and may return
+> server errors. When that happens `pulso_tpm()` transparently falls back
+> to the bundled snapshot, so calls continue to work offline. The fixture
+> ships inside the package and requires no network access.
+
 ```{r, eval=FALSE}
 # Force fixture (no network required)
 tpm_all <- pulso_tpm(use_fixture = TRUE)

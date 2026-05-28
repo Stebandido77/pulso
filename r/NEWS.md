@@ -28,6 +28,10 @@ Module and variable discovery:
 * `pulso_describe_variable()` -- describe a canonical variable and its epoch mappings
 * `pulso_list_variables()` -- list canonical variables, optionally filtered by module
 
+Banco de la República data:
+
+* `pulso_tpm()` -- download the monetary policy rate (TPM) set by Banco de la República, with automatic fallback to a bundled snapshot when the live SDMX API is unavailable
+
 ### Bug fixes (pre-CRAN)
 
 * **BUG-003/010:** Fixed Unicode filename handling. Modules with tildes
@@ -65,3 +69,4 @@ Module and variable discovery:
 * ECH epoch (2000-2006) not yet supported. Planned for v0.2.0.
 * Mixed-level merges (persona + hogar in same `pulso_load_merged()` call)
   deferred to v0.2.0.
+* Banco de la República integration currently covers the policy rate (`pulso_tpm()`) only. The Indicador Bancario de Referencia (IBR) and a generic SDMX accessor are deferred to v0.2.0.
