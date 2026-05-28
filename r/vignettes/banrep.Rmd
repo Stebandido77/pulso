@@ -1,0 +1,37 @@
+---
+title: "Banco de la Republica data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Banco de la Republica data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Tasa Politica Monetaria (TPM)
+
+The `pulso_tpm()` function returns Colombia's monetary policy rate set by
+the Junta Directiva del Banco de la Republica.
+
+```{r, eval=FALSE}
+library(pulso)
+tpm_2024 <- pulso_tpm(start = "2024-01-01", end = "2024-12-31")
+head(tpm_2024)
+```
+
+Data is returned as a tibble with three columns: `fecha` (Date), `valor`
+(numeric, percentage points), and `serie` (always `"tpm"`).
+
+When the live Banrep SDMX API (`totoro.banrep.gov.co`) is available,
+`pulso_tpm()` fetches real-time data. If the API is down, a bundled
+snapshot extending to 2026-04-21 is used automatically.
+
+```{r, eval=FALSE}
+# Force fixture (no network required)
+tpm_all <- pulso_tpm(use_fixture = TRUE)
+range(tpm_all$fecha)
+```
+
+## Coming in v0.2.0
+
+- `pulso_ibr()` for the Indicador Bancario de Referencia (IBR)
+- `pulso_banrep()` for generic Banrep SDMX series

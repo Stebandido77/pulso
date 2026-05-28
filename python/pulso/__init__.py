@@ -19,6 +19,7 @@ Public API:
     pulso.cache_clear(level="all") -> None
     pulso.cache_path() -> Path
     pulso.data_version() -> str
+    pulso.tpm(start=None, end=None, use_fixture=None) -> pd.DataFrame
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ from pulso._config.registry import (
     list_variables,
     validation_status,
 )
+from pulso._core.banrep_tpm import tpm
 from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
@@ -85,5 +87,6 @@ __all__ = [
     "load",
     "load_empalme",
     "load_merged",
+    "tpm",
     "validation_status",
 ]
