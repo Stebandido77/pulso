@@ -10,7 +10,7 @@
 #' @return A multi-line character string.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' df <- pulso_load(2024, 6, "ocupados", metadata = TRUE)
 #' cat(pulso_describe_column(df, "P6020"))
 #' }

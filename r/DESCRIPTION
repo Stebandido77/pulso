@@ -1,13 +1,13 @@
 Package: pulso
-Title: Load Microdata from Colombia's GEIH (DANE)
+Title: Load Microdata from Colombia's 'GEIH' ('DANE')
 Version: 0.1.0
 Authors@R:
     person("Esteban", "Labastidas", , "estebanlabastidas123@gmail.com",
            role = c("aut", "cre"))
 Description: Programmatic access to microdata from Colombia's Gran
-    Encuesta Integrada de Hogares (GEIH), published by DANE. Provides
+    Encuesta Integrada de Hogares ('GEIH'), published by 'DANE'. Provides
     a tidy interface to download, parse, and harmonize labor market
-    surveys from 2007 to present. R companion to the pulso-co Python
+    surveys from 2007 to present. R companion to the 'pulso-co' 'Python'
     package.
 License: MIT + file LICENSE
 URL: https://github.com/Stebandido77/pulso

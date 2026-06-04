@@ -8,7 +8,7 @@
 #'   has_categories.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' df <- pulso_load(2024, 6, "ocupados", metadata = TRUE)
 #' summary <- pulso_list_columns_metadata(df)
 #' print(summary)

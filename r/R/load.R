@@ -21,7 +21,7 @@
 #'   has an attribute "pulso_metadata" with structured column info.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' df <- pulso_load(year = 2024, month = 6, module = "ocupados",
 #'                  metadata = TRUE)
 #' cat(pulso_describe_column(df, "P6020"))

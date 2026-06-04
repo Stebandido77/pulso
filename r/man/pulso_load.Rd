@@ -46,7 +46,7 @@ Downloads and parses microdata from Colombia's Gran Encuesta Integrada
 de Hogares (GEIH), published by DANE.
 }
 \examples{
-\dontrun{
+\donttest{
 df <- pulso_load(year = 2024, month = 6, module = "ocupados",
                  metadata = TRUE)
 cat(pulso_describe_column(df, "P6020"))

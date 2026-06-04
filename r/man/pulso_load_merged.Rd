@@ -52,7 +52,7 @@ deferred to v0.2.0. If you need a hogar-level module, merge the result
 manually after separate calls.
 }
 \examples{
-\dontrun{
+\donttest{
 df <- pulso_load_merged(2024, 6, c("ocupados", "caracteristicas_generales"))
 nrow(df)
 }

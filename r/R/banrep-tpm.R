@@ -19,7 +19,7 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Recent TPM
 #' tpm_2024 <- pulso_tpm(start = "2024-01-01", end = "2024-12-31")
 #' # Full history (uses fixture if API down)

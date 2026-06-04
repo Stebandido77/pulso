@@ -29,7 +29,7 @@ Banco de la Republica SDMX API (DF_CBR_DAILY_HIST). When the API is
 unavailable, falls back to a bundled snapshot extending to 2026-04-21.
 }
 \examples{
-\dontrun{
+\donttest{
 # Recent TPM
 tpm_2024 <- pulso_tpm(start = "2024-01-01", end = "2024-12-31")
 # Full history (uses fixture if API down)

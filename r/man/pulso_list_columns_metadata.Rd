@@ -17,7 +17,7 @@ has_categories.
 Returns a tibble summary of all columns with their metadata.
 }
 \examples{
-\dontrun{
+\donttest{
 df <- pulso_load(2024, 6, "ocupados", metadata = TRUE)
 summary <- pulso_list_columns_metadata(df)
 print(summary)
