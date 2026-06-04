@@ -4,24 +4,51 @@
 \name{pulso-package}
 \alias{pulso}
 \alias{pulso-package}
-\title{pulso: Load Microdata from Colombia's GEIH (DANE)}
+\title{pulso: Load Microdata from Colombia's 'GEIH' ('DANE')}
 \description{
-R companion to the pulso-co Python package. Provides programmatic
+R companion to the 'pulso-co' 'Python' package. Provides programmatic
 access to microdata from Colombia's Gran Encuesta Integrada de Hogares
-(GEIH), published by DANE.
+('GEIH'), published by 'DANE', and to Banco de la Republica monetary
+policy data.
 }
-\section{Main functions}{
+\section{Loading microdata}{
 
 \itemize{
-\item \code{\link[=pulso_load]{pulso_load()}} - Load microdata for a single year/month/module
-\item (More to come in v0.1.0+)
+\item \code{\link[=pulso_load]{pulso_load()}} - Load a single GEIH module for a year/month
+\item \code{\link[=pulso_load_merged]{pulso_load_merged()}} - Load and merge multiple persona-level modules
+}
+}
+
+\section{Describing columns and variables}{
+
+\itemize{
+\item \code{\link[=pulso_describe]{pulso_describe()}} - Describe a survey module
+\item \code{\link[=pulso_describe_column]{pulso_describe_column()}} - Describe a single loaded column
+\item \code{\link[=pulso_describe_variable]{pulso_describe_variable()}} - Describe a canonical variable and its epoch mappings
+\item \code{\link[=pulso_list_columns_metadata]{pulso_list_columns_metadata()}} - List metadata for all columns in a loaded tibble
+\item \code{\link[=pulso_list_variables]{pulso_list_variables()}} - List canonical variables, optionally by module
+}
+}
+
+\section{Catalog and validation}{
+
+\itemize{
+\item \code{\link[=pulso_list_validated_range]{pulso_list_validated_range()}} - List periods with verified downloads
+\item \code{\link[=pulso_validation_status]{pulso_validation_status()}} - Validation info for a specific period
+}
+}
+
+\section{Banco de la Republica}{
+
+\itemize{
+\item \code{\link[=pulso_tpm]{pulso_tpm()}} - Monetary policy rate (TPM), with offline fallback
 }
 }
 
 \section{Comparison with Python}{
 
-This package mirrors the API of the Python \code{pulso-co} package. See
-the vignette for details.
+This package mirrors the API of the 'pulso-co' 'Python' package. See
+the package vignette for details.
 }
 
 \seealso{
