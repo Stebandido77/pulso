@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-06-07  (Python pulso-co)
+
+### Added
+- `pulso.tpm()` — Banco de la República monetary policy rate (TPM), with bundled fixture fallback when the SDMX API is unavailable. Brings parity with the R package's `pulso_tpm()`.
+
+### Notes
+- This is a Python-only release. The R package (`pulso`) is at v0.1.0, awaiting CRAN review.
+- Wheel includes the bundled fixture `tpm_jdbr_manual_20260422.xlsx` (5,958 rows, 2010–2026) under `pulso/ext/`.
+
 ## [1.0.0] — 2026-05-03
 
 ### Added
