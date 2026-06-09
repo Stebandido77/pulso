@@ -16,6 +16,7 @@ on:
       - "data/**"
       - "scripts/sync_data.py"
       - ".github/workflows/python-ci.yml"
+      - "docs/internal/r-port/wheel_reference_inventory.txt"
   pull_request:
     branches: [main]
     paths:
@@ -23,6 +24,7 @@ on:
       - "data/**"
       - "scripts/sync_data.py"
       - ".github/workflows/python-ci.yml"
+      - "docs/internal/r-port/wheel_reference_inventory.txt"
 
 concurrency:
   group: python-ci-${{ github.ref }}
