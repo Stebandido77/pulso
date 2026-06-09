@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-06-09  (Python pulso-co)
+
+### Fixed
+- Packaging: `python-publish.yml` now builds wheel-only (`python -m build --wheel`) instead of sdist+wheel. The previous flow built the wheel from an extracted sdist, which did not include the canonical `data/` directory (it lives outside `python/` in the monorepo) and caused the build to fail in CI. Since `pulso-co` is pure Python, the wheel is sufficient for installation.
+
+### Notes
+- Version 1.1.0 was tagged but never published to PyPI (the publish workflow failed on the build step). 1.1.1 is the first public release of the TPM feature.
+
 ## [1.1.0] — 2026-06-07  (Python pulso-co)
 
 ### Added
