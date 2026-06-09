@@ -1,4 +1,4 @@
-      2445  8a8155f4e2f6b506e7e2c532b0bcc4f185766841e65849bab7ecbe3404dac3a8  pulso/__init__.py
+      2445  89d8d8bcd277d7bfc91705c3d96136d66c11b10c453a6fbf426df30f085f16fb  pulso/__init__.py
         83  bdd49275fc3e29e8842cec79d17b10bc67d7bb7ff577b11f834a968812e40424  pulso/_config/__init__.py
       4959  ab0d4b71147f1f0d71a4dfc65108adc5b3c5e300172924f5e92e03e7165b2e72  pulso/_config/epochs.py
      16098  ffa58c3af0a7c3c05038841eea3bc60f51655d3fc5fd53ccf508efcb21322630  pulso/_config/registry.py
@@ -41,8 +41,8 @@
      14637  6a188d0bee1f3a5d852f88eae29c5df4799c4fe87a7fe9b6827328f79b2fd240  pulso/metadata/composer.py
      10097  3252ae7420fb693465711e57926c6ab9539ce9ee7f4e8797ed1f46f8bc2bdd6f  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
-     28185  f79802de09afd727f8941343a91408f73ee2b2c7be8e1c5ecd2c87d8dbed3733  pulso_co-1.1.0.dist-info/METADATA
-      4065  16f340251e78d174a45b23943414d2683e75f37bf907e2c74d7846a8805cacc5  pulso_co-1.1.0.dist-info/RECORD
-        87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.1.0.dist-info/WHEEL
-       128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.1.0.dist-info/entry_points.txt
-      1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.1.0.dist-info/licenses/LICENSE
+     28185  859cf59c69724a42652286633ff037b4fd09d52aedd27d63688dbb5c3f30383d  pulso_co-1.1.1.dist-info/METADATA
+      4065  a81852da90d1f36531c3d2e05820de74c7b1d07e49401dc90d56c5facb3ae234  pulso_co-1.1.1.dist-info/RECORD
+        87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.1.1.dist-info/WHEEL
+       128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.1.1.dist-info/entry_points.txt
+      1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.1.1.dist-info/licenses/LICENSE
