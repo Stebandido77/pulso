@@ -1,3 +1,9 @@
+# pulso 0.1.1
+
+* Fix: corregido nombre de columna en ejemplo de `pulso_describe_column`
+  (`P6020` → `P6430`); ejemplos con descarga de red envueltos en
+  `if (interactive())` para cumplir política CRAN de `\donttest`.
+
 # pulso 0.1.0
 
 ## Initial CRAN release

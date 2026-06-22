@@ -11,8 +11,10 @@
 #'
 #' @examples
 #' \donttest{
-#' df <- pulso_load(2024, 6, "ocupados", metadata = TRUE)
-#' cat(pulso_describe_column(df, "P6020"))
+#' if (interactive()) {
+#'   df <- pulso_load(2024, 6, "ocupados", metadata = TRUE)
+#'   cat(pulso_describe_column(df, "P6430"))
+#' }
 #' }
 #'
 #' @importFrom utils head

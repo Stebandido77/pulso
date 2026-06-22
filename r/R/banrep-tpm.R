@@ -20,10 +20,12 @@
 #' @export
 #' @examples
 #' \donttest{
-#' # Recent TPM
-#' tpm_2024 <- pulso_tpm(start = "2024-01-01", end = "2024-12-31")
-#' # Full history (uses fixture if API down)
-#' tpm_all <- pulso_tpm()
+#' if (interactive()) {
+#'   # Recent TPM
+#'   tpm_2024 <- pulso_tpm(start = "2024-01-01", end = "2024-12-31")
+#'   # Full history (uses fixture if API down)
+#'   tpm_all <- pulso_tpm()
+#' }
 #' }
 pulso_tpm <- function(start = NULL, end = NULL, use_fixture = NULL) {
   if (!is.null(start)) start <- .validate_banrep_date(start, "start")

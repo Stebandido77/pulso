@@ -47,9 +47,11 @@ de Hogares (GEIH), published by DANE.
 }
 \examples{
 \donttest{
-df <- pulso_load(year = 2024, month = 6, module = "ocupados",
-                 metadata = TRUE)
-cat(pulso_describe_column(df, "P6020"))
+if (interactive()) {
+  df <- pulso_load(year = 2024, month = 6, module = "ocupados",
+                   metadata = TRUE)
+  cat(pulso_describe_column(df, "P6430"))
+}
 }
 
 }

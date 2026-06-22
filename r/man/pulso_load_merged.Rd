@@ -53,8 +53,10 @@ manually after separate calls.
 }
 \examples{
 \donttest{
-df <- pulso_load_merged(2024, 6, c("ocupados", "caracteristicas_generales"))
-nrow(df)
+if (interactive()) {
+  df <- pulso_load_merged(2024, 6, c("ocupados", "caracteristicas_generales"))
+  nrow(df)
+}
 }
 
 }

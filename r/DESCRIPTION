@@ -1,6 +1,6 @@
 Package: pulso
 Title: Load Microdata from Colombia's 'GEIH' ('DANE')
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     person("Esteban", "Labastidas", , "estebanlabastidas123@gmail.com",
            role = c("aut", "cre"))
