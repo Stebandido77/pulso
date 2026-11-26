@@ -131,3 +131,27 @@ test_that("pulso_update_catalog rejects a file that is not a catalog", {
   expect_error(pulso_update_catalog(url = paste0("file://", path)),
                class = "pulso_parse_error")
 })
+
+test_that("';' files with point decimals keep weights numeric (#77)", {
+  df <- .parse_module_csv(fixture("dane_point_decimal.zip"),
+                          list(file = "CSV/Ocupados.CSV"), "ocupados", 2026, 9)
+  expect_type(df$FEX_C18, "double")
+  expect_equal(df$FEX_C18, c(43.55418099, 34.68595437))
+  # leading-zero codes stay as they were parsed before (no forced coercion)
+  expect_equal(nrow(df), 2)
+})
+
+test_that("CSV wins over a DTA with the same folded name (#78)", {
+  df <- .parse_module_csv(fixture("dane_point_decimal.zip"),
+                          list(file = "DTA_ignored/Datos del hogar y la vivienda.CSV"),
+                          "vivienda_hogares", 2026, 9)
+  expect_equal(nrow(df), 2)
+  expect_type(df$FEX_C18, "double")
+})
+
+test_that(".sniff_decimal decides from the data", {
+  expect_equal(.sniff_decimal("A;B\n1;43.5\n2;1.25\n", ";"), ".")
+  expect_equal(.sniff_decimal("A;B\n1;43,5\n2;1,25\n", ";"), ",")
+  expect_equal(.sniff_decimal("A;B\n1;2\n", ";"), ",")
+  expect_equal(.sniff_decimal("A,B\n1,2\n", ","), ".")
+})

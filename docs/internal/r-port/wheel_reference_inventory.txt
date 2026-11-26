@@ -12,7 +12,7 @@
       4533  52ec33a3879f4de54f52aa73a6f58d32d59f2c35c67126fa80dece84f06e3d27  pulso/_core/harmonizer_funcs.py
      27975  207ec72c7df35daaa661c345fe3e002f0330c604132ff210053ea3f17caaf96b  pulso/_core/loader.py
       5686  9afa25856f0b381b2b409c1a932a00772681b37f44620deec1ad7521813b819a  pulso/_core/merger.py
-     18242  c8168d585e7f76c11532ad2fcb274d9b04d0ab1db53105bda7c16ec1d041f01e  pulso/_core/parser.py
+     19667  7f55c204c4a84f325ca08375c4df994b2b99bd7b74fb764692a33c10feda2965  pulso/_core/parser.py
         58  ae24694bf1b63ebd80885b1c41e8f422c6497f243b04fc3469347f4f7a43b534  pulso/_scripts/__init__.py
       4873  ecc15bdfec6cc461fcae64601f900dc7666c52df6b41ac82b1fa3539ed710b8e  pulso/_scripts/add_month.py
       2303  76a276f29217669b1667892fb2362d004b0c5a488e48045437c305f1a1b688d5  pulso/_scripts/validate_sources.py
@@ -42,7 +42,7 @@
      10097  3252ae7420fb693465711e57926c6ab9539ce9ee7f4e8797ed1f46f8bc2bdd6f  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
      28275  694b226f404ead4222ce854bb8670395eb9608bd2af81b01fdd42f411d30fc23  pulso_co-1.2.0.dist-info/METADATA
-      4065  fc80a28b871a39a808618379242ee2889464e19753e6a26792f7dfe1472b5daf  pulso_co-1.2.0.dist-info/RECORD
+      4065  f926a18bd247b81927695b90d8356436db740270fdcc523e78127e0222506aea  pulso_co-1.2.0.dist-info/RECORD
         87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.2.0.dist-info/WHEEL
        128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.2.0.dist-info/entry_points.txt
       1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.2.0.dist-info/licenses/LICENSE
