@@ -24,7 +24,7 @@ from apply_validation import (  # noqa: E402
 )
 
 DATA = Path(__file__).resolve().parents[3] / "data"
-NOW = dt.datetime(2026, 11, 26, 12, 0, 0, tzinfo=dt.UTC)
+NOW = dt.datetime(2026, 11, 26, 12, 0, 0, tzinfo=dt.timezone.utc)
 
 
 def _sources() -> dict:

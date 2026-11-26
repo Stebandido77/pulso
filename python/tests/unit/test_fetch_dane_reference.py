@@ -136,7 +136,10 @@ def test_build_reference_keeps_each_annex_inside_its_epoch() -> None:
     ]
     ranges = {"geih_2006_2020": ("2006-01", "2021-12"), "geih_2021_present": ("2022-01", None)}
     rows = build_reference(
-        specs, ranges, fetch=files.__getitem__, now=dt.datetime(2026, 11, 26, tzinfo=dt.UTC)
+        specs,
+        ranges,
+        fetch=files.__getitem__,
+        now=dt.datetime(2026, 11, 26, tzinfo=dt.timezone.utc),
     )
     by = {r["period"]: r for r in rows}
     assert len(rows) == 24

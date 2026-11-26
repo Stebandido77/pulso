@@ -196,7 +196,7 @@ def build_reference(
     now: dt.datetime | None = None,
 ) -> list[dict[str, Any]]:
     """Fetch every annex and keep, for each one, only its own epoch's months."""
-    retrieved = (now or dt.datetime.now(dt.UTC)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    retrieved = (now or dt.datetime.now(dt.timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
     rows: dict[str, dict[str, Any]] = {}
     for spec in specs:
         lo, hi = ranges[spec.epoch]

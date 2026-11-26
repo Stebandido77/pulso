@@ -56,7 +56,7 @@ def apply_results(
     now: dt.datetime | None = None,
 ) -> dict[str, list[str]]:
     """Mutate ``sources`` in place. Returns the report buckets."""
-    stamp = (now or dt.datetime.now(dt.UTC)).replace(microsecond=0).isoformat()
+    stamp = (now or dt.datetime.now(dt.timezone.utc)).replace(microsecond=0).isoformat()
     report: dict[str, list[str]] = {
         "validated_now": [],
         "already_validated_ok": [],
