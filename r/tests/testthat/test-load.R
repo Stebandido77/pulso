@@ -198,7 +198,9 @@ test_that("BUG-006: unvalidated periods load by default with a warning", {
   skip_on_cran()
   skip_if_offline()
   expect_warning(
-    df <- pulso_load(year = 2024, month = 3, module = "ocupados"),
+    # 2026-09 stays unvalidated (DSI 0/1, #76) and no other test loads it, so
+    # the once-per-session warning has not fired yet.
+    df <- pulso_load(year = 2026, month = 9, module = "ocupados"),
     regexp = "not been validated"
   )
   expect_s3_class(df, "data.frame")
