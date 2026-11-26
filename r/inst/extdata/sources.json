@@ -89,9 +89,9 @@
       "checksum_sha256": null,
       "size_bytes": 6857687,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -118,7 +118,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2007-02": {
       "epoch": "geih_2006_2020",
@@ -127,9 +127,9 @@
       "checksum_sha256": null,
       "size_bytes": 7570718,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -156,7 +156,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2007-03": {
       "epoch": "geih_2006_2020",
@@ -165,9 +165,9 @@
       "checksum_sha256": null,
       "size_bytes": 7654604,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -194,7 +194,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2007-04": {
       "epoch": "geih_2006_2020",
@@ -203,9 +203,9 @@
       "checksum_sha256": null,
       "size_bytes": 7717519,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -232,7 +232,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2007-05": {
       "epoch": "geih_2006_2020",
@@ -241,9 +241,9 @@
       "checksum_sha256": null,
       "size_bytes": 7560232,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -270,7 +270,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2007-06": {
       "epoch": "geih_2006_2020",
@@ -279,9 +279,9 @@
       "checksum_sha256": null,
       "size_bytes": 7465861,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -308,7 +308,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2007-07": {
       "epoch": "geih_2006_2020",
@@ -317,9 +317,9 @@
       "checksum_sha256": null,
       "size_bytes": 7518289,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -346,7 +346,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2007-08": {
       "epoch": "geih_2006_2020",
@@ -355,9 +355,9 @@
       "checksum_sha256": null,
       "size_bytes": 7623147,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -384,7 +384,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2007-09": {
       "epoch": "geih_2006_2020",
@@ -393,9 +393,9 @@
       "checksum_sha256": null,
       "size_bytes": 7497318,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -422,7 +422,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2007-10": {
       "epoch": "geih_2006_2020",
@@ -431,9 +431,9 @@
       "checksum_sha256": null,
       "size_bytes": 7413432,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -460,7 +460,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2007-11": {
       "epoch": "geih_2006_2020",
@@ -469,9 +469,9 @@
       "checksum_sha256": null,
       "size_bytes": 7014973,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -498,7 +498,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2007-12": {
       "epoch": "geih_2006_2020",
@@ -1001,9 +1001,9 @@
       "checksum_sha256": null,
       "size_bytes": 6207569,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1030,7 +1030,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2009-02": {
       "epoch": "geih_2006_2020",
@@ -1039,9 +1039,9 @@
       "checksum_sha256": null,
       "size_bytes": 6469713,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1068,7 +1068,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2009-03": {
       "epoch": "geih_2006_2020",
@@ -1077,9 +1077,9 @@
       "checksum_sha256": null,
       "size_bytes": 6427770,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1106,7 +1106,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2009-04": {
       "epoch": "geih_2006_2020",
@@ -1115,9 +1115,9 @@
       "checksum_sha256": null,
       "size_bytes": 6616514,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1144,7 +1144,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2009-05": {
       "epoch": "geih_2006_2020",
@@ -1153,9 +1153,9 @@
       "checksum_sha256": null,
       "size_bytes": 6553600,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1182,7 +1182,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2009-06": {
       "epoch": "geih_2006_2020",
@@ -1191,9 +1191,9 @@
       "checksum_sha256": null,
       "size_bytes": 6448742,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1220,7 +1220,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2009-07": {
       "epoch": "geih_2006_2020",
@@ -1229,9 +1229,9 @@
       "checksum_sha256": null,
       "size_bytes": 6763315,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1258,7 +1258,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2009-08": {
       "epoch": "geih_2006_2020",
@@ -1267,9 +1267,9 @@
       "checksum_sha256": null,
       "size_bytes": 6784286,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1296,7 +1296,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2009-09": {
       "epoch": "geih_2006_2020",
@@ -1305,9 +1305,9 @@
       "checksum_sha256": null,
       "size_bytes": 6763315,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1334,7 +1334,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2009-10": {
       "epoch": "geih_2006_2020",
@@ -1343,9 +1343,9 @@
       "checksum_sha256": null,
       "size_bytes": 6742343,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1372,7 +1372,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2009-11": {
       "epoch": "geih_2006_2020",
@@ -1381,9 +1381,9 @@
       "checksum_sha256": null,
       "size_bytes": 6700400,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1410,7 +1410,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2009-12": {
       "epoch": "geih_2006_2020",
@@ -1419,9 +1419,9 @@
       "checksum_sha256": null,
       "size_bytes": 6448742,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1448,7 +1448,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2010-01": {
       "epoch": "geih_2006_2020",
@@ -1457,9 +1457,9 @@
       "checksum_sha256": null,
       "size_bytes": 6721372,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1486,7 +1486,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2010-02": {
       "epoch": "geih_2006_2020",
@@ -1495,9 +1495,9 @@
       "checksum_sha256": null,
       "size_bytes": 6920601,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1524,7 +1524,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2010-03": {
       "epoch": "geih_2006_2020",
@@ -1533,9 +1533,9 @@
       "checksum_sha256": null,
       "size_bytes": 6763315,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1562,7 +1562,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2010-04": {
       "epoch": "geih_2006_2020",
@@ -1571,9 +1571,9 @@
       "checksum_sha256": null,
       "size_bytes": 7161774,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1600,7 +1600,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2010-05": {
       "epoch": "geih_2006_2020",
@@ -1609,9 +1609,9 @@
       "checksum_sha256": null,
       "size_bytes": 6962544,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1638,7 +1638,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP -0.000"
     },
     "2010-06": {
       "epoch": "geih_2006_2020",
@@ -1647,9 +1647,9 @@
       "checksum_sha256": null,
       "size_bytes": 6857687,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1676,7 +1676,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2010-07": {
       "epoch": "geih_2006_2020",
@@ -1685,9 +1685,9 @@
       "checksum_sha256": null,
       "size_bytes": 6994001,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1714,7 +1714,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2010-08": {
       "epoch": "geih_2006_2020",
@@ -1723,9 +1723,9 @@
       "checksum_sha256": null,
       "size_bytes": 7172259,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1752,7 +1752,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2010-09": {
       "epoch": "geih_2006_2020",
@@ -1761,9 +1761,9 @@
       "checksum_sha256": null,
       "size_bytes": 7140802,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1790,7 +1790,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2010-10": {
       "epoch": "geih_2006_2020",
@@ -1799,9 +1799,9 @@
       "checksum_sha256": null,
       "size_bytes": 7098859,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1828,7 +1828,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2010-11": {
       "epoch": "geih_2006_2020",
@@ -1837,9 +1837,9 @@
       "checksum_sha256": null,
       "size_bytes": 7109345,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1866,7 +1866,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2010-12": {
       "epoch": "geih_2006_2020",
@@ -1875,9 +1875,9 @@
       "checksum_sha256": null,
       "size_bytes": 6805258,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1904,7 +1904,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2011-01": {
       "epoch": "geih_2006_2020",
@@ -2369,9 +2369,9 @@
       "checksum_sha256": null,
       "size_bytes": 6847201,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2398,7 +2398,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2012-02": {
       "epoch": "geih_2006_2020",
@@ -2407,9 +2407,9 @@
       "checksum_sha256": null,
       "size_bytes": 7193231,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2436,7 +2436,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2012-03": {
       "epoch": "geih_2006_2020",
@@ -2445,9 +2445,9 @@
       "checksum_sha256": null,
       "size_bytes": 7130316,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2474,7 +2474,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2012-04": {
       "epoch": "geih_2006_2020",
@@ -2483,9 +2483,9 @@
       "checksum_sha256": null,
       "size_bytes": 7214202,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2512,7 +2512,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2012-05": {
       "epoch": "geih_2006_2020",
@@ -2521,9 +2521,9 @@
       "checksum_sha256": null,
       "size_bytes": 7476346,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2550,7 +2550,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2012-06": {
       "epoch": "geih_2006_2020",
@@ -2559,9 +2559,9 @@
       "checksum_sha256": null,
       "size_bytes": 7109345,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2588,7 +2588,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2012-07": {
       "epoch": "geih_2006_2020",
@@ -2597,9 +2597,9 @@
       "checksum_sha256": null,
       "size_bytes": 7067402,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2626,7 +2626,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2012-08": {
       "epoch": "geih_2006_2020",
@@ -2635,9 +2635,9 @@
       "checksum_sha256": null,
       "size_bytes": 7203717,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2664,7 +2664,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2012-09": {
       "epoch": "geih_2006_2020",
@@ -2673,9 +2673,9 @@
       "checksum_sha256": null,
       "size_bytes": 7109345,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2702,7 +2702,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2012-10": {
       "epoch": "geih_2006_2020",
@@ -2711,9 +2711,9 @@
       "checksum_sha256": null,
       "size_bytes": 7172259,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2740,7 +2740,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2012-11": {
       "epoch": "geih_2006_2020",
@@ -2749,9 +2749,9 @@
       "checksum_sha256": null,
       "size_bytes": 7235174,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2778,7 +2778,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2012-12": {
       "epoch": "geih_2006_2020",
@@ -2787,9 +2787,9 @@
       "checksum_sha256": null,
       "size_bytes": 6637486,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2816,7 +2816,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2013-01": {
       "epoch": "geih_2006_2020",
@@ -2825,9 +2825,9 @@
       "checksum_sha256": null,
       "size_bytes": 7004487,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2854,7 +2854,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2013-02": {
       "epoch": "geih_2006_2020",
@@ -2863,9 +2863,9 @@
       "checksum_sha256": null,
       "size_bytes": 7004487,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2892,7 +2892,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2013-03": {
       "epoch": "geih_2006_2020",
@@ -2901,9 +2901,9 @@
       "checksum_sha256": null,
       "size_bytes": 6889144,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2930,7 +2930,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2013-04": {
       "epoch": "geih_2006_2020",
@@ -3053,9 +3053,9 @@
       "checksum_sha256": null,
       "size_bytes": 6836715,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3082,7 +3082,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2013-08": {
       "epoch": "geih_2006_2020",
@@ -3091,9 +3091,9 @@
       "checksum_sha256": null,
       "size_bytes": 6899630,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3120,7 +3120,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2013-09": {
       "epoch": "geih_2006_2020",
@@ -3129,9 +3129,9 @@
       "checksum_sha256": null,
       "size_bytes": 6794772,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3158,7 +3158,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2013-10": {
       "epoch": "geih_2006_2020",
@@ -3167,9 +3167,9 @@
       "checksum_sha256": null,
       "size_bytes": 6952058,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3196,7 +3196,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2013-11": {
       "epoch": "geih_2006_2020",
@@ -3205,9 +3205,9 @@
       "checksum_sha256": null,
       "size_bytes": 6836715,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3234,7 +3234,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2013-12": {
       "epoch": "geih_2006_2020",
@@ -3243,9 +3243,9 @@
       "checksum_sha256": null,
       "size_bytes": 6427770,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3272,7 +3272,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-01": {
       "epoch": "geih_2006_2020",
@@ -3281,9 +3281,9 @@
       "checksum_sha256": null,
       "size_bytes": 6752829,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3310,7 +3310,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-02": {
       "epoch": "geih_2006_2020",
@@ -3319,9 +3319,9 @@
       "checksum_sha256": null,
       "size_bytes": 6826229,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3348,7 +3348,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2014-03": {
       "epoch": "geih_2006_2020",
@@ -3357,9 +3357,9 @@
       "checksum_sha256": null,
       "size_bytes": 6679429,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3386,7 +3386,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2014-04": {
       "epoch": "geih_2006_2020",
@@ -3395,9 +3395,9 @@
       "checksum_sha256": null,
       "size_bytes": 6658457,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3424,7 +3424,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2014-05": {
       "epoch": "geih_2006_2020",
@@ -3433,9 +3433,9 @@
       "checksum_sha256": null,
       "size_bytes": 6931087,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3462,7 +3462,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-06": {
       "epoch": "geih_2006_2020",
@@ -3471,9 +3471,9 @@
       "checksum_sha256": null,
       "size_bytes": 6532628,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3500,7 +3500,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-07": {
       "epoch": "geih_2006_2020",
@@ -3509,9 +3509,9 @@
       "checksum_sha256": null,
       "size_bytes": 6710886,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3538,7 +3538,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2014-08": {
       "epoch": "geih_2006_2020",
@@ -3547,9 +3547,9 @@
       "checksum_sha256": null,
       "size_bytes": 6815744,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3576,7 +3576,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-09": {
       "epoch": "geih_2006_2020",
@@ -3585,9 +3585,9 @@
       "checksum_sha256": null,
       "size_bytes": 6658457,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3614,7 +3614,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2014-10": {
       "epoch": "geih_2006_2020",
@@ -3623,9 +3623,9 @@
       "checksum_sha256": null,
       "size_bytes": 7014973,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3652,7 +3652,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2014-11": {
       "epoch": "geih_2006_2020",
@@ -3661,9 +3661,9 @@
       "checksum_sha256": null,
       "size_bytes": 6700400,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3690,7 +3690,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2014-12": {
       "epoch": "geih_2006_2020",
@@ -3699,9 +3699,9 @@
       "checksum_sha256": null,
       "size_bytes": 6417285,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3728,7 +3728,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2015-01": {
       "epoch": "geih_2006_2020",
@@ -3737,9 +3737,9 @@
       "checksum_sha256": null,
       "size_bytes": 6585057,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3766,7 +3766,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2015-02": {
       "epoch": "geih_2006_2020",
@@ -3775,9 +3775,9 @@
       "checksum_sha256": null,
       "size_bytes": 6710886,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3804,7 +3804,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2015-03": {
       "epoch": "geih_2006_2020",
@@ -3813,9 +3813,9 @@
       "checksum_sha256": null,
       "size_bytes": 6689914,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3842,7 +3842,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2015-04": {
       "epoch": "geih_2006_2020",
@@ -3851,9 +3851,9 @@
       "checksum_sha256": null,
       "size_bytes": 6910115,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3880,7 +3880,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2015-05": {
       "epoch": "geih_2006_2020",
@@ -3889,9 +3889,9 @@
       "checksum_sha256": null,
       "size_bytes": 6763315,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3918,7 +3918,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2015-06": {
       "epoch": "geih_2006_2020",
@@ -3965,9 +3965,9 @@
       "checksum_sha256": null,
       "size_bytes": 6899630,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3994,7 +3994,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2015-08": {
       "epoch": "geih_2006_2020",
@@ -4003,9 +4003,9 @@
       "checksum_sha256": null,
       "size_bytes": 6910115,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4032,7 +4032,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2015-09": {
       "epoch": "geih_2006_2020",
@@ -4041,9 +4041,9 @@
       "checksum_sha256": null,
       "size_bytes": 6857687,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4070,7 +4070,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2015-10": {
       "epoch": "geih_2006_2020",
@@ -4079,9 +4079,9 @@
       "checksum_sha256": null,
       "size_bytes": 6962544,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4108,7 +4108,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2015-11": {
       "epoch": "geih_2006_2020",
@@ -4117,9 +4117,9 @@
       "checksum_sha256": null,
       "size_bytes": 6847201,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4146,7 +4146,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2015-12": {
       "epoch": "geih_2006_2020",
@@ -4155,9 +4155,9 @@
       "checksum_sha256": null,
       "size_bytes": 6616514,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4184,7 +4184,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2016-01": {
       "epoch": "geih_2006_2020",
@@ -4193,9 +4193,9 @@
       "checksum_sha256": null,
       "size_bytes": 6616514,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4222,7 +4222,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2016-02": {
       "epoch": "geih_2006_2020",
@@ -4231,9 +4231,9 @@
       "checksum_sha256": null,
       "size_bytes": 6647971,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4260,7 +4260,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2016-03": {
       "epoch": "geih_2006_2020",
@@ -4269,9 +4269,9 @@
       "checksum_sha256": null,
       "size_bytes": 7130316,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4298,7 +4298,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2016-04": {
       "epoch": "geih_2006_2020",
@@ -4307,9 +4307,9 @@
       "checksum_sha256": null,
       "size_bytes": 6773800,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4336,7 +4336,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2016-05": {
       "epoch": "geih_2006_2020",
@@ -4345,9 +4345,9 @@
       "checksum_sha256": null,
       "size_bytes": 7014973,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4374,7 +4374,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2016-06": {
       "epoch": "geih_2006_2020",
@@ -4383,9 +4383,9 @@
       "checksum_sha256": null,
       "size_bytes": 7046430,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4412,7 +4412,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2016-07": {
       "epoch": "geih_2006_2020",
@@ -4421,9 +4421,9 @@
       "checksum_sha256": null,
       "size_bytes": 7014973,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4450,7 +4450,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2016-08": {
       "epoch": "geih_2006_2020",
@@ -4459,9 +4459,9 @@
       "checksum_sha256": null,
       "size_bytes": 6962544,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4488,7 +4488,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2016-09": {
       "epoch": "geih_2006_2020",
@@ -4497,9 +4497,9 @@
       "checksum_sha256": null,
       "size_bytes": 6721372,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4526,7 +4526,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2016-10": {
       "epoch": "geih_2006_2020",
@@ -4535,9 +4535,9 @@
       "checksum_sha256": null,
       "size_bytes": 6606028,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4564,7 +4564,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2016-11": {
       "epoch": "geih_2006_2020",
@@ -4573,9 +4573,9 @@
       "checksum_sha256": null,
       "size_bytes": 6574571,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4602,7 +4602,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2016-12": {
       "epoch": "geih_2006_2020",
@@ -4611,9 +4611,9 @@
       "checksum_sha256": null,
       "size_bytes": 6364856,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4640,7 +4640,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-01": {
       "epoch": "geih_2006_2020",
@@ -4649,9 +4649,9 @@
       "checksum_sha256": null,
       "size_bytes": 6417285,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4678,7 +4678,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2017-02": {
       "epoch": "geih_2006_2020",
@@ -4687,9 +4687,9 @@
       "checksum_sha256": null,
       "size_bytes": 6553600,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4716,7 +4716,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2017-03": {
       "epoch": "geih_2006_2020",
@@ -4725,9 +4725,9 @@
       "checksum_sha256": null,
       "size_bytes": 6490685,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4754,7 +4754,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-04": {
       "epoch": "geih_2006_2020",
@@ -4763,9 +4763,9 @@
       "checksum_sha256": null,
       "size_bytes": 6469713,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4792,7 +4792,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2017-05": {
       "epoch": "geih_2006_2020",
@@ -4801,9 +4801,9 @@
       "checksum_sha256": null,
       "size_bytes": 6679429,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4830,7 +4830,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2017-06": {
       "epoch": "geih_2006_2020",
@@ -4839,9 +4839,9 @@
       "checksum_sha256": null,
       "size_bytes": 6553600,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4868,7 +4868,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-07": {
       "epoch": "geih_2006_2020",
@@ -4877,9 +4877,9 @@
       "checksum_sha256": null,
       "size_bytes": 6952058,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4906,7 +4906,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2017-08": {
       "epoch": "geih_2006_2020",
@@ -4915,9 +4915,9 @@
       "checksum_sha256": null,
       "size_bytes": 7035944,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4944,7 +4944,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2017-09": {
       "epoch": "geih_2006_2020",
@@ -4953,9 +4953,9 @@
       "checksum_sha256": null,
       "size_bytes": 9133096,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -4982,7 +4982,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-10": {
       "epoch": "geih_2006_2020",
@@ -4991,9 +4991,9 @@
       "checksum_sha256": null,
       "size_bytes": 9133096,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5020,7 +5020,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-11": {
       "epoch": "geih_2006_2020",
@@ -5029,9 +5029,9 @@
       "checksum_sha256": null,
       "size_bytes": 9017753,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5058,7 +5058,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2017-12": {
       "epoch": "geih_2006_2020",
@@ -5067,9 +5067,9 @@
       "checksum_sha256": null,
       "size_bytes": 8535408,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5096,7 +5096,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2018-01": {
       "epoch": "geih_2006_2020",
@@ -5105,9 +5105,9 @@
       "checksum_sha256": null,
       "size_bytes": 6606028,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5134,7 +5134,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2018-02": {
       "epoch": "geih_2006_2020",
@@ -5143,9 +5143,9 @@
       "checksum_sha256": null,
       "size_bytes": 6794772,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5172,7 +5172,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2018-03": {
       "epoch": "geih_2006_2020",
@@ -5181,9 +5181,9 @@
       "checksum_sha256": null,
       "size_bytes": 6826229,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5210,7 +5210,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2018-04": {
       "epoch": "geih_2006_2020",
@@ -5219,9 +5219,9 @@
       "checksum_sha256": null,
       "size_bytes": 6952058,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5248,7 +5248,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2018-05": {
       "epoch": "geih_2006_2020",
@@ -5257,9 +5257,9 @@
       "checksum_sha256": null,
       "size_bytes": 7119831,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5286,7 +5286,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2018-06": {
       "epoch": "geih_2006_2020",
@@ -5295,9 +5295,9 @@
       "checksum_sha256": null,
       "size_bytes": 6647971,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5324,7 +5324,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2018-07": {
       "epoch": "geih_2006_2020",
@@ -5333,9 +5333,9 @@
       "checksum_sha256": null,
       "size_bytes": 6878658,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5362,7 +5362,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2018-08": {
       "epoch": "geih_2006_2020",
@@ -5371,9 +5371,9 @@
       "checksum_sha256": null,
       "size_bytes": 7035944,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5400,7 +5400,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP -0.000"
     },
     "2018-09": {
       "epoch": "geih_2006_2020",
@@ -5409,9 +5409,9 @@
       "checksum_sha256": null,
       "size_bytes": 6773800,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5438,7 +5438,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2018-10": {
       "epoch": "geih_2006_2020",
@@ -5447,9 +5447,9 @@
       "checksum_sha256": null,
       "size_bytes": 6742343,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5476,7 +5476,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2018-11": {
       "epoch": "geih_2006_2020",
@@ -5485,9 +5485,9 @@
       "checksum_sha256": null,
       "size_bytes": 6794772,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5514,7 +5514,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2018-12": {
       "epoch": "geih_2006_2020",
@@ -5523,9 +5523,9 @@
       "checksum_sha256": null,
       "size_bytes": 6553600,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5552,7 +5552,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2019-01": {
       "epoch": "geih_2006_2020",
@@ -5561,9 +5561,9 @@
       "checksum_sha256": null,
       "size_bytes": 6784286,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5590,7 +5590,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2019-02": {
       "epoch": "geih_2006_2020",
@@ -5599,9 +5599,9 @@
       "checksum_sha256": null,
       "size_bytes": 6910115,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5628,7 +5628,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2019-03": {
       "epoch": "geih_2006_2020",
@@ -5637,9 +5637,9 @@
       "checksum_sha256": null,
       "size_bytes": 6710886,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5666,7 +5666,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2019-04": {
       "epoch": "geih_2006_2020",
@@ -5675,9 +5675,9 @@
       "checksum_sha256": null,
       "size_bytes": 6794772,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5704,7 +5704,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2019-05": {
       "epoch": "geih_2006_2020",
@@ -5713,9 +5713,9 @@
       "checksum_sha256": null,
       "size_bytes": 7025459,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5742,7 +5742,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2019-06": {
       "epoch": "geih_2006_2020",
@@ -5751,9 +5751,9 @@
       "checksum_sha256": null,
       "size_bytes": 6689914,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5780,7 +5780,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2019-07": {
       "epoch": "geih_2006_2020",
@@ -5789,9 +5789,9 @@
       "checksum_sha256": null,
       "size_bytes": 6815744,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5818,7 +5818,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2019-08": {
       "epoch": "geih_2006_2020",
@@ -5827,9 +5827,9 @@
       "checksum_sha256": null,
       "size_bytes": 6931087,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5856,7 +5856,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2019-09": {
       "epoch": "geih_2006_2020",
@@ -5865,9 +5865,9 @@
       "checksum_sha256": null,
       "size_bytes": 6721372,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5894,7 +5894,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2019-10": {
       "epoch": "geih_2006_2020",
@@ -5903,9 +5903,9 @@
       "checksum_sha256": null,
       "size_bytes": 6805258,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5932,7 +5932,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2019-11": {
       "epoch": "geih_2006_2020",
@@ -5941,9 +5941,9 @@
       "checksum_sha256": null,
       "size_bytes": 6668943,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -5970,7 +5970,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2019-12": {
       "epoch": "geih_2006_2020",
@@ -5979,9 +5979,9 @@
       "checksum_sha256": null,
       "size_bytes": 6417285,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6008,7 +6008,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2020-01": {
       "epoch": "geih_2006_2020",
@@ -6473,9 +6473,9 @@
       "checksum_sha256": null,
       "size_bytes": 5463080,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6502,7 +6502,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-02": {
       "epoch": "geih_2006_2020",
@@ -6511,9 +6511,9 @@
       "checksum_sha256": null,
       "size_bytes": 5494538,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6540,7 +6540,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-03": {
       "epoch": "geih_2006_2020",
@@ -6549,9 +6549,9 @@
       "checksum_sha256": null,
       "size_bytes": 5400166,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6578,7 +6578,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2021-04": {
       "epoch": "geih_2006_2020",
@@ -6587,9 +6587,9 @@
       "checksum_sha256": null,
       "size_bytes": 5546967,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6616,7 +6616,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-05": {
       "epoch": "geih_2006_2020",
@@ -6625,9 +6625,9 @@
       "checksum_sha256": null,
       "size_bytes": 6627000,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6654,7 +6654,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2021-06": {
       "epoch": "geih_2006_2020",
@@ -6663,9 +6663,9 @@
       "checksum_sha256": null,
       "size_bytes": 6176112,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6692,7 +6692,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-07": {
       "epoch": "geih_2006_2020",
@@ -6701,9 +6701,9 @@
       "checksum_sha256": null,
       "size_bytes": 6910115,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6730,7 +6730,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2021-08": {
       "epoch": "geih_2006_2020",
@@ -6739,9 +6739,9 @@
       "checksum_sha256": null,
       "size_bytes": 6574571,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6768,7 +6768,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-09": {
       "epoch": "geih_2006_2020",
@@ -6777,9 +6777,9 @@
       "checksum_sha256": null,
       "size_bytes": 6490685,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6806,7 +6806,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2021-10": {
       "epoch": "geih_2006_2020",
@@ -6815,9 +6815,9 @@
       "checksum_sha256": null,
       "size_bytes": 6291456,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6844,7 +6844,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-11": {
       "epoch": "geih_2006_2020",
@@ -6853,9 +6853,9 @@
       "checksum_sha256": null,
       "size_bytes": 5987368,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6882,7 +6882,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2021-12": {
       "epoch": "geih_2006_2020",
@@ -6967,9 +6967,9 @@
       "checksum_sha256": null,
       "size_bytes": 78538342,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -6996,7 +6996,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2022-03": {
       "epoch": "geih_2021_present",
@@ -7005,9 +7005,9 @@
       "checksum_sha256": null,
       "size_bytes": 79104573,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7034,7 +7034,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2022-04": {
       "epoch": "geih_2021_present",
@@ -7043,9 +7043,9 @@
       "checksum_sha256": null,
       "size_bytes": 78066483,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7072,7 +7072,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2022-05": {
       "epoch": "geih_2021_present",
@@ -7081,9 +7081,9 @@
       "checksum_sha256": null,
       "size_bytes": 48706355,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7110,7 +7110,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2022-06": {
       "epoch": "geih_2021_present",
@@ -7119,9 +7119,9 @@
       "checksum_sha256": null,
       "size_bytes": 70590136,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7148,7 +7148,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2022-07": {
       "epoch": "geih_2021_present",
@@ -7157,9 +7157,9 @@
       "checksum_sha256": null,
       "size_bytes": 68241326,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7186,7 +7186,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2022-08": {
       "epoch": "geih_2021_present",
@@ -7195,9 +7195,9 @@
       "checksum_sha256": null,
       "size_bytes": 70663536,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7224,7 +7224,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2022-09": {
       "epoch": "geih_2021_present",
@@ -7233,9 +7233,9 @@
       "checksum_sha256": null,
       "size_bytes": 75990302,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7262,7 +7262,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2022-10": {
       "epoch": "geih_2021_present",
@@ -7309,9 +7309,9 @@
       "checksum_sha256": null,
       "size_bytes": 72666316,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7338,7 +7338,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2022-12": {
       "epoch": "geih_2021_present",
@@ -7347,9 +7347,9 @@
       "checksum_sha256": null,
       "size_bytes": 66521661,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7376,7 +7376,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2023-01": {
       "epoch": "geih_2021_present",
@@ -7385,9 +7385,9 @@
       "checksum_sha256": null,
       "size_bytes": 69122129,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7414,7 +7414,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP -0.000"
     },
     "2023-02": {
       "epoch": "geih_2021_present",
@@ -7423,9 +7423,9 @@
       "checksum_sha256": null,
       "size_bytes": 71963770,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7452,7 +7452,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2023-03": {
       "epoch": "geih_2021_present",
@@ -7461,9 +7461,9 @@
       "checksum_sha256": null,
       "size_bytes": 74323066,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7490,7 +7490,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-04": {
       "epoch": "geih_2021_present",
@@ -7537,9 +7537,9 @@
       "checksum_sha256": null,
       "size_bytes": 67979182,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7566,7 +7566,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2023-06": {
       "epoch": "geih_2021_present",
@@ -7575,9 +7575,9 @@
       "checksum_sha256": null,
       "size_bytes": 68199383,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7604,7 +7604,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-07": {
       "epoch": "geih_2021_present",
@@ -7613,9 +7613,9 @@
       "checksum_sha256": null,
       "size_bytes": 67318579,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7642,7 +7642,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-08": {
       "epoch": "geih_2021_present",
@@ -7727,9 +7727,9 @@
       "checksum_sha256": null,
       "size_bytes": 61404610,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7756,7 +7756,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-11": {
       "epoch": "geih_2021_present",
@@ -7765,9 +7765,9 @@
       "checksum_sha256": null,
       "size_bytes": 69981962,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7794,7 +7794,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-12": {
       "epoch": "geih_2021_present",
@@ -7803,9 +7803,9 @@
       "checksum_sha256": null,
       "size_bytes": 70474792,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7832,7 +7832,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-01": {
       "epoch": "geih_2021_present",
@@ -7841,9 +7841,9 @@
       "checksum_sha256": null,
       "size_bytes": 68440555,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7870,7 +7870,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-02": {
       "epoch": "geih_2021_present",
@@ -7879,9 +7879,9 @@
       "checksum_sha256": null,
       "size_bytes": 68178411,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7908,7 +7908,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-03": {
       "epoch": "geih_2021_present",
@@ -7955,9 +7955,9 @@
       "checksum_sha256": null,
       "size_bytes": 67821895,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7984,7 +7984,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-05": {
       "epoch": "geih_2021_present",
@@ -7993,9 +7993,9 @@
       "checksum_sha256": null,
       "size_bytes": 68555898,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8022,7 +8022,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-06": {
       "epoch": "geih_2021_present",
@@ -8069,9 +8069,9 @@
       "checksum_sha256": null,
       "size_bytes": 69090672,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8098,7 +8098,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-08": {
       "epoch": "geih_2021_present",
@@ -8107,9 +8107,9 @@
       "checksum_sha256": null,
       "size_bytes": 62757273,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8136,7 +8136,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-09": {
       "epoch": "geih_2021_present",
@@ -8145,9 +8145,9 @@
       "checksum_sha256": null,
       "size_bytes": 59905146,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8174,7 +8174,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-10": {
       "epoch": "geih_2021_present",
@@ -8183,9 +8183,9 @@
       "checksum_sha256": null,
       "size_bytes": 60125347,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8212,7 +8212,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-11": {
       "epoch": "geih_2021_present",
@@ -8221,9 +8221,9 @@
       "checksum_sha256": null,
       "size_bytes": 59317944,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8250,7 +8250,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-12": {
       "epoch": "geih_2021_present",
@@ -8259,9 +8259,9 @@
       "checksum_sha256": null,
       "size_bytes": 57388564,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8288,7 +8288,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-01": {
       "epoch": "geih_2021_present",
@@ -8297,9 +8297,9 @@
       "checksum_sha256": null,
       "size_bytes": 61865984,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8326,7 +8326,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-02": {
       "epoch": "geih_2021_present",
@@ -8335,9 +8335,9 @@
       "checksum_sha256": null,
       "size_bytes": 63732449,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8364,7 +8364,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-03": {
       "epoch": "geih_2021_present",
@@ -8373,9 +8373,9 @@
       "checksum_sha256": null,
       "size_bytes": 65148026,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8402,7 +8402,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-04": {
       "epoch": "geih_2021_present",
@@ -8411,9 +8411,9 @@
       "checksum_sha256": null,
       "size_bytes": 64833454,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8440,7 +8440,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-05": {
       "epoch": "geih_2021_present",
@@ -8449,9 +8449,9 @@
       "checksum_sha256": null,
       "size_bytes": 66532147,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8478,7 +8478,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-06": {
       "epoch": "geih_2021_present",
@@ -8487,9 +8487,9 @@
       "checksum_sha256": null,
       "size_bytes": 63994593,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8516,7 +8516,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-07": {
       "epoch": "geih_2021_present",
@@ -8525,9 +8525,9 @@
       "checksum_sha256": null,
       "size_bytes": 64099450,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8554,7 +8554,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-08": {
       "epoch": "geih_2021_present",
@@ -8563,9 +8563,9 @@
       "checksum_sha256": null,
       "size_bytes": 64393052,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8592,7 +8592,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-09": {
       "epoch": "geih_2021_present",
@@ -8601,9 +8601,9 @@
       "checksum_sha256": null,
       "size_bytes": 65263370,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8630,7 +8630,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-10": {
       "epoch": "geih_2021_present",
@@ -8639,9 +8639,9 @@
       "checksum_sha256": null,
       "size_bytes": 69247959,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8668,7 +8668,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-11": {
       "epoch": "geih_2021_present",
@@ -8677,9 +8677,9 @@
       "checksum_sha256": null,
       "size_bytes": 66972549,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8706,7 +8706,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2025-12": {
       "epoch": "geih_2021_present",
@@ -8715,9 +8715,9 @@
       "checksum_sha256": null,
       "size_bytes": 63428362,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8744,7 +8744,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-01": {
       "epoch": "geih_2021_present",
@@ -8753,9 +8753,9 @@
       "checksum_sha256": null,
       "size_bytes": 65568904,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8782,7 +8782,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-02": {
       "epoch": "geih_2021_present",
@@ -8791,9 +8791,9 @@
       "checksum_sha256": null,
       "size_bytes": 70632499,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8820,7 +8820,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-03": {
       "epoch": "geih_2021_present",
@@ -8829,9 +8829,9 @@
       "checksum_sha256": null,
       "size_bytes": 65661095,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8858,7 +8858,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-04": {
       "epoch": "geih_2021_present",
@@ -8867,9 +8867,9 @@
       "checksum_sha256": null,
       "size_bytes": 67276412,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Capítulos de características generales, seguridad social en salud y educación.CSV"
@@ -8896,7 +8896,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": "DANE renombró el archivo de características generales ('Capítulos de ...'); se resuelve por palabra clave."
+      "notes": "DANE renombr\u00f3 el archivo de caracter\u00edsticas generales ('Cap\u00edtulos de ...'); se resuelve por palabra clave. | Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-05": {
       "epoch": "geih_2021_present",
@@ -8905,9 +8905,9 @@
       "checksum_sha256": null,
       "size_bytes": 70456328,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8934,7 +8934,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-06": {
       "epoch": "geih_2021_present",
@@ -8943,9 +8943,9 @@
       "checksum_sha256": null,
       "size_bytes": 67544350,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -8972,7 +8972,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-07": {
       "epoch": "geih_2021_present",
@@ -8981,9 +8981,9 @@
       "checksum_sha256": null,
       "size_bytes": 67614454,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-26T14:24:06+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -9010,7 +9010,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-08": {
       "epoch": "geih_2021_present",

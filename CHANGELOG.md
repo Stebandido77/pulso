@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Cambiado
 - `sources.schema.json`: `validated_by` admite `"auto:validate_periods.py"`.
 
+### Datos
+- 191 de 237 periodos con `validated: true` (antes 5), validados con `validate_periods.py` contra el anexo del DANE de su época (diferencia máxima 0,000049 pp). Los 46 que no cargan en Python siguen con `validated: false`: 2008, 2011, 2013-04..06, 2020, 2022-10, 2023-04/08/09, 2024-03 y 2026-08/09 (issues #74, #75 y #76). Resultados y método en `data/reference/`.
+
 ## [1.2.0] — 2026-11-26  (Python pulso-co) / R pulso 0.2.0
 
 ### Added

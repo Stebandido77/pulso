@@ -2,6 +2,11 @@
 
 ## Datos
 
+* 191 de los 237 periodos del catálogo quedan validados (antes 5): TD, TO y
+  TGP calculados con pulso coinciden con el anexo oficial del DANE con
+  diferencias de 0,000049 pp o menos. Los 46 restantes no cargan en Python
+  y siguen sin validar (issues #74 a #76). El detalle está en
+  `data/reference/` del repositorio.
 * El esquema de `sources.json` acepta `validated_by: "auto:validate_periods.py"`
   para los periodos validados automáticamente contra las cifras oficiales del
   DANE. `pulso_validation_status()` lo devuelve tal cual en `validated_by`.
