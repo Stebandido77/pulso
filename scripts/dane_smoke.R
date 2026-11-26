@@ -3,7 +3,7 @@
 # Smoke test semanal: descarga del DANE real un periodo y verifica que los
 # modulos se lean bien. Lo usa .github/workflows/dane_smoke.yml.
 #
-# Checks per (period, module): more than 1000 rows; FEX_C18 present and
+# Checks per (period, module): more than 1000 rows; FEX_C18 (any case) present and
 # numeric; no mojibake ("Ã" or U+FFFD) in column names nor in a sample of
 # text values. Failures are written literally to the file given in
 # --failures (Markdown) so the workflow can paste them into an issue.
@@ -47,14 +47,19 @@ check_frame <- function(df) {
   if (nrow(df) <= min_rows) {
     problems <- c(problems, sprintf("expected more than %d rows, got %d", min_rows, nrow(df)))
   }
-  if (!"FEX_C18" %in% names(df)) {
+  # pulso_load(harmonize = TRUE) lowercases column names by design, so the
+  # weight arrives as `fex_c18`: match the name case-insensitively.
+  fex <- names(df)[tolower(names(df)) == "fex_c18"]
+  if (!length(fex)) {
     problems <- c(problems, paste0(
       "FEX_C18 column missing; first columns: ",
       paste(utils::head(names(df), 10), collapse = ", ")
     ))
-  } else if (!is.numeric(df[["FEX_C18"]])) {
+  } else if (!is.numeric(df[[fex[1]]])) {
     problems <- c(problems, sprintf(
-      "FEX_C18 is not numeric (class=%s)", paste(class(df[["FEX_C18"]]), collapse = "/")
+      "%s is not numeric (class=%s; first values: %s)", fex[1],
+      paste(class(df[[fex[1]]]), collapse = "/"),
+      paste(utils::head(df[[fex[1]]], 3), collapse = ", ")
     ))
   }
   bad_cols <- names(df)[grepl(mojibake, names(df))]
