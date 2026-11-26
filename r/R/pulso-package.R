@@ -17,6 +17,7 @@
 #' * [pulso_list_variables()] - List canonical variables, optionally by module
 #'
 #' @section Catalog and validation:
+#' * [pulso_update_catalog()] - Fetch the latest catalog of DANE releases
 #' * [pulso_list_validated_range()] - List periods with verified downloads
 #' * [pulso_validation_status()] - Validation info for a specific period
 #'

@@ -101,7 +101,7 @@ test_that(".parse_module_csv Shape A concatenates cabecera + resto with CLASE", 
   expect_equal(sum(df$CLASE == 2L), 1L)
 })
 
-test_that(".parse_module_csv detects nested-zip layout (2024-03/04) and defers", {
+test_that(".parse_module_csv rejects a nested wrapper whose CSV.zip is corrupt", {
   tmp_dir <- tempfile()
   fs::dir_create(tmp_dir)
   on.exit(fs::dir_delete(tmp_dir), add = TRUE)
@@ -119,7 +119,7 @@ test_that(".parse_module_csv detects nested-zip layout (2024-03/04) and defers",
   expect_error(
     .parse_module_csv(zip_path, spec, "ocupados", 2024L, 3L),
     class = "pulso_parse_error",
-    regexp = "nested-zip"
+    regexp = "CSV.zip"
   )
 })
 

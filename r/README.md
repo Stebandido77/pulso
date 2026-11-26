@@ -31,6 +31,13 @@ library(pulso)
 ocupados <- pulso_load(year = 2024, month = 6, module = "ocupados")
 ```
 
+The bundled catalog covers 2007-01 to 2026-09. DANE publishes a new month
+roughly every four weeks; fetch the latest catalog without upgrading:
+
+```r
+pulso_update_catalog()
+```
+
 Discover and describe canonical variables across survey epochs:
 
 ```r

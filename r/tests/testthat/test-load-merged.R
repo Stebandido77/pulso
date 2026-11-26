@@ -31,7 +31,7 @@ test_that("pulso_load_merged errors on mixed levels (Q4=A)", {
   expect_error(
     pulso_load_merged(2024, 6, c("ocupados", "vivienda_hogares")),
     class = "pulso_validation_error",
-    regexp = "v0.2.0"
+    regexp = "not supported yet"
   )
 })
 

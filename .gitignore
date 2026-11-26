@@ -79,6 +79,7 @@ $RECYCLE.BIN/
 *.dta
 !tests/fixtures/zips/*.zip
 !tests/fixtures/expected_outputs/*.parquet
+!r/tests/testthat/fixtures/*.zip
 
 # Scraper artifacts
 scripts/.scrape_cache/

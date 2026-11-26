@@ -106,11 +106,30 @@ def find_shape_a_files(
     return cabecera, resto
 
 
-def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
-    """Resolve a ZIP member path, tolerating mojibake encoding and missing subfolder prefix.
+def _name_key(name: str) -> str:
+    """Fold cosmetic DANE filename drift into a comparison key.
 
-    Tries in order: (1) exact match, (2) mojibake-fixed path, (3) case-insensitive
-    basename match across all ZIP entries.  Raises KeyError if nothing matches.
+    Handles non-breaking spaces (U+00A0, present since 2025-12), accents,
+    letter case, repeated whitespace and the file extension (``.CSV`` vs
+    ``.csv`` since 2026-08).
+    """
+    import unicodedata
+
+    base = name.rsplit("/", 1)[-1].replace("\u00a0", " ")
+    base = unicodedata.normalize("NFKD", base)
+    base = "".join(c for c in base if not unicodedata.combining(c))
+    base = re.sub(r"\.[A-Za-z0-9]{2,4}$", "", base).lower()
+    return re.sub(r"[\s_]+", " ", base).strip()
+
+
+def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
+    """Resolve a ZIP member path, tolerating mojibake encoding and DANE filename drift.
+
+    Tries in order: (1) exact match, (2) mojibake-fixed path, (3) folded
+    basename match (case, accents, NBSP, extension), (4) unique member whose
+    folded basename contains the folded target, for renamed files such as
+    2026-04 "Capítulos de características generales ...". Raises KeyError
+    if nothing matches.
     """
     names = zf.namelist()
 
@@ -125,10 +144,23 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
     if fixed in names:
         return fixed
 
-    target = fixed.rsplit("/", 1)[-1].lower()
-    for name in names:
-        if not name.endswith("/") and name.rsplit("/", 1)[-1].lower() == target:
-            return name
+    files = [n for n in names if not n.endswith("/")]
+    target = _name_key(fixed)
+    target_ext = fixed.rsplit(".", 1)[-1].lower() if "." in fixed.rsplit("/", 1)[-1] else ""
+    # A zip can carry the same table as .csv, .dta and .sav; the key drops the
+    # extension, so candidates with the requested extension must win (#78).
+    same_ext = [n for n in files if n.rsplit(".", 1)[-1].lower() == target_ext]
+    for pool in (same_ext, files):
+        for name in pool:
+            if _name_key(name) == target:
+                return name
+
+    # Containment is only safe for long, specific targets: a short key like
+    # "ocupados" would also match "no ocupados".
+    if len(target) >= 15:
+        hits = [n for n in files if n.lower().endswith(".csv") and target in _name_key(n)]
+        if len(hits) == 1:
+            return hits[0]
 
     raise KeyError(f"No item named {path!r} in the archive")
 
@@ -195,6 +227,37 @@ def _open_nested_zip(zf: zipfile.ZipFile, format_name: str) -> zipfile.ZipFile:
     return zipfile.ZipFile(io.BytesIO(inner_bytes))
 
 
+_DOT_DECIMAL = re.compile(rb"^-?\d+\.\d+$")
+_COMMA_DECIMAL = re.compile(rb"^-?\d+,\d+$")
+
+
+def _sniff_decimal(raw_bytes: bytes, sep: str, default: str) -> str:
+    """Infer the decimal mark from the first data lines.
+
+    DANE is not consistent: older files use ``;`` with comma decimals, while
+    the 2018-frame files (2022+) use ``;`` with point decimals
+    (``43.55418099``). ``epochs.json`` only carries one value per epoch, so
+    the mark is decided from the data and the epoch value breaks ties.
+    """
+    if sep == ",":
+        return "."
+    lines = raw_bytes[:2_000_000].splitlines()[1:201]
+    sep_b = sep.encode("latin-1")
+    dots = commas = 0
+    for line in lines:
+        for field in line.split(sep_b):
+            field = field.strip()
+            if _DOT_DECIMAL.match(field):
+                dots += 1
+            elif _COMMA_DECIMAL.match(field):
+                commas += 1
+    if dots > commas:
+        return "."
+    if commas > dots:
+        return ","
+    return default
+
+
 def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
 
@@ -205,12 +268,13 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     import pandas as pd
 
     sep = epoch.separator if epoch.separator is not None else ","
+    decimal = _sniff_decimal(raw_bytes, sep, epoch.decimal)
     buf = io.BytesIO(raw_bytes)
     df: pd.DataFrame = pd.read_csv(
         buf,
         encoding=epoch.encoding,
         sep=sep,
-        decimal=epoch.decimal,
+        decimal=decimal,
         low_memory=False,
     )
     if df.shape[1] == 1:
@@ -220,7 +284,7 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
             encoding=epoch.encoding,
             sep=None,
             engine="python",
-            decimal=epoch.decimal,
+            decimal=decimal,
         )
 
     # Strip BOM in both its UTF-8 unicode form and latin-1 decoded artifact (ï»¿).
