@@ -186,10 +186,10 @@ test_that("BUG-018: 2020 COVID Shape C variant loads", {
 })
 
 test_that("BUG-006: strict = TRUE refuses unvalidated periods", {
-  # 2024-09 is confirmed validated=FALSE in sources.json.
+  # 2024-03 stays validated=FALSE in sources.json (singular "No ocupado.CSV", #75).
   # Guard fires before any download so no skip_if_offline() needed.
   expect_error(
-    pulso_load(year = 2024, month = 9, module = "ocupados", strict = TRUE),
+    pulso_load(year = 2024, month = 3, module = "ocupados", strict = TRUE),
     class = "pulso_data_not_validated"
   )
 })
@@ -198,7 +198,7 @@ test_that("BUG-006: unvalidated periods load by default with a warning", {
   skip_on_cran()
   skip_if_offline()
   expect_warning(
-    df <- pulso_load(year = 2024, month = 9, module = "ocupados"),
+    df <- pulso_load(year = 2024, month = 3, module = "ocupados"),
     regexp = "not been validated"
   )
   expect_s3_class(df, "data.frame")

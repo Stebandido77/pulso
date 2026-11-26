@@ -32,7 +32,7 @@
       7397  207d167a4447e718b25dcf0e353e30e0b2ef1e9e5a3b49846e4ddcda0ab6a364  pulso/data/schemas/sources.schema.json
       5516  90c8539151da2aee5553eb075155ef3789704d6df2b85f3a218640f5f4c439ed  pulso/data/schemas/variable_map.schema.json
       1526  e78d19e6c2e7ef62ec3b3407c24b61da9fb26982254ffdec6c155276f43b05c4  pulso/data/schemas/variable_module_map.schema.json
-    315450  1d398c8c8cae884c361637ef393438450d6481f2ae8f5c2e3713b566015be14b  pulso/data/sources.json
+    337043  e827e24707dce6bef22372f55865d96aabf89be729d2a9bb35ee4215b6cdc8ad  pulso/data/sources.json
      37384  07281bb8259aa6eea769e7fe5495a4cad0f9f2e6e5a09c463c5679cc02156c1f  pulso/data/variable_map.json
       2297  f59b0fc0fc08306518fd47da02ac6ec0d78dd15c2574c0b879b66b8cddfc1f88  pulso/data/variable_module_map.json
     179321  5f2e15a3534f8704494d7b5a684bd70f1c54e962fa38f8491d6f11ad060a1f18  pulso/ext/tpm_jdbr_manual_20260422.xlsx
@@ -42,7 +42,7 @@
      10097  3252ae7420fb693465711e57926c6ab9539ce9ee7f4e8797ed1f46f8bc2bdd6f  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
      28399  acb484f1520c748e674cafdaa644e2cbbb935534c7da2568c4f2d3071f575d1f  pulso_co-1.2.1.dist-info/METADATA
-      4065  e358315540f32918bb2919fb3bae23e50423ed928cc162022810803ea319bd81  pulso_co-1.2.1.dist-info/RECORD
+      4065  d2164fbfb3f06f1361ad921e4aa827fe4412bd064fd589d057ec8023acb89dc5  pulso_co-1.2.1.dist-info/RECORD
         87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.2.1.dist-info/WHEEL
        128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.2.1.dist-info/entry_points.txt
       1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.2.1.dist-info/licenses/LICENSE

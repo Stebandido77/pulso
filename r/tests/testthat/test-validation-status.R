@@ -51,7 +51,8 @@ test_that("pulso_validation_status values are sensible for known period", {
 })
 
 test_that("pulso_validation_status NA fields are NA for unvalidated period", {
-  result <- pulso_validation_status(2007, 3)
+  # 2008-01 stays unvalidated: Python cannot parse its header-less .txt (#74).
+  result <- pulso_validation_status(2008, 1)
   expect_false(result$validated)
   expect_true(is.na(result$validated_by))
   expect_true(is.na(result$validated_at))
