@@ -1,0 +1,157 @@
+name: DANE smoke
+
+# Smoke test semanal contra el portal real del DANE (R + Python).
+# Detecta cambios de formato de los zip el mismo día en que aparecen:
+# carga el último periodo del catálogo y 2024-03 (zip anidado) y verifica
+# filas, FEX_C18 numérico y ausencia de mojibake. Si falla, abre o actualiza
+# un issue con la etiqueta `dane-format-change` y el error literal.
+#
+# Sin continue-on-error: un fallo debe dejar el run en rojo.
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # lunes 09:00 UTC (04:00 en Bogotá)
+  workflow_dispatch:
+  pull_request:
+    # workflow_dispatch solo funciona con workflows ya presentes en main; este
+    # disparador ejecuta el smoke en el PR que lo modifica. Desde un PR no se
+    # abren issues.
+    paths:
+      - ".github/workflows/dane_smoke.yml"
+      - "python/scripts/dane_smoke.py"
+      - "scripts/dane_smoke.R"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: dane-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Smoke ${{ matrix.lang }} (${{ matrix.period }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: [python, r]
+        period: [latest, "2024-03"]
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve period
+        id: period
+        run: |
+          if [ "${{ matrix.period }}" = "latest" ]; then
+            value=$(python3 -c "import json; print(max(json.load(open('data/sources.json', encoding='utf-8'))['data']))")
+          else
+            value="${{ matrix.period }}"
+          fi
+          echo "value=$value" >> "$GITHUB_OUTPUT"
+          echo "Periodo: $value"
+
+      # ---------------------------------------------------------------- Python
+      - uses: actions/setup-python@v5
+        if: matrix.lang == 'python'
+        with:
+          python-version: "3.11"
+
+      - name: Install pulso-co from the checkout
+        if: matrix.lang == 'python'
+        run: |
+          python scripts/sync_data.py
+          pip install -e python
+
+      - name: Smoke (Python)
+        if: matrix.lang == 'python'
+        run: >
+          python python/scripts/dane_smoke.py
+          --period "${{ steps.period.outputs.value }}"
+          --modules ocupados vivienda_hogares
+          --failures smoke_failures.md
+
+      # --------------------------------------------------------------------- R
+      - uses: r-lib/actions/setup-r@v2
+        if: matrix.lang == 'r'
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: matrix.lang == 'r'
+        with:
+          working-directory: r
+          dependencies: '"hard"'
+
+      - name: Install pulso (R) from the checkout
+        if: matrix.lang == 'r'
+        run: |
+          Rscript scripts/sync_data_to_r.R
+          R CMD INSTALL r
+
+      - name: Smoke (R)
+        if: matrix.lang == 'r'
+        run: >
+          Rscript scripts/dane_smoke.R
+          --period "${{ steps.period.outputs.value }}"
+          --modules ocupados vivienda_hogares
+          --failures smoke_failures.md
+
+      # ----------------------------------------------------------------- issue
+      - name: Open or update dane-format-change issue
+        if: failure() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LANG_NAME: ${{ matrix.lang }}
+          PERIOD: ${{ steps.period.outputs.value }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create dane-format-change --color B60205 \
+            --description "El smoke semanal detectó un cambio de formato del DANE" 2>/dev/null || true
+          title="DANE format change: ${LANG_NAME} ${PERIOD}"
+          {
+            if [ -f smoke_failures.md ]; then
+              cat smoke_failures.md
+            else
+              echo "El job falló antes de terminar el smoke (instalación o descarga). Ver el log del run."
+            fi
+            echo
+            echo "Run: ${RUN_URL}"
+          } > issue_body.md
+          num=$(gh issue list --label dane-format-change --state open --limit 100 \
+                  --json number,title --jq ".[] | select(.title == \"${title}\") | .number" | head -n1)
+          if [ -n "$num" ]; then
+            gh issue comment "$num" --body-file issue_body.md
+          else
+            gh issue create --title "$title" --label dane-format-change --body-file issue_body.md
+          fi
+
+  new-months:
+    name: Meses nuevos en el DANE (agent_scraper --dry-run)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install scraper
+        run: |
+          python scripts/sync_data.py
+          pip install -e "python[scraper]"
+
+      - name: Dry-run scraper and write job summary
+        run: |
+          python python/scripts/agent_scraper.py --dry-run --report scrape_report.md
+          {
+            echo "## Meses nuevos en el portal del DANE"
+            echo
+            cat scrape_report.md
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,3 +1,22 @@
+# pulso 0.2.1
+
+## Datos
+
+* El esquema de `sources.json` acepta `validated_by: "auto:validate_periods.py"`
+  para los periodos validados automáticamente contra las cifras oficiales del
+  DANE. `pulso_validation_status()` lo devuelve tal cual en `validated_by`.
+
+## Mantenimiento
+
+* Validación automática de periodos (scripts en `python/scripts/`, la lógica
+  vive en Python y R solo consume `sources.json`): se calculan TD, TO y TGP
+  nacionales ponderados y se comparan con el anexo de mercado laboral del DANE
+  de la misma época (marco 2005 hasta 2021-12, marco 2018 desde 2022-01).
+* Nuevo workflow `dane_smoke.yml`: cada lunes carga con `pulso_load()` el
+  último periodo del catálogo y 2024-03 desde el DANE real, verifica filas,
+  `FEX_C18` numérico y ausencia de mojibake, y abre un issue
+  `dane-format-change` si algo falla.
+
 # pulso 0.2.0
 
 ## Datos

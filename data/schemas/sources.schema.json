@@ -116,7 +116,10 @@
         },
         "validated_by": {
           "anyOf": [
-            { "type": "string", "enum": ["manual", "automated", "scraper"] },
+            {
+              "type": "string",
+              "enum": ["manual", "automated", "scraper", "auto:validate_periods.py"]
+            },
             { "type": "null" }
           ]
         },
