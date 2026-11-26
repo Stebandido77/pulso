@@ -150,8 +150,13 @@
   idx <- which(is_file & keys_full == .name_key(inner_path))
   if (length(idx) >= 1) return(zip_contents[idx[1]])
 
+  # The same table can ship as .csv, .dta and .sav: candidates with the
+  # requested extension win over the rest (pulso #78).
+  ext_of <- function(x) tolower(sub("^.*\\.", "", .base_name(x)))
+  same_ext <- ext_of(zip_normalized) == ext_of(inner_path)
   keys_base <- .name_key(.base_name(zip_normalized))
-  idx <- which(is_file & keys_base == .name_key(.base_name(inner_path)))
+  hit <- is_file & keys_base == .name_key(.base_name(inner_path))
+  idx <- c(which(hit & same_ext), which(hit & !same_ext))
   if (length(idx) >= 1) return(zip_contents[idx[1]])
 
   pattern <- if (!is.null(module_name)) .MODULE_KEYWORDS_GEIH2[[module_name]]
@@ -215,7 +220,7 @@
   } else {
     ","
   }
-  dec <- if (sep == ",") "." else ","
+  dec <- .sniff_decimal(sample_chr, sep)
 
   df <- data.table::fread(
     file         = tmp,
@@ -234,6 +239,25 @@
     }
   }
   df
+}
+
+#' Infer the decimal mark of a DANE CSV from its first data lines
+#'
+#' DANE is not consistent: older ';'-separated files use ',' decimals, while
+#' the 2018-frame files (2022+) use ';' with '.' decimals ("43.55418099").
+#' Counts numeric tokens of each kind in up to 200 data lines; ties (no
+#' decimals at all) fall back to ',' for ';' files.
+#' @noRd
+.sniff_decimal <- function(sample_chr, sep) {
+  if (sep == ",") return(".")
+  lines <- strsplit(sample_chr, "\r?\n", useBytes = TRUE)[[1]]
+  lines <- utils::head(lines[-1], 200)
+  if (length(lines) == 0) return(",")
+  fields <- unlist(strsplit(lines, sep, fixed = TRUE, useBytes = TRUE))
+  fields <- gsub("^[ \t]+|[ \t\r]+$", "", fields, useBytes = TRUE)
+  dots <- sum(grepl("^-?[0-9]+\\.[0-9]+$", fields, useBytes = TRUE))
+  commas <- sum(grepl("^-?[0-9]+,[0-9]+$", fields, useBytes = TRUE))
+  if (dots > commas) "." else ","
 }
 
 #' Read a single CSV from inside a zip

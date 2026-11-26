@@ -53,3 +53,15 @@ def test_ocupados_never_resolves_to_no_ocupados() -> None:
     zf = _zip(["CSV/No ocupados.csv"])
     with pytest.raises(KeyError):
         _resolve_zip_path(zf, "CSV/Ocupados.CSV")
+
+
+def test_resolve_prefers_requested_extension_over_dta() -> None:
+    # Real 2026-09 layout: DTA/ listed before CSV/, both with NBSP (#78).
+    zf = _zip(
+        [
+            f"DTA/Datos del hogar y la{NB}vivienda.dta",
+            f"SAV/Datos del hogar y la{NB}vivienda.sav",
+            f"CSV/Datos del hogar y la{NB}vivienda.csv",
+        ]
+    )
+    assert _resolve_zip_path(zf, "CSV/Datos del hogar y la vivienda.csv").startswith("CSV/")

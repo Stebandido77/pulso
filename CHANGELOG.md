@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Monthly scrape workflow reported success while doing nothing (stub + `continue-on-error`), which is why the catalog stopped at 2026-02. Failures now turn the run red.
+- Decimal mark is detected per file in both packages: 2018-frame CSVs use `;` with point decimals, so `FEX_C18` was read as text (#77).
+- Name resolution prefers the requested extension, so a `.dta` with the same folded name is never picked over the `.csv` (#78).
 - ZIP member resolution tolerates DANE filename drift: non-breaking spaces (2025-12+), lowercase `.csv` (2026-08+) and the renamed characteristics file (2026-04). Affects `vivienda_hogares` and `otras_formas_trabajo` from 2025-12 in both packages.
 - R only: per-entry CP437/UTF-8 filename decoding, nested `CSV.zip` periods (2024-03/04), Latin-1 → UTF-8 text, comma decimals, atomic downloads with cache validation. Unvalidated periods now load with a warning by default (parity with Python); `allow_unvalidated` is deprecated in favour of `strict`.
 

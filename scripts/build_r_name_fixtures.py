@@ -48,3 +48,15 @@ with zipfile.ZipFile(inner, "w", zipfile.ZIP_DEFLATED) as z:
 with zipfile.ZipFile(f"{out}/dane_nested.zip", "w") as z:
     z.writestr("CSV.zip", inner.getvalue())
     z.writestr("DTA.zip", b"placeholder")
+
+# Real 2018-frame layout (2026-09): ';' separator with POINT decimals, DTA/
+# listed before CSV/, NBSP in names (pulso #77, #78).
+point = (
+    "PERIODO;MES;DIRECTORIO;SECUENCIA_P;ORDEN;HOGAR;DPTO;FEX_C18\n"
+    "20260939;09;8713327;1;1;1;08;43.55418099\n"
+    "20260939;09;8713328;1;1;1;08;34.68595437\n"
+).encode("latin-1")
+with zipfile.ZipFile(f"{out}/dane_point_decimal.zip", "w", zipfile.ZIP_DEFLATED) as z:
+    z.writestr("DTA/Datos del hogar y la\u00a0vivienda.dta", b"\x75\x00binary-not-csv;;\n1;2;3\n")
+    z.writestr("CSV/Datos del hogar y la\u00a0vivienda.csv", point)
+    z.writestr("CSV/Ocupados.csv", point)

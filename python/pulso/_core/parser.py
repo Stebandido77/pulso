@@ -146,9 +146,14 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
 
     files = [n for n in names if not n.endswith("/")]
     target = _name_key(fixed)
-    for name in files:
-        if _name_key(name) == target:
-            return name
+    target_ext = fixed.rsplit(".", 1)[-1].lower() if "." in fixed.rsplit("/", 1)[-1] else ""
+    # A zip can carry the same table as .csv, .dta and .sav; the key drops the
+    # extension, so candidates with the requested extension must win (#78).
+    same_ext = [n for n in files if n.rsplit(".", 1)[-1].lower() == target_ext]
+    for pool in (same_ext, files):
+        for name in pool:
+            if _name_key(name) == target:
+                return name
 
     # Containment is only safe for long, specific targets: a short key like
     # "ocupados" would also match "no ocupados".
@@ -222,6 +227,37 @@ def _open_nested_zip(zf: zipfile.ZipFile, format_name: str) -> zipfile.ZipFile:
     return zipfile.ZipFile(io.BytesIO(inner_bytes))
 
 
+_DOT_DECIMAL = re.compile(rb"^-?\d+\.\d+$")
+_COMMA_DECIMAL = re.compile(rb"^-?\d+,\d+$")
+
+
+def _sniff_decimal(raw_bytes: bytes, sep: str, default: str) -> str:
+    """Infer the decimal mark from the first data lines.
+
+    DANE is not consistent: older files use ``;`` with comma decimals, while
+    the 2018-frame files (2022+) use ``;`` with point decimals
+    (``43.55418099``). ``epochs.json`` only carries one value per epoch, so
+    the mark is decided from the data and the epoch value breaks ties.
+    """
+    if sep == ",":
+        return "."
+    lines = raw_bytes[:2_000_000].splitlines()[1:201]
+    sep_b = sep.encode("latin-1")
+    dots = commas = 0
+    for line in lines:
+        for field in line.split(sep_b):
+            field = field.strip()
+            if _DOT_DECIMAL.match(field):
+                dots += 1
+            elif _COMMA_DECIMAL.match(field):
+                commas += 1
+    if dots > commas:
+        return "."
+    if commas > dots:
+        return ","
+    return default
+
+
 def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
 
@@ -232,12 +268,13 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     import pandas as pd
 
     sep = epoch.separator if epoch.separator is not None else ","
+    decimal = _sniff_decimal(raw_bytes, sep, epoch.decimal)
     buf = io.BytesIO(raw_bytes)
     df: pd.DataFrame = pd.read_csv(
         buf,
         encoding=epoch.encoding,
         sep=sep,
-        decimal=epoch.decimal,
+        decimal=decimal,
         low_memory=False,
     )
     if df.shape[1] == 1:
@@ -247,7 +284,7 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
             encoding=epoch.encoding,
             sep=None,
             engine="python",
-            decimal=epoch.decimal,
+            decimal=decimal,
         )
 
     # Strip BOM in both its UTF-8 unicode form and latin-1 decoded artifact (ï»¿).
