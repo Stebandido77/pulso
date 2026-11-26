@@ -52,8 +52,12 @@
   clave como último recurso. El error de archivo faltante lista los CSV
   presentes en el zip.
 * Se leen los periodos con zip anidado (`CSV.zip`, 2024-03 y 2024-04).
-* El texto en Latin-1 se convierte a UTF-8 y las columnas con coma decimal
-  (por ejemplo `FEX_C18`) se leen como numéricas.
+* El texto en Latin-1 se convierte a UTF-8. El separador decimal se detecta
+  en cada archivo: los CSV del marco 2018 usan `;` con punto (`43.55418099`)
+  y los antiguos `;` con coma, así que `FEX_C18` y demás columnas decimales
+  quedan numéricas en ambos casos (#77).
+* Cuando el mismo archivo viene en `.csv`, `.dta` y `.sav`, gana la extensión
+  pedida (#78).
 * Descargas atómicas: se escriben a un archivo temporal y solo pasan a la
   caché si son un zip válido. Un zip corrupto en caché se descarta y se
   descarga de nuevo. La clave de caché incluye la URL, así que una
