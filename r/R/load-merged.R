@@ -11,11 +11,11 @@
 #' @param harmonize Logical. Whether to lowercase column names. Default TRUE.
 #' @param cache Logical. Whether to cache downloads. Default TRUE.
 #' @param metadata Logical. Whether to attach DANE metadata. Default FALSE.
-#' @param allow_unvalidated Logical. Passed through to each \code{pulso_load()}
-#'   call. Default FALSE.
 #'   When TRUE, metadata is composed from the first module's column index
-#'   as a v0.1.0 approximation (multi-module metadata composition is planned
-#'   for v0.2.0).
+#'   (multi-module metadata composition is planned for a future release).
+#' @param strict Logical. Passed through to each \code{pulso_load()}.
+#'   Default FALSE: unvalidated periods load with a warning.
+#' @param allow_unvalidated Deprecated; see \code{\link{pulso_load}}.
 #'
 #' @return A tibble with columns from all requested modules, joined on
 #'   shared identifier keys (directorio, secuencia_p, orden for persona-level
@@ -40,7 +40,9 @@ pulso_load_merged <- function(year, month, modules,
                                harmonize = TRUE,
                                cache = TRUE,
                                metadata = FALSE,
-                               allow_unvalidated = FALSE) {
+                               strict = FALSE,
+                               allow_unvalidated = NULL) {
+  strict <- .resolve_strict(strict, allow_unvalidated)
 
   if (!is.character(modules) || length(modules) == 0) {
     abort_validation_error("'modules' must be a non-empty character vector")
@@ -68,14 +70,14 @@ pulso_load_merged <- function(year, month, modules,
   levels <- vapply(modules, function(m) sources$modules[[m]]$level, character(1))
   if (length(unique(levels)) > 1) {
     abort_validation_error(
-      "Mixed-level merge (persona + hogar) is deferred to v0.2.0. Merge modules of the same level only."
+      "Mixed-level merge (persona + hogar) is not supported yet. Merge modules of the same level only."
     )
   }
   level <- levels[[1]]
 
   dfs <- lapply(modules, function(m) {
     pulso_load(year, month, m, harmonize = harmonize, cache = cache,
-               metadata = FALSE, allow_unvalidated = allow_unvalidated)
+               metadata = FALSE, strict = strict)
   })
   names(dfs) <- modules
 

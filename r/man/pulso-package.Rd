@@ -33,6 +33,7 @@ policy data.
 \section{Catalog and validation}{
 
 \itemize{
+\item \code{\link[=pulso_update_catalog]{pulso_update_catalog()}} - Fetch the latest catalog of DANE releases
 \item \code{\link[=pulso_list_validated_range]{pulso_list_validated_range()}} - List periods with verified downloads
 \item \code{\link[=pulso_validation_status]{pulso_validation_status()}} - Validation info for a specific period
 }

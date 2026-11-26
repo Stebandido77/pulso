@@ -96,7 +96,7 @@ df_empalme = pulso.load_empalme(year=2015, harmonize=True)
 | **Cobertura geográfica** | Nacional: cabecera (urbano) + resto (rural), 23 ciudades y áreas metropolitanas |
 | **Módulos** | `caracteristicas_generales`, `ocupados`, `desocupados`, `inactivos`, `vivienda_hogares`, `otros_ingresos`, `migracion`\*, `otras_formas_trabajo`\* |
 | **Meses validados** | 2007-12, 2015-06, 2021-12, 2022-01, 2024-06 (end-to-end con datos reales del DANE) |
-| **Entradas en el registro** | ~230 meses (2006-01 → 2026-02) |
+| **Entradas en el registro** | 237 meses (2007-01 → 2026-09); `pulso.update_catalog()` trae los más nuevos |
 
 \* Disponibles solo en la época `geih_2021_present` (desde 2022-01).
 
@@ -365,7 +365,7 @@ df_empalme = pulso.load_empalme(year=2015, harmonize=True)
 | **Geography** | National: cabecera (urban) + resto (rural), 23 cities and metro areas |
 | **Modules** | `caracteristicas_generales`, `ocupados`, `desocupados`, `inactivos`, `vivienda_hogares`, `otros_ingresos`, `migracion`\*, `otras_formas_trabajo`\* |
 | **Validated months** | 2007-12, 2015-06, 2021-12, 2022-01, 2024-06 (end-to-end with real DANE data) |
-| **Registry entries** | ~230 monthly entries (2006-01 → 2026-02) |
+| **Registry entries** | 237 monthly entries (2007-01 → 2026-09); `pulso.update_catalog()` fetches newer ones |
 
 \* Available only in `geih_2021_present` epoch (2022-01 onward).
 

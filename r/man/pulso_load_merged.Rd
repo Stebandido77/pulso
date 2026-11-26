@@ -11,7 +11,8 @@ pulso_load_merged(
   harmonize = TRUE,
   cache = TRUE,
   metadata = FALSE,
-  allow_unvalidated = FALSE
+  strict = FALSE,
+  allow_unvalidated = NULL
 )
 }
 \arguments{
@@ -26,13 +27,14 @@ Use \code{\link{pulso_load}} for a single module.}
 
 \item{cache}{Logical. Whether to cache downloads. Default TRUE.}
 
-\item{metadata}{Logical. Whether to attach DANE metadata. Default FALSE.}
-
-\item{allow_unvalidated}{Logical. Passed through to each \code{pulso_load()}
-call. Default FALSE.
+\item{metadata}{Logical. Whether to attach DANE metadata. Default FALSE.
 When TRUE, metadata is composed from the first module's column index
-as a v0.1.0 approximation (multi-module metadata composition is planned
-for v0.2.0).}
+(multi-module metadata composition is planned for a future release).}
+
+\item{strict}{Logical. Passed through to each \code{pulso_load()}.
+Default FALSE: unvalidated periods load with a warning.}
+
+\item{allow_unvalidated}{Deprecated; see \code{\link{pulso_load}}.}
 }
 \value{
 A tibble with columns from all requested modules, joined on

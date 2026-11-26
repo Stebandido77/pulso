@@ -1,3 +1,43 @@
+# pulso 0.2.0
+
+## Datos
+
+* El catálogo incluido (`sources.json`) cubre ahora hasta septiembre de 2026
+  (antes llegaba a febrero de 2026): se agregan 2026-03 a 2026-09 del
+  catálogo DANE 900 y se corrigen los tamaños de 2026-01 y 2026-02.
+* `pulso_data_not_available` indica hasta qué periodo llega el catálogo.
+
+## Cambios de comportamiento
+
+* `pulso_load()` y `pulso_load_merged()` cargan por defecto los periodos no
+  validados, con una advertencia por periodo y sesión (paridad con
+  'pulso-co'). Antes fallaban con `pulso_data_not_validated` en 225 de 230
+  periodos justo después de instalar el paquete.
+* Nuevo argumento `strict`; `allow_unvalidated` queda deprecado
+  (`allow_unvalidated = FALSE` equivale a `strict = TRUE`).
+
+## Correcciones
+
+* Nombres de archivo dentro de los zip del DANE: se decodifican por entrada
+  (CP437 o UTF-8, que el DANE mezcla en el mismo zip desde 2024-11). Antes
+  los módulos con tildes (`caracteristicas_generales`, `migracion`) fallaban
+  en todas las versiones recientes, y en locale C fallaban todos.
+* Se toleran espacios no separables (U+00A0, desde 2025-12), extensiones en
+  minúscula (`.csv`, desde 2026-08) y archivos renombrados (2026-04,
+  "Capítulos de características generales..."), con búsqueda por palabra
+  clave como último recurso. El error de archivo faltante lista los CSV
+  presentes en el zip.
+* Se leen los periodos con zip anidado (`CSV.zip`, 2024-03 y 2024-04).
+* El texto en Latin-1 se convierte a UTF-8 y las columnas con coma decimal
+  (por ejemplo `FEX_C18`) se leen como numéricas.
+* Descargas atómicas: se escriben a un archivo temporal y solo pasan a la
+  caché si son un zip válido. Un zip corrupto en caché se descarta y se
+  descarga de nuevo. La clave de caché incluye la URL, así que una
+  republicación del DANE no reutiliza la copia vieja. Se agregan timeout
+  (`options(pulso.timeout)`), reintentos, user agent y la opción
+  `pulso.cache_dir`.
+* Nueva condición `pulso_download_error` (subclase de `pulso_parse_error`).
+
 # pulso 0.1.1
 
 * Fix: corregido nombre de columna en ejemplo de `pulso_describe_column`

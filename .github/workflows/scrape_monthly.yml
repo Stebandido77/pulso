@@ -29,12 +29,19 @@ jobs:
 
       - name: Run scraper
         id: scrape
+        # No continue-on-error: a failed scrape must turn the run red. Until
+        # 2026-11 this step called a stub and the job still reported success,
+        # which is why the catalog silently stopped at 2026-02.
         run: |
-          python python/scripts/agent_scraper.py --output data/sources.json --report scrape_report.md
-          echo "report<<EOF" >> $GITHUB_OUTPUT
-          cat scrape_report.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        continue-on-error: true
+          python python/scripts/agent_scraper.py \
+            --output data/sources.json \
+            --r-copy r/inst/extdata/sources.json \
+            --report scrape_report.md
+          {
+            echo "report<<SCRAPE_REPORT_EOF"
+            cat scrape_report.md
+            echo "SCRAPE_REPORT_EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Re-sync canonical data into pulso/data/ before validation
         run: python scripts/sync_data.py
@@ -60,7 +67,6 @@ jobs:
             ## Checklist for human reviewer
 
             - [ ] New entries have plausible URLs
-            - [ ] Checksums are present
             - [ ] No previously-validated entries got their `validated` flag flipped
             - [ ] Spot-check one new month by downloading and inspecting the ZIP
           labels: |

@@ -41,13 +41,115 @@ def _load_json_validated(data_path: Path, schema_path: Path) -> dict[str, Any]:
     return data
 
 
+#: Canonical, continuously updated catalog (refreshed monthly by CI).
+CATALOG_URL = "https://raw.githubusercontent.com/Stebandido77/pulso/main/data/sources.json"
+
+
+def _catalog_end(sources: dict[str, Any]) -> str:
+    covered = sources.get("metadata", {}).get("covered_range") or []
+    return str(covered[-1]) if covered else max(sources.get("data", {}) or [""])
+
+
+def _cached_catalog_path() -> Path:
+    from pulso._utils.cache import cache_path
+
+    return cache_path() / "catalog" / "sources.json"
+
+
+def _load_cached_catalog(bundled_end: str) -> dict[str, Any] | None:
+    """Return the catalog saved by :func:`update_catalog` if it is newer than the bundled one."""
+    import os
+
+    if os.environ.get("PULSO_IGNORE_CACHED_CATALOG"):
+        return None
+    path = _cached_catalog_path()
+    if not path.exists():
+        return None
+    try:
+        cached = _load_json_validated(path, _data_dir() / "schemas" / "sources.schema.json")
+    except (ConfigError, ValueError, OSError):
+        return None
+    return cached if _catalog_end(cached) > bundled_end else None
+
+
 def _load_sources() -> dict[str, Any]:
-    """Load and validate sources.json against its schema, caching the result."""
+    """Load and validate sources.json against its schema, caching the result.
+
+    The catalog bundled with the package is used unless :func:`update_catalog`
+    saved a newer one to the cache directory.
+    """
     global _SOURCES
     if _SOURCES is None:
         d = _data_dir()
-        _SOURCES = _load_json_validated(d / "sources.json", d / "schemas" / "sources.schema.json")
+        bundled = _load_json_validated(d / "sources.json", d / "schemas" / "sources.schema.json")
+        _SOURCES = _load_cached_catalog(_catalog_end(bundled)) or bundled
     return _SOURCES
+
+
+def update_catalog(url: str = CATALOG_URL, timeout: float = 30.0) -> dict[str, Any]:
+    """Download the latest catalog of DANE releases into the local cache.
+
+    Descarga el catálogo más reciente de publicaciones del DANE a la caché local.
+
+    DANE publishes a new GEIH month roughly every four weeks, faster than
+    package releases. This fetches the catalog maintained in the pulso
+    repository (updated monthly by CI) so new months become loadable
+    without upgrading the package. The download is validated against the
+    bundled schema before it replaces anything.
+
+    Args:
+        url: Catalog URL. Defaults to the ``main`` branch of the repository.
+        timeout: Request timeout in seconds.
+
+    Returns:
+        Dict with keys ``previous_end``, ``latest_end``, ``n_periods`` and
+        ``path`` (where the catalog was saved, or ``None`` if not newer).
+
+    Raises:
+        DownloadError: Network failure.
+        ConfigError: The downloaded file is not a valid catalog.
+    """
+    import json as _json
+    import tempfile
+
+    import requests
+
+    from pulso._utils.exceptions import DownloadError
+
+    global _SOURCES
+    previous_end = _catalog_end(_load_sources())
+    try:
+        resp = requests.get(url, timeout=timeout, headers={"User-Agent": "pulso-co"})
+        resp.raise_for_status()
+    except requests.RequestException as exc:
+        raise DownloadError(f"Could not download the catalog from {url}: {exc}") from exc
+
+    with tempfile.NamedTemporaryFile("wb", suffix=".json", delete=False) as tmp:
+        tmp.write(resp.content)
+        tmp_path = Path(tmp.name)
+    try:
+        try:
+            fresh = _load_json_validated(tmp_path, _data_dir() / "schemas" / "sources.schema.json")
+        except ValueError as exc:
+            raise ConfigError(f"Downloaded catalog is not valid JSON: {exc}") from exc
+        latest_end = _catalog_end(fresh)
+        saved: Path | None = None
+        if latest_end > previous_end:
+            saved = _cached_catalog_path()
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            saved.write_text(
+                _json.dumps(fresh, ensure_ascii=True, indent=2) + "\n", encoding="utf-8"
+            )
+            _SOURCES = None
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    return {
+        "previous_end": previous_end,
+        "latest_end": max(latest_end, previous_end),
+        "n_periods": len(fresh.get("data", {})),
+        "path": saved,
+    }
 
 
 def _load_epochs() -> dict[str, Any]:

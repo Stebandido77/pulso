@@ -17,9 +17,21 @@ abort_pulso <- function(class, message, ...) {
 }
 
 abort_data_not_available <- function(year, month) {
+  latest <- tryCatch(
+    max(names(.load_sources()$data)),
+    error = function(e) NA_character_
+  )
+  hint <- if (!is.na(latest)) {
+    sprintf(
+      " The catalog in use covers 2007-01 to %s; run pulso_update_catalog() to fetch newer DANE releases.",
+      latest
+    )
+  } else {
+    ""
+  }
   abort_pulso(
     class = "pulso_data_not_available",
-    message = sprintf("Data not available for %d-%02d", year, month),
+    message = sprintf("Data not available for %d-%02d.%s", year, month, hint),
     year = year,
     month = month
   )
@@ -58,11 +70,19 @@ abort_data_not_validated <- function(year, month, ...) {
   abort_pulso(
     class = "pulso_data_not_validated",
     message = sprintf(
-      "Period %d-%02d has not been validated against DANE published figures. Use allow_unvalidated = TRUE to load anyway.",
+      "Period %d-%02d has not been validated against DANE published figures. Use strict = FALSE to load anyway.",
       year, month
     ),
     year = year,
     month = month,
+    ...
+  )
+}
+
+abort_download_error <- function(message, ...) {
+  abort_pulso(
+    class = c("pulso_download_error", "pulso_parse_error"),
+    message = message,
     ...
   )
 }

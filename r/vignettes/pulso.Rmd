@@ -35,28 +35,20 @@ The result is a tibble with the survey microdata. By default, all
 columns are returned with their original DANE codes (e.g., P6020,
 P3271).
 
-## Validated periods and the allow_unvalidated parameter
+## Validated periods and the strict parameter
 
 pulso maintains a registry of periods that have been manually verified
-against DANE published figures. As of v0.1.0-rc2, **5 periods are
-validated**:
-
-- 2007-12
-- 2015-06
-- 2021-12
-- 2022-01
-- 2024-06
-
-For all other periods, `pulso_load()` raises a `pulso_data_not_validated`
-error by default:
+against DANE published figures (see `pulso_list_validated_range()`).
+Since 0.2.0, every period in the catalog loads by default, exactly like
+`pulso-co` in 'Python'; periods that are not yet validated emit a
+one-time warning per session. Use `strict = TRUE` to refuse them:
 
 ```{r, eval=FALSE}
-# Raises pulso_data_not_validated -- 2024-09 is not yet validated
+# Loads, with a warning -- 2024-09 is not yet validated
 df <- pulso_load(year = 2024, month = 9, module = "ocupados")
 
-# Explicitly allow unvalidated periods -- emits a visible warning
-df <- pulso_load(year = 2024, month = 9, module = "ocupados",
-                 allow_unvalidated = TRUE)
+# Refuse unvalidated periods
+df <- pulso_load(year = 2024, month = 9, module = "ocupados", strict = TRUE)
 ```
 
 To check the validation status of a specific period:
@@ -164,21 +156,15 @@ Downloaded microdata is cached at
 `tools::R_user_dir("pulso", "cache")` to avoid re-downloading.
 Pass `cache = FALSE` to force re-download.
 
-## Breaking changes in 0.1.0-rc2
+## Changes in 0.2.0
 
-If you used `pulso_load()` in earlier development versions, note that
-**the default behavior has changed for unvalidated periods**:
-
-- **Before:** Loaded silently even if data was not validated
-- **After:** Raises `pulso_data_not_validated` unless
-  `allow_unvalidated = TRUE` is specified
-
-This change aligns the R package with `pulso-co` (Python) and protects
-users from inadvertently using unvalidated data.
+- Unvalidated periods load by default (with a warning) instead of raising
+  an error. `allow_unvalidated` is deprecated in favour of `strict`.
+- The catalog covers DANE releases through 2026-09.
 
 ## Coverage and limitations
 
-`pulso` v0.1.0-rc2 supports the following:
+`pulso` 0.2.0 supports the following:
 
 - Single year/month/module loads via `pulso_load()`
 - Multi-module persona-level merges via `pulso_load_merged()`
@@ -189,19 +175,17 @@ users from inadvertently using unvalidated data.
   `pulso_list_variables()`
 - Validation status queries via `pulso_validation_status()` and
   `pulso_list_validated_range()`
-- Coverage: 2007-01 to present (sources.json)
+- Coverage: 2007-01 to 2026-09 (bundled catalog, updated with each release)
 
 Known limitations:
 
-- Only 5 of 230 periods are validated. Use `allow_unvalidated = TRUE`
-  for the rest, with awareness that results may differ from DANE
-  official tables.
+- Only a handful of periods are validated against DANE tables; the rest
+  load with a warning, and results may differ from official figures.
 - Curator entries in `variable_map.json` are theoretical mappings
   pending empirical verification. Use `has_warning` from
   `pulso_list_variables()` to identify these entries.
-- Nested-zip periods (2024-03, 2024-04) are deferred to v0.2.0.
 - Mixed-level merges (persona + hogar) in `pulso_load_merged()` are
-  deferred to v0.2.0.
-- ECH epoch (2000-2006) not yet supported. Planned for v0.2.0.
+  not supported yet.
+- ECH epoch (2000-2006) not yet supported.
 
 See the GitHub issues for roadmap and known limitations.

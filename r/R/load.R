@@ -13,9 +13,12 @@
 #'   Default FALSE for Python parity. When TRUE, attaches metadata via
 #'   `attr(df, "pulso_metadata")` and triggers lazy download of codebook
 #'   on first call.
-#' @param allow_unvalidated Logical. When FALSE (default), raises
-#'   \code{pulso_data_not_validated} for periods not yet manually validated
-#'   against DANE published figures. Set TRUE to load anyway with a warning.
+#' @param strict Logical. When FALSE (default, same as 'pulso-co' in
+#'   'Python'), periods not yet manually validated against DANE published
+#'   figures are loaded with a one-time warning per period. When TRUE,
+#'   such periods raise \code{pulso_data_not_validated}.
+#' @param allow_unvalidated Deprecated. Use \code{strict} instead
+#'   (\code{allow_unvalidated = FALSE} is \code{strict = TRUE}).
 #'
 #' @return A tibble with the microdata. If metadata = TRUE, the tibble
 #'   has an attribute "pulso_metadata" with structured column info.
@@ -35,7 +38,10 @@ pulso_load <- function(year, month, module,
                        harmonize = TRUE,
                        cache = TRUE,
                        metadata = FALSE,
-                       allow_unvalidated = FALSE) {
+                       strict = FALSE,
+                       allow_unvalidated = NULL) {
+
+  strict <- .resolve_strict(strict, allow_unvalidated)
 
   .validate_module(module)
   .validate_year(year)
@@ -61,14 +67,10 @@ pulso_load <- function(year, month, module,
   }
 
   if (!isTRUE(source_info$validated)) {
-    if (!isTRUE(allow_unvalidated)) {
+    if (isTRUE(strict)) {
       abort_data_not_validated(year, month)
     }
-    period_str <- sprintf("%d-%02d", year, month)
-    cli::cli_warn(c(
-      "Period {period_str} has not been validated against DANE published figures.",
-      "i" = "Results may differ from official DANE tables. Proceed with caution."
-    ))
+    .warn_unvalidated_once(year, month)
   }
 
   zip_path <- .download_zip(url, year, month, use_cache = cache)
@@ -94,4 +96,44 @@ pulso_load <- function(year, month, module,
   }
 
   result
+}
+
+#' Resolve `strict` against the deprecated `allow_unvalidated`
+#' @noRd
+.resolve_strict <- function(strict, allow_unvalidated) {
+  if (!is.null(allow_unvalidated)) {
+    if (!is.logical(allow_unvalidated) || length(allow_unvalidated) != 1 ||
+        is.na(allow_unvalidated)) {
+      abort_validation_error("`allow_unvalidated` must be TRUE or FALSE")
+    }
+    cli::cli_warn(
+      c(
+        "{.arg allow_unvalidated} is deprecated as of pulso 0.2.0.",
+        "i" = "Use {.code strict = {!allow_unvalidated}} instead."
+      ),
+      .frequency = "regularly",
+      .frequency_id = "pulso_allow_unvalidated"
+    )
+    return(!allow_unvalidated)
+  }
+  if (!is.logical(strict) || length(strict) != 1 || is.na(strict)) {
+    abort_validation_error("`strict` must be TRUE or FALSE")
+  }
+  strict
+}
+
+.pulso_state <- new.env(parent = emptyenv())
+
+#' Warn about an unvalidated period once per session
+#' @noRd
+.warn_unvalidated_once <- function(year, month) {
+  period_str <- sprintf("%d-%02d", year, month)
+  seen <- .pulso_state$warned_periods %||% character()
+  if (period_str %in% seen) return(invisible(FALSE))
+  .pulso_state$warned_periods <- c(seen, period_str)
+  cli::cli_warn(c(
+    "Period {period_str} has not been validated against DANE published figures.",
+    "i" = "Results may differ from official DANE tables. Use {.code strict = TRUE} to refuse unvalidated periods."
+  ), class = "pulso_unvalidated_warning")
+  invisible(TRUE)
 }

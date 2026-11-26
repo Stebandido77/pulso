@@ -1,110 +1,258 @@
 #' Normalize DANE zip filename encoding to UTF-8
 #'
-#' DANE monthly zips are created with legacy DOS/Windows zip tools that
-#' default to the CP437 codepage for filenames and do NOT set the zip's
-#' UTF-8 flag bit. R's utils::unzip(list=TRUE) returns those names with
-#' Encoding() == "unknown" on Linux/Mac. Naive comparison against the
-#' UTF-8 paths from sources.json fails, and tolower() / basename() can
-#' crash on invalid multibyte sequences under C locale.
-#'
-#' Byte 0xa1 in CP437 is i-acute ("Caracteristicas"); latin1 misreads it as
-#' inverted-exclamation (wrong). Always use CP437 for DANE filenames.
+#' DANE monthly zips mix two filename encodings, sometimes inside the same
+#' archive: entries written by legacy DOS/Windows tools use CP437 without
+#' the zip UTF-8 flag, while newer entries (2024-11 onwards) are UTF-8 with
+#' the flag set. utils::unzip(list = TRUE) returns both as raw bytes with
+#' Encoding() == "unknown", so each name is decoded individually: if the
+#' bytes are valid UTF-8 they are kept as UTF-8, otherwise they are decoded
+#' from CP437 (byte 0xa1 in CP437 is i-acute, which latin1 would misread).
 #' @noRd
 .normalize_zip_names <- function(zip_contents) {
-  unknown <- Encoding(zip_contents) == "unknown"
-  if (any(unknown)) {
-    zip_contents[unknown] <- iconv(
-      zip_contents[unknown],
-      from = "CP437",
-      to = "UTF-8",
-      sub = "?"
-    )
+  out <- zip_contents
+  for (i in seq_along(out)) {
+    x <- out[i]
+    if (Encoding(x) != "unknown") next
+    if (!grepl("[^\x01-\x7f]", x, useBytes = TRUE)) next
+    if (validUTF8(x)) {
+      Encoding(x) <- "UTF-8"
+    } else {
+      x <- iconv(x, from = "CP437", to = "UTF-8", sub = "?")
+    }
+    out[i] <- x
   }
-  zip_contents
+  .mark_utf8(out)
+}
+
+#' Comparison key for DANE filenames
+#'
+#' Folds the cosmetic variations DANE introduces between releases so that
+#' a sources.json path still matches the real zip member: non-breaking
+#' spaces (U+00A0, present since 2025-12), repeated whitespace, accents,
+#' letter case, and the file extension (.CSV vs .csv since 2026-08).
+#' @noRd
+.name_key <- function(x, drop_ext = TRUE) {
+  # Byte-level replacements so this works in any locale (including C).
+  x <- .mark_utf8(as.character(x))
+  from <- c("\u00a0", "\u00e1", "\u00e9", "\u00ed", "\u00f3", "\u00fa",
+            "\u00fc", "\u00f1", "\u00c1", "\u00c9", "\u00cd", "\u00d3",
+            "\u00da", "\u00dc", "\u00d1")
+  to <- c(" ", "a", "e", "i", "o", "u", "u", "n", "a", "e", "i", "o", "u",
+          "u", "n")
+  for (k in seq_along(from)) {
+    x <- gsub(from[k], to[k], x, fixed = TRUE, useBytes = TRUE)
+  }
+  x <- iconv(x, from = "UTF-8", to = "ASCII", sub = "?")
+  x[is.na(x)] <- ""
+  x <- tolower(x)
+  if (drop_ext) x <- sub("\\.[a-z0-9]{2,4}$", "", x)
+  x <- gsub("[[:space:]_]+", " ", x)
+  trimws(x)
+}
+
+#' Locale-safe basename (base::basename() can fail to translate UTF-8
+#' names to the native encoding under a C locale)
+#' @noRd
+.base_name <- function(x) .mark_utf8(sub("^.*/", "", x, useBytes = TRUE))
+
+#' Mark valid-UTF-8 strings as UTF-8 without re-encoding them (enc2utf8()
+#' on an "unknown" string re-encodes from the native locale, which under C
+#' turns bytes into literal "<c3><ad>" escapes)
+#' @noRd
+.mark_utf8 <- function(x) {
+  x <- as.character(x)
+  ok <- !is.na(x) & validUTF8(x)
+  Encoding(x[ok]) <- "UTF-8"
+  x
 }
 
 #' Detect DANE nested-zip wrapper layout (2024-03, 2024-04)
 #'
 #' Some DANE releases wrap data files inside a second zip layer; the outer
-#' archive contains only CSV.zip / DTA.zip / SAV.zip entries. We don't
-#' implement the descent in v0.1.0 -- callers get a clear deferral error.
+#' archive contains only CSV.zip / DTA.zip / SAV.zip entries.
 #' @noRd
 .is_nested_zip_wrapper <- function(zip_contents) {
   zip_contents <- .normalize_zip_names(zip_contents)
   entries <- zip_contents[!grepl("/$", zip_contents)]
   if (length(entries) == 0) return(FALSE)
-  all(basename(entries) %in% c("CSV.zip", "DTA.zip", "SAV.zip"))
+  all(vapply(entries, .base_name, character(1), USE.NAMES = FALSE) %in% c("CSV.zip", "DTA.zip", "SAV.zip"))
 }
+
+#' Extract the inner CSV.zip of a nested DANE wrapper (cached next to it)
+#' @noRd
+.unwrap_nested_zip <- function(zip_path) {
+  zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
+  inner <- zip_contents[vapply(zip_contents, .base_name, character(1), USE.NAMES = FALSE) == "CSV.zip"]
+  if (length(inner) == 0) {
+    abort_parse_error(sprintf(
+      "Nested zip %s has no CSV.zip member", basename(zip_path)
+    ))
+  }
+  target <- paste0(sub("\\.zip$", "", zip_path), "__CSV.zip")
+  if (!file.exists(target)) {
+    exdir <- tempfile("pulso_nested_")
+    dir.create(exdir)
+    on.exit(unlink(exdir, recursive = TRUE), add = TRUE)
+    utils::unzip(zip_path, files = inner[1], exdir = exdir, junkpaths = TRUE)
+    ok <- file.copy(file.path(exdir, "CSV.zip"), target, overwrite = TRUE)
+    if (!ok) {
+      abort_parse_error(sprintf(
+        "Could not extract CSV.zip from %s", basename(zip_path)
+      ))
+    }
+  }
+  if (!.is_valid_zip(target)) {
+    unlink(target)
+    abort_parse_error(sprintf(
+      "Inner CSV.zip of nested zip %s is not a valid zip archive",
+      basename(zip_path)
+    ))
+  }
+  target
+}
+
+#' Shape B keyword index (redesigned GEIH, 2022+)
+#'
+#' Used when neither the literal sources.json path nor its folded form
+#' matches, e.g. 2026-04 where DANE renamed the characteristics file to
+#' "Capitulos de caracteristicas generales ...". Patterns run against
+#' .name_key(basename) (lowercase, no accents, no extension).
+#' @noRd
+.MODULE_KEYWORDS_GEIH2 <- list(
+  caracteristicas_generales = "caracteristicas generales",
+  ocupados                  = "^ocupados$",
+  desocupados               = "^no ocupados?$",
+  inactivos                 = "^no ocupados?$",
+  vivienda_hogares          = "hogar y la vivienda",
+  otros_ingresos            = "^otros ingresos",
+  migracion                 = "^migracion$",
+  otras_formas_trabajo      = "^otras formas de trabajo$",
+  fuerza_de_trabajo         = "^fuerza de trabajo$"
+)
 
 #' Resolve a zip member path tolerating case / encoding variations
 #'
-#' Returns the *original* (possibly CP437) name from zip_contents so that
-#' base::unz() can do byte-exact matching against the zip central directory.
-#' Comparison is done on normalized UTF-8 strings (locale-safe PCRE, no
-#' tolower()), but the returned value is always zip_contents[i], not the
-#' UTF-8 form.
+#' Returns the *original* (raw-byte) name from zip_contents so that
+#' base::unz() can do byte-exact matching against the zip central
+#' directory. Matching tiers: exact UTF-8 path, folded full path, folded
+#' basename, and finally the module keyword index.
 #' @noRd
-.resolve_zip_path <- function(zip_contents, inner_path) {
+.resolve_zip_path <- function(zip_contents, inner_path, module_name = NULL) {
   zip_normalized <- .normalize_zip_names(zip_contents)
+  is_file <- !grepl("/$", zip_normalized)
 
-  if (Encoding(inner_path) == "unknown") {
-    inner_path <- iconv(inner_path, from = "CP437", to = "UTF-8", sub = "?")
-  }
+  inner_path <- .normalize_zip_names(inner_path)
 
   idx <- match(inner_path, zip_normalized)
   if (!is.na(idx)) return(zip_contents[idx])
 
-  base_target <- basename(inner_path)
-  pattern <- paste0("(?i)^\\Q", base_target, "\\E$")
+  keys_full <- .name_key(zip_normalized)
+  idx <- which(is_file & keys_full == .name_key(inner_path))
+  if (length(idx) >= 1) return(zip_contents[idx[1]])
 
-  for (i in seq_along(zip_normalized)) {
-    name_norm <- zip_normalized[i]
-    if (grepl("/$", name_norm)) next
-    if (grepl(pattern, basename(name_norm), perl = TRUE)) {
-      return(zip_contents[i])
-    }
+  keys_base <- .name_key(.base_name(zip_normalized))
+  idx <- which(is_file & keys_base == .name_key(.base_name(inner_path)))
+  if (length(idx) >= 1) return(zip_contents[idx[1]])
+
+  pattern <- if (!is.null(module_name)) .MODULE_KEYWORDS_GEIH2[[module_name]]
+  if (!is.null(pattern)) {
+    is_csv <- grepl("(?i)\\.csv$", zip_normalized, perl = TRUE)
+    idx <- which(is_file & is_csv & grepl(pattern, keys_base, perl = TRUE))
+    if (length(idx) >= 1) return(zip_contents[idx[1]])
   }
 
   NULL
 }
 
-#' Read a single CSV from inside a zip
+#' Read a zip member (by raw name) into a data.frame
 #'
-#' Lists with utils::unzip() (returns raw CP437 bytes that
-#' .normalize_zip_names() can convert reliably). Reads with base::unz()
-#' which does byte-exact matching against the zip central directory and
-#' opens an in-memory connection -- no file is written to disk, so macOS
-#' HFS+ UTF-8 filename validation is never triggered.
-#' readLines(encoding="Latin-1") decodes the bytes; fread(text=) parses.
+#' Streams the member through base::unz() (byte-exact name match, no
+#' extraction under the original CP437/UTF-8 name, so macOS HFS+ filename
+#' validation is never triggered) into a temporary file with an ASCII
+#' name, then parses it with data.table::fread(). The text encoding is
+#' sniffed (DANE ships Latin-1, a few releases ship UTF-8) and the decimal
+#' mark follows the separator: DANE ';'-separated files use ',' decimals.
 #' @noRd
-.read_single_csv_from_zip <- function(zip_path, inner_path) {
-  zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
+.read_zip_member <- function(zip_path, member, label = member) {
+  tmp <- tempfile("pulso_", fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
 
-  resolved <- .resolve_zip_path(zip_contents, inner_path)
-  if (is.null(resolved)) {
+  con <- unz(zip_path, member, open = "rb")
+  out <- file(tmp, open = "wb")
+  n_bytes <- 0
+  tryCatch({
+    repeat {
+      chunk <- readBin(con, what = "raw", n = 8 * 1024 * 1024)
+      if (length(chunk) == 0) break
+      writeBin(chunk, out)
+      n_bytes <- n_bytes + length(chunk)
+    }
+  }, finally = {
+    close(out)
+    close(con)
+  })
+
+  if (n_bytes == 0) {
     abort_parse_error(sprintf(
-      "Expected file '%s' not found inside zip %s",
-      inner_path, basename(zip_path)
+      "Failed to read '%s' from zip %s (empty member)",
+      label, basename(zip_path)
     ))
   }
 
-  con <- unz(zip_path, resolved)
-  on.exit(try(close(con), silent = TRUE), add = TRUE)
-  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
-  if (length(lines) == 0) {
-    abort_parse_error(sprintf(
-      "Failed to read '%s' from zip %s",
-      inner_path, basename(zip_path)
-    ))
-  }
+  sample <- readBin(tmp, what = "raw", n = 2 * 1024 * 1024)
+  nl <- which(sample == as.raw(0x0a))
+  if (length(nl) > 0) sample <- sample[seq_len(max(nl))]
+  has_bom <- length(sample) >= 3 && identical(sample[1:3], as.raw(c(0xef, 0xbb, 0xbf)))
+  sample_chr <- rawToChar(sample[sample != as.raw(0)])
+  is_utf8 <- has_bom || validUTF8(sample_chr)
+  encoding <- if (is_utf8) "UTF-8" else "Latin-1"
 
-  data.table::fread(
-    text         = paste(lines, collapse = "\n"),
-    sep          = "auto",
+  first_line <- sub("[\r\n].*$", "", sample_chr, useBytes = TRUE)
+  sep <- if (grepl(";", first_line, fixed = TRUE, useBytes = TRUE)) {
+    ";"
+  } else if (grepl("\t", first_line, fixed = TRUE, useBytes = TRUE)) {
+    "\t"
+  } else {
+    ","
+  }
+  dec <- if (sep == ",") "." else ","
+
+  df <- data.table::fread(
+    file         = tmp,
+    sep          = sep,
+    dec          = dec,
     header       = TRUE,
+    encoding     = encoding,
     data.table   = FALSE,
     showProgress = FALSE
   )
+
+  names(df) <- sub("^\ufeff", "", enc2utf8(names(df)))
+  if (encoding == "Latin-1") {
+    for (j in seq_along(df)) {
+      if (is.character(df[[j]])) df[[j]] <- enc2utf8(df[[j]])
+    }
+  }
+  df
+}
+
+#' Read a single CSV from inside a zip
+#' @noRd
+.read_single_csv_from_zip <- function(zip_path, inner_path, module_name = NULL) {
+  zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
+
+  resolved <- .resolve_zip_path(zip_contents, inner_path, module_name)
+  if (is.null(resolved)) {
+    available <- .normalize_zip_names(zip_contents)
+    available <- available[grepl("(?i)\\.csv$", available, perl = TRUE)]
+    abort_parse_error(sprintf(
+      "Expected file '%s' not found inside zip %s. CSV files present: %s",
+      inner_path, basename(zip_path),
+      if (length(available)) paste(available, collapse = "; ") else "(none)"
+    ))
+  }
+
+  .read_zip_member(zip_path, resolved, label = inner_path)
 }
 
 #' Shape A module keyword index (GEIH-1 era, 2007-2020)
@@ -154,7 +302,7 @@
     name_norm <- zip_normalized[i]
     if (grepl("/$", name_norm)) next
 
-    base <- basename(name_norm)
+    base <- .base_name(name_norm)
 
     if (grepl("(?i)^cabecera", base, perl = TRUE)) {
       prefix <- "cabecera"
@@ -189,29 +337,10 @@
 #' Parse a Shape C (COVID-era single-CSV) module from a DANE monthly zip
 #'
 #' Shape C occurs in 2020-06 and 2020-12 where DANE published a single CSV
-#' for modules that normally have Cabecera/Resto pairs (Shape A). The zip
-#' does NOT contain files prefixed with "Cabecera" or "Resto"; instead a
-#' single CSV matching the module keyword is present.
-#' Uses base::unz() connection (no file extraction) so CP437 filenames
-#' never touch the filesystem and macOS HFS+ UTF-8 validation is bypassed.
+#' for modules that normally have Cabecera/Resto pairs (Shape A).
 #' @noRd
 .parse_shape_c <- function(zip_path, csv_name) {
-  con <- unz(zip_path, csv_name)
-  on.exit(try(close(con), silent = TRUE), add = TRUE)
-  lines <- suppressWarnings(readLines(con, encoding = "Latin-1", warn = FALSE))
-  if (length(lines) == 0) {
-    abort_parse_error(sprintf(
-      "Shape C CSV '%s' not found in zip %s",
-      csv_name, basename(zip_path)
-    ))
-  }
-  data.table::fread(
-    text         = paste(lines, collapse = "\n"),
-    sep          = "auto",
-    header       = TRUE,
-    data.table   = FALSE,
-    showProgress = FALSE
-  )
+  .read_zip_member(zip_path, csv_name)
 }
 
 #' Locate a single keyword-matching CSV in the zip (Shape C fallback)
@@ -230,7 +359,7 @@
     if (grepl("/$", name_norm)) next
     if (!grepl("\\.csv$", name_norm, ignore.case = TRUE)) next
 
-    base <- basename(name_norm)
+    base <- .base_name(name_norm)
     for (kw in keywords) {
       pattern <- paste0("(?i)\\b\\Q", kw, "\\E\\d*\\b")
       if (grepl(pattern, base, perl = TRUE)) {
@@ -257,8 +386,8 @@
 #'     but the zip does NOT contain Cabecera/Resto files. A single matching
 #'     CSV is found by keyword search and read directly (no CLASE split).
 #'
-#' Nested-zip layout (DANE 2024-03 / 2024-04) is deferred to v0.2.0; we
-#' detect and raise pulso_parse_error.
+#' Nested-zip layout (DANE 2024-03 / 2024-04): the inner CSV.zip is
+#' extracted once next to the cached outer zip and parsed transparently.
 #'
 #' @param zip_path Path to outer zip file (already downloaded).
 #' @param module_spec Named list from sources.json for the requested module
@@ -275,14 +404,12 @@
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
 
   if (.is_nested_zip_wrapper(zip_contents)) {
-    abort_parse_error(sprintf(
-      "Period %d-%02d uses a nested-zip layout (CSV.zip wrapper) that is not yet supported in pulso v0.1.0. Planned for v0.2.0. See https://github.com/Stebandido77/pulso/issues/61",
-      year, month
-    ))
+    zip_path <- .unwrap_nested_zip(zip_path)
+    zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
   }
 
   if (!is.null(module_spec$file)) {
-    return(.read_single_csv_from_zip(zip_path, module_spec$file))
+    return(.read_single_csv_from_zip(zip_path, module_spec$file, module_name))
   }
 
   if (!is.null(module_spec$cabecera) && !is.null(module_spec$resto)) {

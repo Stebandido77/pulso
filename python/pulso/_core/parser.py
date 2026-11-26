@@ -106,11 +106,30 @@ def find_shape_a_files(
     return cabecera, resto
 
 
-def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
-    """Resolve a ZIP member path, tolerating mojibake encoding and missing subfolder prefix.
+def _name_key(name: str) -> str:
+    """Fold cosmetic DANE filename drift into a comparison key.
 
-    Tries in order: (1) exact match, (2) mojibake-fixed path, (3) case-insensitive
-    basename match across all ZIP entries.  Raises KeyError if nothing matches.
+    Handles non-breaking spaces (U+00A0, present since 2025-12), accents,
+    letter case, repeated whitespace and the file extension (``.CSV`` vs
+    ``.csv`` since 2026-08).
+    """
+    import unicodedata
+
+    base = name.rsplit("/", 1)[-1].replace("\u00a0", " ")
+    base = unicodedata.normalize("NFKD", base)
+    base = "".join(c for c in base if not unicodedata.combining(c))
+    base = re.sub(r"\.[A-Za-z0-9]{2,4}$", "", base).lower()
+    return re.sub(r"[\s_]+", " ", base).strip()
+
+
+def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
+    """Resolve a ZIP member path, tolerating mojibake encoding and DANE filename drift.
+
+    Tries in order: (1) exact match, (2) mojibake-fixed path, (3) folded
+    basename match (case, accents, NBSP, extension), (4) unique member whose
+    folded basename contains the folded target, for renamed files such as
+    2026-04 "Capítulos de características generales ...". Raises KeyError
+    if nothing matches.
     """
     names = zf.namelist()
 
@@ -125,10 +144,18 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
     if fixed in names:
         return fixed
 
-    target = fixed.rsplit("/", 1)[-1].lower()
-    for name in names:
-        if not name.endswith("/") and name.rsplit("/", 1)[-1].lower() == target:
+    files = [n for n in names if not n.endswith("/")]
+    target = _name_key(fixed)
+    for name in files:
+        if _name_key(name) == target:
             return name
+
+    # Containment is only safe for long, specific targets: a short key like
+    # "ocupados" would also match "no ocupados".
+    if len(target) >= 15:
+        hits = [n for n in files if n.lower().endswith(".csv") and target in _name_key(n)]
+        if len(hits) == 1:
+            return hits[0]
 
     raise KeyError(f"No item named {path!r} in the archive")
 

@@ -335,3 +335,9 @@ def registry_with_fixture(
     # a synthetic epoch with area_filter=None so the parser takes Shape A path.
     monkeypatch.setattr(reg, "_SOURCES", _make_fixture_sources(fixture_zip_sha256))
     monkeypatch.setattr(reg, "_EPOCHS", _FIXTURE_EPOCHS)
+
+
+@pytest.fixture(autouse=True)
+def _ignore_user_cached_catalog(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep tests on the bundled catalog even if the developer ran update_catalog()."""
+    monkeypatch.setenv("PULSO_IGNORE_CACHED_CATALOG", "1")
