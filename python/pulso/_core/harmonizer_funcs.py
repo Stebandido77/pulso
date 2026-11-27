@@ -94,7 +94,10 @@ def merge_labor_status(
     Coding:
         "1" = ocupado   (OCI == 1)
         "2" = desocupado (OCI is NA, DSI == 1)
-        "3" = inactivo   (OCI is NA, DSI is NA)  — heuristic, see PHASE_2_CODE_NOTES.md
+        "3" = inactivo   (OCI is NA, DSI is NA or 0)  — heuristic, see PHASE_2_CODE_NOTES.md
+
+    DANE coded DSI as 1/blank until 2026-07 and as 1/0 from 2026-08 onwards
+    (pulso #76); both 0 and blank mean "not unemployed", so both map to "3".
     """
     if not isinstance(source_var, list) or len(source_var) < 2:
         raise ConfigError("merge_labor_status requires source_variable as a list ['OCI', 'DSI'].")
@@ -114,7 +117,7 @@ def merge_labor_status(
     result = pd.Series(pd.NA, index=df.index, dtype="string")
     result[oci.eq(1)] = "1"  # ocupado
     result[oci.isna() & dsi.eq(1)] = "2"  # desocupado
-    result[oci.isna() & dsi.isna()] = "3"  # inactivo (heuristic)
+    result[oci.isna() & (dsi.isna() | dsi.eq(0))] = "3"  # inactivo (heuristic)
 
     return result
 

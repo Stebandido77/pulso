@@ -121,3 +121,16 @@ def test_compute_ingreso_total_raises_when_no_columns_available() -> None:
 def test_get_custom_raises_on_unknown() -> None:
     with pytest.raises(ConfigError, match="not registered"):
         get_custom("nonexistent_fn_xyz")
+
+
+def test_merge_labor_status_dsi_zero_is_inactive() -> None:
+    """From 2026-08 DANE codes DSI as 1/0 instead of 1/blank (#76)."""
+    df = pd.DataFrame(
+        {
+            "OCI": pd.array([1, None, None, None], dtype="Int64"),
+            "DSI": pd.array([None, 1, 0, None], dtype="Int64"),
+        }
+    )
+    result = merge_labor_status(df, ["OCI", "DSI"], {}, _epoch())
+    assert result.tolist() == ["1", "2", "3", "3"]
+    assert result.notna().all()
