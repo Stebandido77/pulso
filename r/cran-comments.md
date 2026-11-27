@@ -1,6 +1,6 @@
 ## Update
 
-This is an update from pulso 0.1.1 to 0.2.0.
+This is an update from pulso 0.1.1 to 0.2.1.
 
 * Extends the bundled catalog of 'DANE' releases through 2026-09.
 * Fixes failures when reading recent 'DANE' archives (mixed CP437/UTF-8

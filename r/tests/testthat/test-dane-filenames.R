@@ -155,3 +155,12 @@ test_that(".sniff_decimal decides from the data", {
   expect_equal(.sniff_decimal("A;B\n1;2\n", ";"), ",")
   expect_equal(.sniff_decimal("A,B\n1,2\n", ","), ".")
 })
+
+test_that(".warn_unvalidated_once warns once per period per session", {
+  old <- .pulso_state$warned_periods
+  withr::defer(.pulso_state$warned_periods <- old)
+  .pulso_state$warned_periods <- character()
+  expect_warning(.warn_unvalidated_once(2099, 1), class = "pulso_unvalidated_warning")
+  expect_no_warning(.warn_unvalidated_once(2099, 1))
+  expect_warning(.warn_unvalidated_once(2099, 2), class = "pulso_unvalidated_warning")
+})

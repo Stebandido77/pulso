@@ -197,10 +197,20 @@ test_that("BUG-006: strict = TRUE refuses unvalidated periods", {
 test_that("BUG-006: unvalidated periods load by default with a warning", {
   skip_on_cran()
   skip_if_offline()
+  # Pick an unvalidated period from the catalog instead of hard-coding one:
+  # periods get validated over time (2026-09 was, after #76) and this test
+  # broke every time. 2024-03 is preferred because R reads its nested zip.
+  sources <- .load_sources()$data
+  unvalidated <- names(sources)[!vapply(sources, function(x) isTRUE(x$validated), logical(1))]
+  skip_if(length(unvalidated) == 0, "every period is validated")
+  period <- if ("2024-03" %in% unvalidated) "2024-03" else max(unvalidated)
+  yr <- as.integer(substr(period, 1, 4))
+  mo <- as.integer(substr(period, 6, 7))
+  # The warning fires once per period per session; reset so test order
+  # does not matter.
+  .pulso_state$warned_periods <- character()
   expect_warning(
-    # 2026-09 stays unvalidated (DSI 0/1, #76) and no other test loads it, so
-    # the once-per-session warning has not fired yet.
-    df <- pulso_load(year = 2026, month = 9, module = "ocupados"),
+    df <- pulso_load(year = yr, month = mo, module = "ocupados"),
     regexp = "not been validated"
   )
   expect_s3_class(df, "data.frame")
