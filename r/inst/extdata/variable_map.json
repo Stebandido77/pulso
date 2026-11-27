@@ -366,7 +366,7 @@
         "2": "Desocupado",
         "3": "Inactivo"
       },
-      "comparability_warning": "En GEIH-1, OCI es una variable unificada por persona. En GEIH-2, no existe un indicador OCI único para toda la población: OCI=1 aparece en ocupados.CSV; para no ocupados, DSI en no_ocupados.CSV distingue desocupados (1) de inactivos (NaN). Se requiere join entre módulos.",
+      "comparability_warning": "En GEIH-1, OCI es una variable unificada por persona. En GEIH-2, no existe un indicador OCI único para toda la población: OCI=1 aparece en ocupados.CSV; para no ocupados, DSI en no_ocupados.CSV distingue desocupados (1) de inactivos (NaN hasta 2026-07; 0 desde 2026-08). Se requiere join entre módulos.",
       "mappings": {
         "geih_2006_2020": {
           "source_variable": "OCI",
@@ -383,8 +383,8 @@
             "op": "custom",
             "name": "merge_labor_status"
           },
-          "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en ocupados.CSV (todos = 1); DSI en no_ocupados.CSV (1=desocupado, NaN=inactivo).",
-          "notes": "Función merge_labor_status: para registros en ocupados → condicion=1; para registros en no_ocupados con DSI=1 → condicion=2; DSI=NaN → condicion=3."
+          "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en ocupados.CSV (todos = 1); DSI en no_ocupados.CSV (1=desocupado, NaN o 0=inactivo; 0 desde 2026-08).",
+          "notes": "Función merge_labor_status: para registros en ocupados → condicion=1; para registros en no_ocupados con DSI=1 → condicion=2; DSI=NaN o DSI=0 (codificación desde 2026-08) → condicion=3."
         }
       }
     },
