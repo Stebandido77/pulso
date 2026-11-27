@@ -9019,9 +9019,9 @@
       "checksum_sha256": null,
       "size_bytes": 25945538,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-27T06:04:59+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.csv"
@@ -9048,7 +9048,7 @@
           "file": "CSV/Otras formas de trabajo.csv"
         }
       },
-      "notes": "Zip solo con CSV (sin DTA/SAV); extensión en minúsculas."
+      "notes": "Zip solo con CSV (sin DTA/SAV); extensi\u00f3n en min\u00fasculas. | Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2026-09": {
       "epoch": "geih_2021_present",
@@ -9057,9 +9057,9 @@
       "checksum_sha256": null,
       "size_bytes": 26557625,
       "scraped_at": "2026-11-26T05:30:00+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-27T06:04:59+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.csv"
@@ -9086,7 +9086,7 @@
           "file": "CSV/Otras formas de trabajo.csv"
         }
       },
-      "notes": "Zip solo con CSV (sin DTA/SAV); extensión en minúsculas."
+      "notes": "Zip solo con CSV (sin DTA/SAV); extensi\u00f3n en min\u00fasculas. | Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     }
   }
 }
