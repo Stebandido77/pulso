@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
+
+### Agregado
+- `python/scripts/fetch_dane_reference.py`: descarga los anexos oficiales de mercado laboral de la GEIH y extrae la serie mensual del Total Nacional (TD, TO, TGP) a `data/reference/dane_labor_indicators.csv`. Usa un anexo por época porque el anexo vigente retroproyecta 2001–2020 al marco 2018 (PET 15+): `anexo_empleo_dic_21.xlsx` (marco 2005) para 2006-01..2021-12 y el `anex-GEIH-<mes><año>.xlsx` más reciente para 2022-01 en adelante.
+- `python/scripts/validate_periods.py`: carga los módulos de fuerza de trabajo de cada periodo con `pulso`, calcula TD, TO y TGP ponderados con el factor de expansión de `variable_map.json` y los compara con el DANE (≤ 0,1 pp `pass`, ≤ 0,5 pp `review`, más `fail`; `pending` sin cifra oficial; `error` si no carga). Flags `--periods`, `--workers` y `--resume`; escribe `data/reference/validation_results.csv`.
+- `python/scripts/apply_validation.py`: marca como `validated: true` (`validated_by: "auto:validate_periods.py"`) los periodos en `pass` en `data/sources.json` y `r/inst/extdata/sources.json`. Nunca modifica un periodo ya validado: si deja de pasar, lo reporta como regresión y sale con código 1. Reescribe solo las cuatro líneas tocadas de cada periodo y verifica por re-lectura que nada más cambió.
+- `.github/workflows/dane_smoke.yml` (+ `python/scripts/dane_smoke.py`, `scripts/dane_smoke.R`): smoke test semanal contra el DANE real en R y Python, con issue automático `dane-format-change`, y resumen de meses nuevos vía `agent_scraper.py --dry-run`.
+- Extra opcional `validation` (`openpyxl`) para leer los anexos del DANE.
+
+### Cambiado
+- `sources.schema.json`: `validated_by` admite `"auto:validate_periods.py"`.
+
+### Datos
+- 191 de 237 periodos con `validated: true` (antes 5), validados con `validate_periods.py` contra el anexo del DANE de su época (diferencia máxima 0,000049 pp). Los 46 que no cargan en Python siguen con `validated: false`: 2008, 2011, 2013-04..06, 2020, 2022-10, 2023-04/08/09, 2024-03 y 2026-08/09 (issues #74, #75 y #76). Resultados y método en `data/reference/`.
+
 ## [1.2.0] — 2026-11-26  (Python pulso-co) / R pulso 0.2.0
 
 ### Added

@@ -25,7 +25,7 @@ def main() -> int:
         return 1
     if DST.exists():
         shutil.rmtree(DST)
-    shutil.copytree(SRC, DST, ignore=shutil.ignore_patterns(".gitkeep"))
+    shutil.copytree(SRC, DST, ignore=shutil.ignore_patterns(".gitkeep", "reference"))
     n = sum(1 for _ in DST.rglob("*.json"))
     print(f"Synced {n} JSON files from {SRC} -> {DST}")
     return 0

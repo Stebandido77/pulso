@@ -11,6 +11,9 @@ Failure modes:
   * ``data/`` missing -> RuntimeError (refuse to build a data-less wheel).
   * Fewer than 13 JSON files after sync -> RuntimeError (sanity check; we
     expect 7 top-level JSONs + 6 schemas).
+
+``data/reference/`` (DANE annex figures and validation results used by the
+maintenance scripts) is not package data and is excluded.
 """
 
 from __future__ import annotations
@@ -36,7 +39,7 @@ class SyncDataHook(BuildHookInterface):
         dst = Path(self.root) / "pulso" / "data"
         if dst.exists():
             shutil.rmtree(dst)
-        shutil.copytree(src, dst, ignore=shutil.ignore_patterns(".gitkeep"))
+        shutil.copytree(src, dst, ignore=shutil.ignore_patterns(".gitkeep", "reference"))
 
         json_count = sum(1 for _ in dst.rglob("*.json"))
         if json_count < 13:

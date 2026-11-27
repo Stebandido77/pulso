@@ -48,11 +48,13 @@ def test_describe_period_mode_validated() -> None:
 
 
 def test_describe_period_mode_unvalidated_returns_null_checksum() -> None:
-    """An entry with validated=false (one of the 225 in production) returns None checksum."""
+    """An entry with validated=false returns None checksum."""
     import pulso
+    from pulso._config.registry import _load_sources
 
-    # 2007-01 is in the registry but not validated end-to-end.
-    info = pulso.describe("ocupados", year=2007, month=1)
+    # Pick any period still unvalidated (the set shrinks as validate_periods.py runs).
+    period = next(p for p, e in sorted(_load_sources()["data"].items()) if not e["validated"])
+    info = pulso.describe("ocupados", year=int(period[:4]), month=int(period[5:]))
     assert info["validated"] is False
     assert info["checksum_sha256"] is None
 
