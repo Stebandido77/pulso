@@ -144,3 +144,4 @@ Banco de la República data:
 * Mixed-level merges (persona + hogar in same `pulso_load_merged()` call)
   deferred to v0.2.0.
 * Banco de la República integration currently covers the policy rate (`pulso_tpm()`) only. The Indicador Bancario de Referencia (IBR) and a generic SDMX accessor are deferred to v0.2.0.
+
