@@ -12,7 +12,9 @@ pulso_load_range(
   cache = TRUE,
   strict = FALSE,
   columns = NULL,
-  average_weights = FALSE
+  average_weights = FALSE,
+  deflate_to = NULL,
+  income_columns = NULL
 )
 }
 \arguments{
@@ -29,6 +31,13 @@ counts everyone once per month; DANE's moving-quarter levels (sheet
 "Total nacional Trim" of \code{anex-GEIH-<mes><anio>.xlsx}) are the
 average of the monthly levels, i.e. factor / 3. Rates (TD, TO, TGP) are
 the same with either factor. Default FALSE.}
+
+\item{deflate_to}{Character or NULL. If given ("YYYY-MM"), add
+\code{<col>_real} columns in pesos of that month with DANE's IPC
+(\code{\link{pulso_deflactar}}).}
+
+\item{income_columns}{Character or NULL. Columns to deflate. Default:
+\code{inglabo} (or \code{INGLABO}) when present.}
 }
 \value{
 A tibble with \code{periodo}, \code{year} and \code{month} columns

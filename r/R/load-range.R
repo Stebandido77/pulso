@@ -15,6 +15,12 @@
 #'   average of the monthly levels, i.e. factor / 3. Rates (TD, TO, TGP) are
 #'   the same with either factor. Default FALSE.
 #'
+#' @param deflate_to Character or NULL. If given ("YYYY-MM"), add
+#'   \code{<col>_real} columns in pesos of that month with DANE's IPC
+#'   (\code{\link{pulso_deflactar}}).
+#' @param income_columns Character or NULL. Columns to deflate. Default:
+#'   \code{inglabo} (or \code{INGLABO}) when present.
+#'
 #' @details A warning is raised when the range mixes microdata on the 2005
 #'   and the 2018 census frames (2022-01 onwards, and 2020, whose files DANE
 #'   re-weighted to the 2018 census): levels and rates are not comparable
@@ -38,7 +44,9 @@ pulso_load_range <- function(start, end, module,
                              cache = TRUE,
                              strict = FALSE,
                              columns = NULL,
-                             average_weights = FALSE) {
+                             average_weights = FALSE,
+                             deflate_to = NULL,
+                             income_columns = NULL) {
   periods <- .period_range(start, end)
   frames <- vapply(seq_len(nrow(periods)), function(i) {
     .sampling_frame(periods$year[i], periods$month[i])
@@ -74,7 +82,15 @@ pulso_load_range <- function(start, end, module,
     }
     df
   })
-  dplyr::bind_rows(parts)
+  out <- dplyr::bind_rows(parts)
+  if (!is.null(deflate_to)) {
+    cols <- income_columns
+    if (is.null(cols)) {
+      cols <- intersect(c("inglabo", "INGLABO", "ingreso_laboral", "ingreso_total"), names(out))
+    }
+    out <- pulso_deflactar(out, cols, deflate_to)
+  }
+  out
 }
 
 #' Inclusive data.frame of (year, month) between two "YYYY-MM" strings
