@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
 - El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
 
+### Datos
+- 235 de 237 periodos con `validated: true` (antes 193), validados con `validate_periods.py` contra el DANE: diferencia máxima de 0,004595 pp (2011-07) y ninguna regresión. Faltan 2020-03 y 2020-04, para los que el DANE no publicó desocupados ni inactivos.
+- 2008-01..12 y 2011-01..12 apuntan a los `Mes_txt.zip` del DANE (tabulados y con encabezado). Los CSV anteriores traían `fex_c_2011` sin punto decimal en todas las filas (#74).
+
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado

@@ -69,6 +69,18 @@ Conteo por status: {"error": 46, "pass": 191}
 | 2024-03 | 1 | `No ocupado.CSV` (singular) dentro de `CSV.zip`; el catálogo declara `No ocupados.CSV` | parser / catálogo | [#75](https://github.com/Stebandido77/pulso/issues/75) |
 | 2026-08, 2026-09 | 2 | `DSI` pasó a 0/1 (antes 1/vacío); `merge_labor_status` deja ~21.000 personas sin condición | cambio de formato DANE + armonizador | [#76](https://github.com/Stebandido77/pulso/issues/76) |
 
+## Corrida completa del 2026-11-28 (v3, W1)
+
+```
+Tiempo total: 218.8s
+Conteo por status: {"error": 2, "pass": 235}
+```
+
+- **235 `pass`**. La diferencia máxima es **0,004595 pp** (2011-07, TGP); en el resto es de 0,000049 pp o menos. No hay regresiones: los 193 periodos que ya estaban validados siguen en `pass`.
+- Cargan los 42 periodos nuevos gracias a #97 (estructuras de zip), #98 (referencia de 2020) y #99 (txt tabulados y clave de caché).
+- **2008 y 2011**: el catálogo apunta ahora a los `Mes_txt.zip` del DANE (catálogos 206 y 182). Los CSV que usaba traían `fex_c_2011` sin punto decimal en todas las filas (`730.787.704.198.798`), y eso no se puede reparar.
+- **2 `error`**: 2020-03 y 2020-04. El DANE no publicó los módulos Desocupados ni Inactivos para esos meses. Se validan cuando FT y PET salgan de variables (W2, #85).
+
 Para regenerar todo:
 
 ```

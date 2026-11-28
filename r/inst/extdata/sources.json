@@ -540,14 +540,14 @@
     },
     "2008-01": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3268",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3294",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 14921236,
+      "size_bytes": 6650865,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -574,18 +574,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2008-02": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3269",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3295",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 15382609,
+      "size_bytes": 6886716,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -612,18 +612,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2008-03": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3270",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3298",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 15015608,
+      "size_bytes": 6644810,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -650,18 +650,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2008-04": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12794",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3299",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 7361003,
+      "size_bytes": 7144986,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -688,18 +688,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2008-05": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12795",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3300",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 7172259,
+      "size_bytes": 6959081,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -726,18 +726,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2008-06": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12796",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3301",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6784286,
+      "size_bytes": 6589832,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -764,18 +764,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2008-07": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12798",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3302",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6815744,
+      "size_bytes": 6608135,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -802,18 +802,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2008-08": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12799",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3303",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6878658,
+      "size_bytes": 6673450,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -840,18 +840,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2008-09": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12800",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3304",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6700400,
+      "size_bytes": 6493260,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -878,18 +878,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2008-10": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12801",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3305",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6910115,
+      "size_bytes": 6688388,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -916,18 +916,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2008-11": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12802",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3306",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6815744,
+      "size_bytes": 6591910,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -954,18 +954,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2008-12": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/12803",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/206/download/3307",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/206",
       "checksum_sha256": null,
-      "size_bytes": 6438256,
+      "size_bytes": 6227604,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -992,7 +992,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2009-01": {
       "epoch": "geih_2006_2020",
@@ -1908,14 +1908,14 @@
     },
     "2011-01": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12719",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2729",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 6847201,
+      "size_bytes": 6638075,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1942,18 +1942,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2011-02": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12720",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2731",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7528775,
+      "size_bytes": 7296752,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -1980,18 +1980,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2011-03": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12721",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2733",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7277117,
+      "size_bytes": 7064504,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2018,18 +2018,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2011-04": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12722",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2735",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 6910115,
+      "size_bytes": 6715707,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2056,18 +2056,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2011-05": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12723",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2737",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7245660,
+      "size_bytes": 7039434,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2094,18 +2094,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP -0.000"
     },
     "2011-06": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12724",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2739",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7235174,
+      "size_bytes": 7024297,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2132,18 +2132,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2011-07": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12725",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2741",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7266631,
+      "size_bytes": 7051788,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2170,18 +2170,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.004, TGP +0.005"
     },
     "2011-08": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12726",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2743",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7214202,
+      "size_bytes": 7009363,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2208,18 +2208,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2011-09": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12727",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2745",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7182745,
+      "size_bytes": 6974398,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2246,18 +2246,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2011-10": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12728",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2747",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7140802,
+      "size_bytes": 6922491,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2284,18 +2284,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2011-11": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12729",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2749",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 7214202,
+      "size_bytes": 6994029,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2322,18 +2322,18 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2011-12": {
       "epoch": "geih_2006_2020",
-      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/12730",
+      "download_url": "https://microdatos.dane.gov.co/index.php/catalog/182/download/2751",
       "landing_page": "https://microdatos.dane.gov.co/index.php/catalog/182",
       "checksum_sha256": null,
-      "size_bytes": 6962544,
+      "size_bytes": 6750954,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2360,7 +2360,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2012-01": {
       "epoch": "geih_2006_2020",
@@ -2939,9 +2939,9 @@
       "checksum_sha256": null,
       "size_bytes": 6973030,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -2968,7 +2968,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2013-05": {
       "epoch": "geih_2006_2020",
@@ -2977,9 +2977,9 @@
       "checksum_sha256": null,
       "size_bytes": 7109345,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3006,7 +3006,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2013-06": {
       "epoch": "geih_2006_2020",
@@ -3015,9 +3015,9 @@
       "checksum_sha256": null,
       "size_bytes": 6962544,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -3044,7 +3044,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2013-07": {
       "epoch": "geih_2006_2020",
@@ -6017,9 +6017,9 @@
       "checksum_sha256": null,
       "size_bytes": 21799895,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6046,7 +6046,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2020-02": {
       "epoch": "geih_2006_2020",
@@ -6055,9 +6055,9 @@
       "checksum_sha256": null,
       "size_bytes": 21852323,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6084,7 +6084,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2020-03": {
       "epoch": "geih_2006_2020",
@@ -6169,9 +6169,9 @@
       "checksum_sha256": null,
       "size_bytes": 12289310,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6198,7 +6198,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2020-06": {
       "epoch": "geih_2006_2020",
@@ -6207,9 +6207,9 @@
       "checksum_sha256": null,
       "size_bytes": 12278824,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6236,7 +6236,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO -0.000, TGP +0.000"
     },
     "2020-07": {
       "epoch": "geih_2006_2020",
@@ -6245,9 +6245,9 @@
       "checksum_sha256": null,
       "size_bytes": 12142510,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6274,7 +6274,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2020-08": {
       "epoch": "geih_2006_2020",
@@ -6283,9 +6283,9 @@
       "checksum_sha256": null,
       "size_bytes": 24043847,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6312,7 +6312,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP +0.000"
     },
     "2020-09": {
       "epoch": "geih_2006_2020",
@@ -6321,9 +6321,9 @@
       "checksum_sha256": null,
       "size_bytes": 23708303,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6350,7 +6350,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP -0.000"
     },
     "2020-10": {
       "epoch": "geih_2006_2020",
@@ -6359,9 +6359,9 @@
       "checksum_sha256": null,
       "size_bytes": 24201134,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6388,7 +6388,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2020-11": {
       "epoch": "geih_2006_2020",
@@ -6397,9 +6397,9 @@
       "checksum_sha256": null,
       "size_bytes": 23435673,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6426,7 +6426,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2020-12": {
       "epoch": "geih_2006_2020",
@@ -6435,9 +6435,9 @@
       "checksum_sha256": null,
       "size_bytes": 23330816,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "cabecera": "Cabecera - Características generales (Personas).csv",
@@ -6464,7 +6464,7 @@
           "resto": "Resto - Otros ingresos.csv"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD -0.000, TO +0.000, TGP +0.000"
     },
     "2021-01": {
       "epoch": "geih_2006_2020",
@@ -7271,9 +7271,9 @@
       "checksum_sha256": null,
       "size_bytes": 71638712,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7300,7 +7300,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO -0.000, TGP -0.000"
     },
     "2022-11": {
       "epoch": "geih_2021_present",
@@ -7499,9 +7499,9 @@
       "checksum_sha256": null,
       "size_bytes": 63847792,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7528,7 +7528,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-05": {
       "epoch": "geih_2021_present",
@@ -7651,9 +7651,9 @@
       "checksum_sha256": null,
       "size_bytes": 70999080,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7680,7 +7680,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-09": {
       "epoch": "geih_2021_present",
@@ -7689,9 +7689,9 @@
       "checksum_sha256": null,
       "size_bytes": 64592281,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7718,7 +7718,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2023-10": {
       "epoch": "geih_2021_present",
@@ -7917,9 +7917,9 @@
       "checksum_sha256": null,
       "size_bytes": 67171778,
       "scraped_at": "2026-05-01T06:49:28.328748+00:00",
-      "validated": false,
-      "validated_by": null,
-      "validated_at": null,
+      "validated": true,
+      "validated_by": "auto:validate_periods.py",
+      "validated_at": "2026-11-28T06:55:33+00:00",
       "modules": {
         "caracteristicas_generales": {
           "file": "CSV/Características generales, seguridad social en salud y educación.CSV"
@@ -7946,7 +7946,7 @@
           "file": "CSV/Otras formas de trabajo.CSV"
         }
       },
-      "notes": null
+      "notes": "Validacion automatica vs anexo DANE (pp): TD +0.000, TO +0.000, TGP +0.000"
     },
     "2024-04": {
       "epoch": "geih_2021_present",
