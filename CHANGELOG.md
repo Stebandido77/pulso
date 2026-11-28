@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
 ### Agregado
+- `pulso.trm()` / `pulso_trm()` (#90): TRM (pesos por dólar) certificada por la Superintendencia Financiera (dataset `32sa-8pi3` de datos.gov.co), un registro por día, con la interfaz de `tpm()`: snapshot incluido (`trm_superfinanciera_20261128.csv.gz`, 2006–2026-11-30, 40 KB) y llamada en vivo con fallback. **IBR pendiente**: la API SDMX del Banco de la República (la única fuente del IBR) estaba en mantenimiento y no se pudo verificar el identificador del flujo.
 - Variables canónicas `pet` (población en edad de trabajar) y `fuerza_trabajo` (FT) en `variable_map.json`, para las dos épocas, con la definición del DANE citada (#79):
   - PET: 12+ en cabecera y 10+ en centro poblado y rural disperso en el marco 2005; 15+ en el marco 2018. 2020 usa 15+ porque sus microdatos están en el marco 2018.
   - FT: ocupados + desocupados, a partir de las banderas de cada módulo.

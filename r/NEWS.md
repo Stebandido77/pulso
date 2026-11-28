@@ -1,5 +1,11 @@
 # pulso (development version)
 
+## Novedades
+
+* `pulso_trm()`: TRM certificada por la Superintendencia Financiera, un
+  registro por día, con la misma interfaz de `pulso_tpm()` (snapshot incluido
+  hasta 2026-11-30 y llamada en vivo con fallback) (#90).
+
 ## Datos
 
 * 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
