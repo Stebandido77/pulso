@@ -17,7 +17,7 @@ from __future__ import annotations
 import io
 import re
 import zipfile
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pulso._config.registry import _load_sources
 from pulso._utils.columns import _normalize_dane_columns
@@ -536,7 +536,7 @@ def _select_columns(df: pd.DataFrame, columns: list[str] | None, epoch: Epoch) -
             UserWarning,
             stacklevel=4,
         )
-    return df[keep]
+    return cast("pd.DataFrame", df[keep])
 
 
 def _parse_shape_c_module(
@@ -818,12 +818,12 @@ def _apply_area(df: pd.DataFrame, area: Area, epoch: Epoch) -> pd.DataFrame:
     if area == "total":
         return df
     if "_area" in df.columns:  # Shape A / Shape C / Shape A lookup
-        return df[df["_area"] == area].reset_index(drop=True)
+        return cast("pd.DataFrame", df[df["_area"] == area].reset_index(drop=True))
     area_filter = epoch.area_filter
     if area_filter is None:
         raise ParseError(f"Cannot apply area={area!r}: no _area column and no area filter.")
     values = area_filter.cabecera_values if area == "cabecera" else area_filter.resto_values
-    return df[df[area_filter.column].isin(values)].reset_index(drop=True)
+    return cast("pd.DataFrame", df[df[area_filter.column].isin(values)].reset_index(drop=True))
 
 
 def parse_module_cached(

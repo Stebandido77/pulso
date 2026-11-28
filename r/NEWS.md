@@ -1,5 +1,17 @@
 # pulso (development version)
 
+## Novedades
+
+* `pulso_load()` acepta `columns =`: lee solo esas columnas del archivo
+  (`data.table::fread(select =)`) y conserva siempre las llaves de merge
+  (#86).
+* Con el paquete 'arrow' instalado (ahora en Suggests), `pulso_load()` guarda
+  el módulo ya parseado en parquet dentro de la caché de pulso. La siguiente
+  carga del mismo periodo y módulo no vuelve a leer el zip. Sin 'arrow' no
+  cambia nada.
+* `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
+  (`"parsed"`) o ambos.
+
 ## Datos
 
 * 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
