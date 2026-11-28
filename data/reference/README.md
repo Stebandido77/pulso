@@ -74,6 +74,17 @@ Conteo por status: {"error": 46, "pass": 191}
 | 2024-03 | 1 | `No ocupado.CSV` (singular) dentro de `CSV.zip`; el catálogo declara `No ocupados.CSV` | parser / catálogo | [#75](https://github.com/Stebandido77/pulso/issues/75) |
 | 2026-08, 2026-09 | 2 | `DSI` pasó a 0/1 (antes 1/vacío); `merge_labor_status` deja ~21.000 personas sin condición | cambio de formato DANE + armonizador | [#76](https://github.com/Stebandido77/pulso/issues/76) |
 
+## Corrida completa del 2026-11-28 (v3, W2: definiciones de `variable_map`)
+
+```
+Tiempo total: 124.3s
+Conteo por status: {"error": 2, "pass": 235}
+```
+
+- PET, FT, OC y DS salen de `pet`, `fuerza_trabajo` y `condicion_actividad` de `variable_map.json`, a través de `load_merged(..., harmonize=True)` (#101).
+- **235 `pass`**, con diferencia máxima de **0,000049 pp**. 2011-07 baja de 0,004595 a 0,000002 pp con la PET explícita. Ninguna inconsistencia entre definiciones y ninguna regresión.
+- **2020-03 y 2020-04 (`error`). Diagnóstico:** el DANE publicó solo Características generales, Fuerza de trabajo y Ocupados, sin desocupados ni inactivos. Con PET de 15+ y `OCI`, la TO coincide exacta (2020-03: 52,4500 contra 52,45; 2020-04: 42,4971 contra 42,4971). TD y TGP necesitan a los desocupados. En el archivo de Fuerza de trabajo de esos meses, `Ft` vale 1 para toda la PET, así que no sirve como bandera de FT. La alternativa sería derivar la desocupación de las preguntas del cuestionario, y eso queda como decisión pendiente.
+
 ## Corrida completa del 2026-11-28 (v3, W1)
 
 ```
