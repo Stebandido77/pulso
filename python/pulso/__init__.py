@@ -66,7 +66,7 @@ from pulso._utils.exceptions import (
 )
 from pulso.metadata.api import describe_column, list_columns_metadata
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 __all__ = [
     "CacheError",

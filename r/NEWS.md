@@ -1,4 +1,4 @@
-# pulso (development version)
+# pulso 0.3.0
 
 ## Novedades
 
