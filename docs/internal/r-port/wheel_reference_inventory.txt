@@ -10,9 +10,9 @@
       2922  b69e1b85e3b40cb24ceafee5020be43678e9e3eefca9d42e539d5df1105f6b4e  pulso/_core/expander.py
      16072  de9490e44572c3f9e9c33b3c25f6fb4608879a3ca1a926a6b9694713504989e9  pulso/_core/harmonizer.py
       9117  c20ae138463c859ffaaf108aa17de1d2c0775f90e51e30a88f586754ba2ad635  pulso/_core/harmonizer_funcs.py
-     28325  1f98adc1878759f3dddc3dbc3b50eb1c1d87948b8e956d899dad54c0f8da5085  pulso/_core/loader.py
+     28390  39551b1cb960e0cf28f6985390799673fdc6a8e3dcf3c3588df01819af489876  pulso/_core/loader.py
       5686  9afa25856f0b381b2b409c1a932a00772681b37f44620deec1ad7521813b819a  pulso/_core/merger.py
-     26572  0253a770dcb92e75b52254c2195d93bff5b62ceb13f7aaba80e45d2dbf08f456  pulso/_core/parser.py
+     34783  075d107013ca1c356f91c0400efde2fc84e7ff429a3373bf3958ad19ba7bb1b5  pulso/_core/parser.py
         58  ae24694bf1b63ebd80885b1c41e8f422c6497f243b04fc3469347f4f7a43b534  pulso/_scripts/__init__.py
       4873  ecc15bdfec6cc461fcae64601f900dc7666c52df6b41ac82b1fa3539ed710b8e  pulso/_scripts/add_month.py
       2303  76a276f29217669b1667892fb2362d004b0c5a488e48045437c305f1a1b688d5  pulso/_scripts/validate_sources.py
@@ -42,7 +42,7 @@
      10077  ba30b28a8cd39dbd7c12796f5c94c2865217367b884d6046211e9840e4fd7bae  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
      28441  230557958c22eaad3e8ebc76ae587e761e441be044a8cb94cd420863f77e8898  pulso_co-1.2.1.dist-info/METADATA
-      4065  f34f911ddd3fbd70e5dc3cbfdd1494f16a273009c685db0c4d45db638f91ec32  pulso_co-1.2.1.dist-info/RECORD
+      4065  a5a0ccc77dc453a3c573ebd8cf83eee26dc2181f5439612d96105c6c5b0dc07c  pulso_co-1.2.1.dist-info/RECORD
         87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.2.1.dist-info/WHEEL
        128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.2.1.dist-info/entry_points.txt
       1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.2.1.dist-info/licenses/LICENSE

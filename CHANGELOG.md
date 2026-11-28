@@ -8,12 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
 ### Agregado
+- Caché del módulo ya parseado en parquet (#86): `pulso.load()` guarda el módulo completo en `<caché>/parsed/<año>/<mes>/<módulo>_<clave>.parquet`. La clave combina la URL de descarga, el módulo, `PARSER_VERSION` y la entrada de `sources.json` del periodo, sin los campos de validación. Las cargas siguientes no vuelven a abrir el zip y leen solo las columnas pedidas. `pulso.cache_clear("parsed")` la borra y `cache=False` la evita. En R, con `arrow` instalado (Suggests), igual: `pulso_clear_cache()` es nueva. Sin `arrow`, R no usa caché parquet.
+- `pulso_load(columns =)` en R (antes solo existía en Python): lee solo esas columnas con `fread(select =)`.
+- `python/scripts/benchmark_load.py`: tiempo y memoria pico de `pulso.load` en primera y segunda carga.
 - Variables canónicas `pet` (población en edad de trabajar) y `fuerza_trabajo` (FT) en `variable_map.json`, para las dos épocas, con la definición del DANE citada (#79):
   - PET: 12+ en cabecera y 10+ en centro poblado y rural disperso en el marco 2005; 15+ en el marco 2018. 2020 usa 15+ porque sus microdatos están en el marco 2018.
   - FT: ocupados + desocupados, a partir de las banderas de cada módulo.
 - Funciones de armonización `labor_status_from_flags`, `labor_force_from_flags` y `pet_by_age_zone`. Los transforms `custom` aceptan `params` en el esquema de `variable_map`.
 
 ### Cambiado
+- `columns=` lee solo esas columnas desde el CSV (`usecols`) y conserva siempre las llaves de merge (`DIRECTORIO`, `SECUENCIA_P`, `ORDEN` y `HOGAR` si existe), para que el resultado se pueda seguir uniendo. Los nombres se comparan sin distinguir mayúsculas y `FEX_C` también encuentra `fex_c_2011`. Si una columna pedida no existe, se avisa con un `UserWarning` en vez de lanzar `KeyError` (Shape B).
+- Shape B: el DataFrame se consolida con `copy()` al leerlo, en vez de quedar en ~200 bloques (#52).
 - La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
 - El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
 - `condicion_actividad` en el marco 2005 usa `OCI`/`DSI`/`INI` en vez de solo `OCI`, que dejaba sin código a desocupados e inactivos (#79). Requiere cargar juntos los módulos de fuerza de trabajo con `load_merged()`.

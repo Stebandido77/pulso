@@ -13,7 +13,8 @@ pulso_load(
   cache = TRUE,
   metadata = FALSE,
   strict = FALSE,
-  allow_unvalidated = NULL
+  allow_unvalidated = NULL,
+  columns = NULL
 )
 }
 \arguments{
@@ -41,6 +42,14 @@ such periods raise \code{pulso_data_not_validated}.}
 
 \item{allow_unvalidated}{Deprecated. Use \code{strict} instead
 (\code{allow_unvalidated = FALSE} is \code{strict = TRUE}).}
+
+\item{columns}{Character or NULL. Columns to keep (DANE names, matched
+case-insensitively; \code{FEX_C} also matches \code{fex_c_2011}). Only
+those columns are read from the file (\code{data.table::fread(select =)}).
+The merge keys (\code{DIRECTORIO}, \code{SECUENCIA_P}, \code{ORDEN},
+\code{HOGAR}) are always kept so the result can still be merged.
+Requested columns that the file lacks are skipped with a warning.
+Default NULL (all columns).}
 }
 \value{
 A tibble with the microdata. If metadata = TRUE, the tibble
@@ -49,6 +58,14 @@ has an attribute "pulso_metadata" with structured column info.
 \description{
 Downloads and parses microdata from Colombia's Gran Encuesta Integrada
 de Hogares (GEIH), published by DANE.
+}
+\details{
+When \code{cache = TRUE} and the 'arrow' package is installed,
+the parsed module is also cached as parquet under the pulso cache
+directory, so the next load of the same period and module skips the
+zip and the CSV parsing. The cache key includes the download URL, the
+module, the parser version and the period's catalog entry. Without
+'arrow' nothing changes. Clear it with \code{pulso_clear_cache("parsed")}.
 }
 \examples{
 \donttest{
