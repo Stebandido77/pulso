@@ -8,8 +8,10 @@ test_that("pulso_list_variables returns tibble with correct columns", {
 test_that("pulso_list_variables NULL returns all variables", {
   result <- pulso_list_variables()
   expect_gte(nrow(result), 1L)
-  # variable_map.json currently contains 30 variables
-  expect_equal(nrow(result), 30L)
+  # One row per variable of variable_map.json (32 since pet and
+  # fuerza_trabajo, #79); read the count instead of hard-coding it.
+  expect_equal(nrow(result), length(.load_variable_map()))
+  expect_true(all(c("pet", "fuerza_trabajo") %in% result$canonical_name))
 })
 
 test_that("pulso_list_variables filters by valid module", {
