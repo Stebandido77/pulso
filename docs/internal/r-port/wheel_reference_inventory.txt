@@ -1,4 +1,4 @@
-      2721  e938a4dfc6a89e17bd32f0c63ce69b41c2c01e72eef638d8794195cebea2bf01  pulso/__init__.py
+      2868  5dbc64eea15e4ee01298f0e1e46bea87591a1c3a2e1227745d7a582bf4431b84  pulso/__init__.py
         83  bdd49275fc3e29e8842cec79d17b10bc67d7bb7ff577b11f834a968812e40424  pulso/_config/__init__.py
       4959  ab0d4b71147f1f0d71a4dfc65108adc5b3c5e300172924f5e92e03e7165b2e72  pulso/_config/epochs.py
      19958  661e621e4a33b223d90edae810d3a57ce28f0e0f69a5d0c045cd2fcd969e1376  pulso/_config/registry.py
@@ -10,6 +10,7 @@
       2922  b69e1b85e3b40cb24ceafee5020be43678e9e3eefca9d42e539d5df1105f6b4e  pulso/_core/expander.py
      16072  de9490e44572c3f9e9c33b3c25f6fb4608879a3ca1a926a6b9694713504989e9  pulso/_core/harmonizer.py
       9117  c20ae138463c859ffaaf108aa17de1d2c0775f90e51e30a88f586754ba2ad635  pulso/_core/harmonizer_funcs.py
+      8428  6db0d655837f906f6a0678c5a6cce81b7fae8d1464ebd0ce5f2ed4fdca784ec1  pulso/_core/indicadores.py
      28390  39551b1cb960e0cf28f6985390799673fdc6a8e3dcf3c3588df01819af489876  pulso/_core/loader.py
       5686  9afa25856f0b381b2b409c1a932a00772681b37f44620deec1ad7521813b819a  pulso/_core/merger.py
      34783  075d107013ca1c356f91c0400efde2fc84e7ff429a3373bf3958ad19ba7bb1b5  pulso/_core/parser.py
@@ -45,7 +46,7 @@
      10077  ba30b28a8cd39dbd7c12796f5c94c2865217367b884d6046211e9840e4fd7bae  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
      28441  230557958c22eaad3e8ebc76ae587e761e441be044a8cb94cd420863f77e8898  pulso_co-1.2.1.dist-info/METADATA
-      4320  fadf7ff94b7f8e7dbab82c16d608eb9b5ba6a8acb804e063f405f558b10e48b9  pulso_co-1.2.1.dist-info/RECORD
+      4403  bf4c4a20f84055e09c3be273d8addadc459c5b1d9e8aea0039dd57369da3c1cb  pulso_co-1.2.1.dist-info/RECORD
         87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.2.1.dist-info/WHEEL
        128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.2.1.dist-info/entry_points.txt
       1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.2.1.dist-info/licenses/LICENSE
