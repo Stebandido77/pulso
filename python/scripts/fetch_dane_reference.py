@@ -15,6 +15,15 @@ proyecciones de población, elaboradas con base en los resultados del censo
 2005"). Each epoch is therefore compared with the annex built on its own frame.
 The epoch date ranges come from ``data/epochs.json``.
 
+Exception: 2020. The 2020 microdata (DANE catalog 780) already ship with
+expansion factors retro-projected to the 2018 census frame, although
+``epochs.json`` places them in ``geih_2006_2020``. Computed with pulso they
+match the *current* annex to its four published decimals (2020-01: TD
+13.4585 / TO 55.3277 / TGP 63.9319, against 12.9880 / 54.3707 / 62.4864 in
+``anexo_empleo_dic_21.xlsx``), while 2019 (catalog 599) and 2021
+(catalog 701) match the 2005-frame annex. ``MICRODATA_ON_2018_FRAME`` lists
+those months; they take the current annex.
+
 Usage:
     python python/scripts/fetch_dane_reference.py
     python python/scripts/fetch_dane_reference.py --current-url URL
@@ -64,6 +73,11 @@ MONTHS_ES = {
 }
 
 FIELDS = ["period", "td", "to", "tgp", "source_url", "retrieved_at"]
+
+# Months whose microdata are on the 2018 frame although their epoch is
+# geih_2006_2020 (see the module docstring). Inclusive (start, end) ranges.
+MICRODATA_ON_2018_FRAME: tuple[tuple[str, str], ...] = (("2020-01", "2020-12"),)
+FRAME_2018_EPOCH = "geih_2021_present"
 
 
 @dataclass(frozen=True)
@@ -189,20 +203,38 @@ def epoch_ranges(epochs_path: Path = EPOCHS_PATH) -> dict[str, tuple[str, str | 
     return {k: (v["date_range"][0], v["date_range"][1]) for k, v in data["epochs"].items()}
 
 
+def _in_frame_2018_override(
+    period: str, overrides: tuple[tuple[str, str], ...] = MICRODATA_ON_2018_FRAME
+) -> bool:
+    return any(lo <= period <= hi for lo, hi in overrides)
+
+
 def build_reference(
     specs: list[AnnexSpec],
     ranges: dict[str, tuple[str, str | None]],
     fetch: Any = _http_get,
     now: dt.datetime | None = None,
+    frame_2018_overrides: tuple[tuple[str, str], ...] = MICRODATA_ON_2018_FRAME,
 ) -> list[dict[str, Any]]:
-    """Fetch every annex and keep, for each one, only its own epoch's months."""
+    """Fetch every annex and keep, for each one, only the months on its frame.
+
+    A month belongs to the annex of its epoch, except the months listed in
+    *frame_2018_overrides*, which belong to the 2018-frame annex whatever
+    their epoch.
+    """
     retrieved = (now or dt.datetime.now(dt.timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
     rows: dict[str, dict[str, Any]] = {}
     for spec in specs:
         lo, hi = ranges[spec.epoch]
         series = parse_national_block(read_sheet_rows(fetch(spec.url), spec.sheet))
         for period, vals in series.items():
-            if period < lo or (hi is not None and period > hi):
+            override = _in_frame_2018_override(period, frame_2018_overrides)
+            in_epoch = lo <= period and (hi is None or period <= hi)
+            if spec.epoch == FRAME_2018_EPOCH:
+                keep = in_epoch or override
+            else:
+                keep = in_epoch and not override
+            if not keep:
                 continue
             rows[period] = {
                 "period": period,
