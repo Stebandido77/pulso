@@ -1,7 +1,12 @@
 name: Python CI
 
-# Replaces the previous root-level ci.yml. Scoped to changes under python/ or
-# data/ so R-only PRs don't trigger Python CI.
+# Replaces the previous root-level ci.yml.
+#
+# pull_request has no `paths:` filter on purpose: the jobs below are required
+# checks on main, and a workflow that never starts leaves them pending forever.
+# Every job always runs; the detect-changes step decides whether the heavy
+# steps run. The `if:` lives on steps, never on jobs, because a skipped job
+# counts as passed and a skipped matrix job reports its unexpanded name.
 
 on:
   push:
@@ -19,12 +24,6 @@ on:
       - "docs/internal/r-port/wheel_reference_inventory.txt"
   pull_request:
     branches: [main]
-    paths:
-      - "python/**"
-      - "data/**"
-      - "scripts/sync_data.py"
-      - ".github/workflows/python-ci.yml"
-      - "docs/internal/r-port/wheel_reference_inventory.txt"
 
 concurrency:
   group: python-ci-${{ github.ref }}
@@ -40,17 +39,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
       - name: Install ruff
+        if: steps.changes.outputs.run == 'true'
         run: pip install "ruff>=0.4"
       - name: Sync data into pulso/data/
+        if: steps.changes.outputs.run == 'true'
         working-directory: ${{ github.workspace }}
         run: python scripts/sync_data.py
       - name: Ruff check
+        if: steps.changes.outputs.run == 'true'
         run: ruff check pulso tests scripts
       - name: Ruff format check
+        if: steps.changes.outputs.run == 'true'
         run: ruff format --check pulso tests scripts
 
   typecheck:
@@ -58,15 +69,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
       - name: Sync data into pulso/data/
+        if: steps.changes.outputs.run == 'true'
         working-directory: ${{ github.workspace }}
         run: python scripts/sync_data.py
       - name: Install package
+        if: steps.changes.outputs.run == 'true'
         run: pip install -e ".[dev]"
       - name: Mypy
+        if: steps.changes.outputs.run == 'true'
         run: mypy pulso
         continue-on-error: true  # type-check is advisory
 
@@ -79,18 +101,29 @@ jobs:
         python: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: ${{ matrix.python }}
       - name: Sync data into pulso/data/
+        if: steps.changes.outputs.run == 'true'
         working-directory: ${{ github.workspace }}
         run: python scripts/sync_data.py
       - name: Install package
+        if: steps.changes.outputs.run == 'true'
         run: pip install -e ".[dev]"
       - name: Run tests
+        if: steps.changes.outputs.run == 'true'
         run: pytest -v --cov=pulso --cov-report=xml
       - name: Upload coverage
-        if: matrix.python == '3.11'
+        if: steps.changes.outputs.run == 'true' && matrix.python == '3.11'
         uses: codecov/codecov-action@v4
         with:
           files: python/coverage.xml
@@ -101,15 +134,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
       - name: Sync data into pulso/data/
+        if: steps.changes.outputs.run == 'true'
         working-directory: ${{ github.workspace }}
         run: python scripts/sync_data.py
       - name: Install
+        if: steps.changes.outputs.run == 'true'
         run: pip install -e ".[dev]"
       - name: Validate sources.json, epochs.json, variable_map.json
+        if: steps.changes.outputs.run == 'true'
         run: pytest tests/unit/test_schemas.py -v
 
   wheel-identity:
@@ -117,14 +161,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
       - name: Install build
+        if: steps.changes.outputs.run == 'true'
         run: pip install build
       - name: Build wheel
+        if: steps.changes.outputs.run == 'true'
         run: python -m build --wheel
       - name: Compare to reference inventory
+        if: steps.changes.outputs.run == 'true'
         working-directory: ${{ github.workspace }}
         run: |
           python scripts/wheel_inventory.py python/dist/pulso_co-*.whl > /tmp/now.txt
