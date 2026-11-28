@@ -94,10 +94,14 @@ def download_zip(
         )
 
     checksum: str | None = record["checksum_sha256"]
-    # Cache filename: use checksum prefix when available (content-addressed),
-    # otherwise a stable, period-derived name so unvalidated entries can still
-    # be cached and re-used across runs without colliding with validated ones.
-    short = checksum[:16] if checksum is not None else f"unvalidated_{year}-{month:02d}"
+    url: str = record["download_url"].strip()
+    # Cache filename: checksum prefix when available (content-addressed),
+    # otherwise the period plus a short hash of the URL, so that pointing the
+    # catalog at another DANE file (e.g. the 2008/2011 ``Mes_txt.zip``
+    # releases, #74) never reuses a stale cached zip. Mirrors the cache key
+    # of ``.download_zip()`` in ``r/R/utils-download.R``.
+    url_key = hashlib.sha1(url.encode("utf-8")).hexdigest()[:10]
+    short = checksum[:16] if checksum is not None else f"{year}-{month:02d}_{url_key}"
     dest = cache_path() / "raw" / str(year) / f"{month:02d}" / f"{short}.zip"
 
     if cache and dest.exists():
@@ -106,7 +110,6 @@ def download_zip(
         logger.warning("Checksum mismatch on cached file %s — re-downloading.", dest)
         dest.unlink()
 
-    url: str = record["download_url"]
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(".tmp")
 

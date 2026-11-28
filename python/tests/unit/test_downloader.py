@@ -195,8 +195,40 @@ def test_download_zip_with_null_checksum_first_run(
 
     assert p.exists()
     assert p.read_bytes() == payload
-    # The cache key falls back to a stable, period-derived name.
-    assert p.name == "unvalidated_2024-06.zip"
+    # The cache key falls back to the period plus a short hash of the URL.
+    url = _sources_with_null_checksum()["data"]["2024-06"]["download_url"].strip()
+    url_key = hashlib.sha1(url.encode("utf-8")).hexdigest()[:10]
+    assert p.name == f"2024-06_{url_key}.zip"
+
+
+def test_download_zip_null_checksum_cache_key_changes_with_url(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mocker: Any,
+) -> None:
+    """Re-pointing a period at another DANE file must not reuse the cached zip (#74)."""
+    import pulso._config.registry as reg
+
+    monkeypatch.setenv("PULSO_CACHE_DIR", str(tmp_path / "cache"))
+    mock_response = MagicMock()
+    mock_response.iter_content.return_value = [b"zip"]
+    mock_response.headers = {}
+    mock_response.raise_for_status = MagicMock()
+    get = mocker.patch("requests.get", return_value=mock_response)
+
+    from pulso._core.downloader import download_zip
+
+    sources = _sources_with_null_checksum()
+    monkeypatch.setattr(reg, "_SOURCES", sources)
+    first = download_zip(2024, 6, allow_unvalidated=True, show_progress=False)
+
+    sources = _sources_with_null_checksum()
+    sources["data"]["2024-06"]["download_url"] = "https://example.org/other.zip"
+    monkeypatch.setattr(reg, "_SOURCES", sources)
+    second = download_zip(2024, 6, allow_unvalidated=True, show_progress=False)
+
+    assert first != second
+    assert get.call_count == 2
 
 
 def test_download_zip_with_null_checksum_cache_hit(
@@ -211,7 +243,9 @@ def test_download_zip_with_null_checksum_cache_hit(
     monkeypatch.setenv("PULSO_CACHE_DIR", str(cache_root))
 
     payload = b"already cached"
-    dest = cache_root / "raw" / "2024" / "06" / "unvalidated_2024-06.zip"
+    url = _sources_with_null_checksum()["data"]["2024-06"]["download_url"].strip()
+    url_key = hashlib.sha1(url.encode("utf-8")).hexdigest()[:10]
+    dest = cache_root / "raw" / "2024" / "06" / f"2024-06_{url_key}.zip"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_bytes(payload)
 

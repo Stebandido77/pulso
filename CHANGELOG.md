@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 2024-03: `No ocupado.CSV` en singular, con el índice de palabras clave de la GEIH rediseñada que ya tenía R.
 - En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
 
+### Cambiado
+- La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
+- El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
+
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado

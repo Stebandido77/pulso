@@ -236,3 +236,38 @@ def test_resolve_zip_path_module_keyword_tier(tmp_path: Path) -> None:
             _resolve_zip_path(zf, "CSV/No ocupados.CSV")
         # "^ocupados$" must not pick "No ocupado".
         assert _resolve_zip_path(zf, "CSV/Ocupado.CSV", "ocupados") == "CSV/Ocupados.CSV"
+
+
+# ---------------------------------------------------------------------------
+# 2008 / 2011 ``Mes_txt.zip``: tab-separated in a ";" epoch (#74)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("header", "default", "expected"),
+    [
+        (b"A;B;C\n", ";", ";"),
+        (b"A\tB\tC\n", ";", "\t"),
+        (b"A,B,C\n", ";", ","),
+        (b"A,B,C\n", ",", ","),
+        (b"A;B\n", ",", ";"),
+    ],
+)
+def test_sniff_separator(header: bytes, default: str, expected: str) -> None:
+    from pulso._core.parser import _sniff_separator
+
+    assert _sniff_separator(header + b"1;2;3\n", default) == expected
+
+
+def test_tab_separated_txt_reads_dot_decimals_in_semicolon_epoch() -> None:
+    from pulso._core.parser import _read_csv_with_fallback
+
+    raw = (
+        b"DIRECTORIO\tSECUENCIA_P\tORDEN\tP6440\tfex_c_2011\r\n"
+        b"636092\t1\t1\t1\t730.787704198798\r\n"
+        b"636093\t1\t2\t\t826.888476521864\r\n"
+    )
+    df = _read_csv_with_fallback(raw, get_epoch("geih_2006_2020"))
+    assert list(df.columns) == ["DIRECTORIO", "SECUENCIA_P", "ORDEN", "P6440", "fex_c_2011"]
+    assert df["fex_c_2011"].dtype.kind == "f"
+    assert df["fex_c_2011"].tolist() == [730.787704198798, 826.888476521864]
