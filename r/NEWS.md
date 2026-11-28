@@ -2,6 +2,9 @@
 
 ## Novedades
 
+* `pulso_trm()`: TRM certificada por la Superintendencia Financiera, un
+  registro por día, con la misma interfaz de `pulso_tpm()` (snapshot incluido
+  hasta 2026-11-30 y llamada en vivo con fallback) (#90).
 * `pulso_load()` acepta `columns =`: lee solo esas columnas del archivo
   (`data.table::fread(select =)`) y conserva siempre las llaves de merge
   (#86).
@@ -12,16 +15,6 @@
 * `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
   (`"parsed"`) o ambos.
 
-## Datos
-
-* 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
-  193). Diferencia máxima: 0,004595 pp (2011-07). Faltan 2020-03 y 2020-04: el
-  DANE no publicó los módulos de desocupados ni de inactivos de esos meses.
-* 2008 y 2011 se descargan ahora de los `Mes_txt.zip` del DANE. Los CSV que se
-  usaban traían el factor de expansión sin punto decimal (#74).
-* Los microdatos de 2020 vienen con factores retroproyectados al censo 2018:
-  no son comparables con 2019 ni con 2021.
-
 ## Correcciones
 
 * `pulso_load()` detecta los zips anidados del DANE con nombres variantes:
@@ -31,6 +24,16 @@
 * Los archivos nacionales de 2020 (Shape C) con errores de tipeo del DANE ya
   se encuentran: `Descupados`, `Desoucpados`, `Ianctivos`, `Inativos` y
   `Fuerzo de trabajo` (#75).
+
+## Datos
+
+* 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
+  193). Diferencia máxima: 0,004595 pp (2011-07). Faltan 2020-03 y 2020-04: el
+  DANE no publicó los módulos de desocupados ni de inactivos de esos meses.
+* 2008 y 2011 se descargan ahora de los `Mes_txt.zip` del DANE. Los CSV que se
+  usaban traían el factor de expansión sin punto decimal (#74).
+* Los microdatos de 2020 vienen con factores retroproyectados al censo 2018:
+  no son comparables con 2019 ni con 2021.
 
 # pulso 0.2.1
 
