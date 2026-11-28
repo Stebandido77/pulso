@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
 - Referencia de validación de 2020: los microdatos de 2020 (catálogo 780 del DANE) vienen con factores retroproyectados al CNPV 2018, así que `fetch_dane_reference.py` toma 2020-01..2020-12 del anexo vigente y no del anexo del marco 2005. Se reemplazaron solo esas 12 filas de `data/reference/dane_labor_indicators.csv`. `docs/caveats.md` advierte que 2020 no es comparable con 2019 ni con 2021.
 
+### Cambiado
+- La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
+- El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
+
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado

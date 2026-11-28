@@ -321,6 +321,26 @@ def _sniff_decimal(raw_bytes: bytes, sep: str, default: str) -> str:
     return default
 
 
+def _sniff_separator(raw_bytes: bytes, default: str) -> str:
+    """Pick the field separator from the header line.
+
+    The epoch separator wins when the header contains it. Otherwise a tab
+    wins over a comma: the 2008 and 2011 ``Mes_txt.zip`` releases are
+    tab-separated although their epoch declares ``;``. Deciding this before
+    ``_sniff_decimal`` matters, because the decimal mark is counted per
+    field. Mirrors the separator rule of ``.read_zip_member()`` in
+    ``r/R/utils-parse.R``.
+    """
+    first = raw_bytes[:65536].split(b"\n", 1)[0]
+    if default.encode("latin-1") in first:
+        return default
+    if b"\t" in first:
+        return "\t"
+    if b";" in first:
+        return ";"
+    return ","
+
+
 def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
 
@@ -330,7 +350,7 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     """
     import pandas as pd
 
-    sep = epoch.separator if epoch.separator is not None else ","
+    sep = _sniff_separator(raw_bytes, epoch.separator if epoch.separator is not None else ",")
     decimal = _sniff_decimal(raw_bytes, sep, epoch.decimal)
     buf = io.BytesIO(raw_bytes)
     df: pd.DataFrame = pd.read_csv(
