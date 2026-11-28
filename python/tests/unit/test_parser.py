@@ -173,7 +173,11 @@ def test_parse_csv_with_column_filter(geih2_epoch: Any) -> None:
     from pulso._core.parser import _parse_csv
 
     df = _parse_csv(FIXTURE_ZIP, INNER_CARAC_CAB, geih2_epoch, columns=["DIRECTORIO", "P6040"])
-    assert list(df.columns) == ["DIRECTORIO", "P6040"]
+    # columns= always keeps the epoch's merge keys present in the file (#86),
+    # so a column-subset load can still be merged; then the requested ones.
+    keys = [k for k in ("DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR") if k in df.columns]
+    assert list(df.columns) == [*keys, "P6040"]
+    assert keys[:3] == ["DIRECTORIO", "SECUENCIA_P", "ORDEN"]
 
 
 def test_parse_csv_missing_file_raises(geih2_epoch: Any) -> None:

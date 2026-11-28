@@ -17,7 +17,7 @@ from __future__ import annotations
 import io
 import re
 import zipfile
-from typing import TYPE_CHECKING, Literal, cast
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pulso._config.registry import _load_sources
 from pulso._utils.columns import _normalize_dane_columns
@@ -341,17 +341,40 @@ def _sniff_separator(raw_bytes: bytes, default: str) -> str:
     return ","
 
 
-def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
+_BOM_CHARS = ("﻿", "ï»¿")
+_FEX_YEAR_SUFFIX = re.compile(r"^FEX_C_\d{4}$")
+
+
+def _canon_col(name: str) -> str:
+    """Comparison key for a column name: no BOM, upper case, ``FEX_C_2011`` -> ``FEX_C``.
+
+    Used to match ``columns=`` requests against raw DANE headers, whose case
+    and weight-column suffix vary by year (see ``_normalize_dane_columns``).
+    """
+    for bom in _BOM_CHARS:
+        name = name.replace(bom, "")
+    name = name.strip().upper()
+    return "FEX_C" if _FEX_YEAR_SUFFIX.match(name) else name
+
+
+def _read_csv_with_fallback(
+    raw_bytes: bytes, epoch: Epoch, usecols: frozenset[str] | None = None
+) -> pd.DataFrame:
     """Try epoch separator; if 1-column result, auto-detect. Strip BOM and normalize merge keys.
 
     Column normalization is intentionally narrow: BOM is stripped from all columns;
     only merge-key columns (DIRECTORIO, SECUENCIA_P, ORDEN) are uppercased.  Other
     columns (e.g. fex_c_2011) keep their original case to match variable_map.json.
+
+    *usecols*, when given, is a set of ``_canon_col`` names: only matching
+    columns are parsed (``pandas.read_csv(usecols=...)``), which saves time
+    and memory on the 200-column modules.
     """
     import pandas as pd
 
     sep = _sniff_separator(raw_bytes, epoch.separator if epoch.separator is not None else ",")
     decimal = _sniff_decimal(raw_bytes, sep, epoch.decimal)
+    keep = (lambda c: _canon_col(str(c)) in usecols) if usecols is not None else None
     buf = io.BytesIO(raw_bytes)
     df: pd.DataFrame = pd.read_csv(
         buf,
@@ -359,8 +382,9 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
         sep=sep,
         decimal=decimal,
         low_memory=False,
+        usecols=keep,
     )
-    if df.shape[1] == 1:
+    if df.shape[1] <= 1 and (usecols is None or len(usecols) > 1):
         buf.seek(0)
         df = pd.read_csv(
             buf,
@@ -368,6 +392,7 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
             sep=None,
             engine="python",
             decimal=decimal,
+            usecols=keep,
         )
 
     # Strip BOM in both its UTF-8 unicode form and latin-1 decoded artifact (ï»¿).
@@ -404,6 +429,7 @@ def parse_shape_a_module(
     zip_path: Path,
     module: str,
     epoch: Epoch,
+    usecols: frozenset[str] | None = None,
 ) -> pd.DataFrame:
     """Load *module* from a Shape A ZIP by concatenating Cabecera + Resto.
 
@@ -432,7 +458,9 @@ def parse_shape_a_module(
             with zf.open(cab_name) as fh:
                 raw = fh.read()
             try:
-                df_cab: pd.DataFrame = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+                df_cab: pd.DataFrame = _normalize_dane_columns(
+                    _read_csv_with_fallback(raw, epoch, usecols)
+                )
             except Exception as exc:
                 raise ParseError(f"Failed to parse {cab_name!r} in {zip_path.name}: {exc}") from exc
             df_cab["CLASE"] = 1
@@ -442,7 +470,7 @@ def parse_shape_a_module(
                 raw = fh.read()
             try:
                 df_resto: pd.DataFrame = _normalize_dane_columns(
-                    _read_csv_with_fallback(raw, epoch)
+                    _read_csv_with_fallback(raw, epoch, usecols)
                 )
             except Exception as exc:
                 raise ParseError(
@@ -455,6 +483,62 @@ def parse_shape_a_module(
     return _ensure_labor_flag(out, module)
 
 
+def _merge_key_names(epoch: Epoch) -> list[str]:
+    """Merge keys kept by every ``columns=`` request (epoch keys plus HOGAR).
+
+    HOGAR is kept even where the epoch's household key does not use it, so
+    the result matches R's ``.MERGE_KEY_COLUMNS`` in r/R/load.R.
+    """
+    keys: list[str] = []
+    for k in [*epoch.merge_keys_persona, *epoch.merge_keys_hogar, "HOGAR"]:
+        if k not in keys:
+            keys.append(k)
+    return keys
+
+
+def _read_set(
+    columns: list[str] | None, epoch: Epoch, extra: tuple[str, ...] = ()
+) -> frozenset[str] | None:
+    """``_canon_col`` names to parse for a ``columns=`` request (None = all).
+
+    Always adds the epoch's merge keys, so a column-subset load can still be
+    merged with other modules, plus *extra* (area / row-filter columns).
+    """
+    if columns is None:
+        return None
+    return frozenset(_canon_col(c) for c in [*columns, *_merge_key_names(epoch), *extra])
+
+
+def _select_columns(df: pd.DataFrame, columns: list[str] | None, epoch: Epoch) -> pd.DataFrame:
+    """Keep the merge keys present plus the requested *columns*, in that order.
+
+    Names are matched with ``_canon_col`` (case, BOM and ``FEX_C_2011``
+    tolerant). Requested columns absent from the file are reported in a
+    UserWarning instead of raising, because a column can exist in one epoch
+    and not in another.
+    """
+    import warnings
+
+    if columns is None:
+        return df
+    by_canon: dict[str, str] = {}
+    for c in df.columns:
+        by_canon.setdefault(_canon_col(str(c)), c)
+    keep: list[str] = []
+    for c in [*_merge_key_names(epoch), *columns]:
+        actual = by_canon.get(_canon_col(c))
+        if actual is not None and actual not in keep:
+            keep.append(actual)
+    missing = [c for c in columns if _canon_col(c) not in by_canon]
+    if missing:
+        warnings.warn(
+            f"Requested columns not found and skipped: {missing}.",
+            UserWarning,
+            stacklevel=4,
+        )
+    return cast("pd.DataFrame", df[keep])
+
+
 def _parse_shape_c_module(
     zip_path: Path,
     module: str,
@@ -462,6 +546,7 @@ def _parse_shape_c_module(
     epoch: Epoch,
     columns: list[str] | None,
     key: str,
+    usecols: frozenset[str] | None = None,
 ) -> pd.DataFrame:
     """Load *module* from a Shape C ZIP (one national CSV with its own CLASE).
 
@@ -484,7 +569,7 @@ def _parse_shape_c_module(
     try:
         with zipfile.ZipFile(zip_path) as zf, zf.open(inner) as fh:
             raw = fh.read()
-        df = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+        df = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch, usecols))
     except Exception as exc:
         raise ParseError(f"Failed to parse {inner!r} in {zip_path.name}: {exc}") from exc
     df = _ensure_labor_flag(df, module)
@@ -502,9 +587,7 @@ def _parse_shape_c_module(
             f"so area={area!r} cannot be applied."
         )
 
-    if columns is not None:
-        df = df[[c for c in columns if c in df.columns]]
-    return df
+    return _select_columns(df, columns, epoch)
 
 
 def _parse_csv(
@@ -513,6 +596,7 @@ def _parse_csv(
     epoch: Epoch,
     columns: list[str] | None,
     module: str | None = None,
+    usecols: frozenset[str] | None = None,
 ) -> pd.DataFrame:
     """Stream-read a CSV from inside a ZIP without extracting to disk.
 
@@ -549,15 +633,15 @@ def _parse_csv(
         raise ParseError(f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}") from exc
 
     try:
-        df: pd.DataFrame = _read_csv_with_fallback(raw_bytes, epoch)
+        df: pd.DataFrame = _read_csv_with_fallback(raw_bytes, epoch, usecols)
     except Exception as exc:
         raise ParseError(f"Failed to parse {inner_path!r} in {zip_path.name}: {exc}") from exc
 
-    if columns is not None:
-        available = [c for c in columns if c in df.columns]
-        df = df[available]
-
-    return df
+    # A wide read_csv result is fragmented into one block per column (~200 on
+    # the 2018 frame); copy() consolidates it so later assign()/concat calls do
+    # not hit pandas' PerformanceWarning or the per-block overhead (#52).
+    df = df.copy()
+    return _select_columns(df, columns, epoch)
 
 
 def _parse_sav(zip_path: Path, inner_path: str) -> pd.DataFrame:
@@ -608,7 +692,7 @@ def parse_module(
     # ── Shape A auto-discovery ────────────────────────────────────────────────
     # Detect by presence of 'Cabecera' filenames; bypass sources.json path lookup.
     if is_shape_a(zip_path):
-        df = parse_shape_a_module(zip_path, module, epoch)
+        df = parse_shape_a_module(zip_path, module, epoch, _read_set(columns, epoch, ("CLASE",)))
         # _area column for backward compatibility with callers that expect it.
         df["_area"] = df["CLASE"].map({1: "cabecera", 2: "resto"})
         # Area filtering via the synthetic CLASE column.
@@ -616,11 +700,9 @@ def parse_module(
             df = df[df["CLASE"] == 1].reset_index(drop=True)
         elif area == "resto":
             df = df[df["CLASE"] == 2].reset_index(drop=True)
-        # Column selection (keeps CLASE and _area unless caller explicitly omits them).
-        if columns is not None:
-            available = [c for c in columns if c in df.columns]
-            df = df[available]
-        return df
+        # Column selection: merge keys + requested columns (CLASE and _area
+        # only if requested).
+        return _select_columns(df, columns, epoch)
 
     # ── Shape A lookup / Shape B ──────────────────────────────────────────────
     sources = _load_sources()
@@ -633,7 +715,9 @@ def parse_module(
     # declared paths cannot resolve. Mirrors the Shape C fallback of
     # .parse_module_csv() in r/R/utils-parse.R.
     if "file" not in module_files and ("cabecera" in module_files or "resto" in module_files):
-        return _parse_shape_c_module(zip_path, module, area, epoch, columns, key)
+        return _parse_shape_c_module(
+            zip_path, module, area, epoch, columns, key, _read_set(columns, epoch, ("CLASE",))
+        )
 
     if epoch.file_format == "csv":
         _parse_fn = _parse_csv
@@ -648,13 +732,13 @@ def parse_module(
             inner = module_files["cabecera"]
             if inner is None:
                 raise ParseError(f"Module {module!r} has no cabecera file for {key}.")
-            return _parse_fn(zip_path, inner, epoch, columns, module)
+            return _parse_fn(zip_path, inner, epoch, columns, module, _read_set(columns, epoch))
 
         if area == "resto":
             inner = module_files["resto"]
             if inner is None:
                 raise ParseError(f"Module {module!r} has no resto file for {key}.")
-            return _parse_fn(zip_path, inner, epoch, columns, module)
+            return _parse_fn(zip_path, inner, epoch, columns, module, _read_set(columns, epoch))
 
         # area == "total": parse both and concatenate
         frames: list[pd.DataFrame] = []
@@ -662,7 +746,7 @@ def parse_module(
             inner = module_files.get(path_key)
             if inner is None:
                 continue
-            part = _parse_fn(zip_path, inner, epoch, columns, module)
+            part = _parse_fn(zip_path, inner, epoch, columns, module, _read_set(columns, epoch))
             part["_area"] = label
             frames.append(part)
 
@@ -676,8 +760,9 @@ def parse_module(
     row_filter_def = module_files.get("row_filter")
     area_filter = epoch.area_filter
 
-    # Read all columns so filter columns are available before selection
-    df = _parse_fn(zip_path, inner_path, epoch, None, module)
+    # Parse only what the request needs, plus the filter columns.
+    extra = (area_filter.column,) + ((row_filter_def["column"],) if row_filter_def else ())
+    df = _parse_fn(zip_path, inner_path, epoch, None, module, _read_set(columns, epoch, extra))
 
     if row_filter_def is not None:
         df = df[df[row_filter_def["column"]].isin(row_filter_def["values"])]
@@ -689,8 +774,121 @@ def parse_module(
     # area == "total": no area filter
 
     df = df.reset_index(drop=True)
+    return _select_columns(df, columns, epoch)
 
-    if columns is not None:
-        df = df[columns]
 
-    return cast("pd.DataFrame", df)
+# ---------------------------------------------------------------------------
+# Parsed-module cache (parquet)
+# ---------------------------------------------------------------------------
+#
+# Bump PARSER_VERSION whenever a change in this module alters what
+# parse_module returns for the same zip (columns, dtypes, rows): every cached
+# parquet written by an older version is then ignored.
+PARSER_VERSION = "3.0"
+
+# Validation bookkeeping changes without changing the zip or its parse.
+_VOLATILE_RECORD_FIELDS = ("validated", "validated_by", "validated_at", "notes", "scraped_at")
+
+
+def parsed_cache_key(record: dict[str, Any], module: str) -> str:
+    """Cache key: download URL, module, PARSER_VERSION and the period's sources.json entry.
+
+    Validation bookkeeping fields (``_VOLATILE_RECORD_FIELDS``) are left out
+    of the hash so that validating a period does not throw its cache away.
+    """
+    import hashlib
+    import json
+
+    entry = {k: v for k, v in record.items() if k not in _VOLATILE_RECORD_FIELDS}
+    payload = json.dumps(
+        {
+            "url": str(record.get("download_url", "")).strip(),
+            "module": module,
+            "parser_version": PARSER_VERSION,
+            "entry": entry,
+        },
+        sort_keys=True,
+        ensure_ascii=True,
+    )
+    return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def _apply_area(df: pd.DataFrame, area: Area, epoch: Epoch) -> pd.DataFrame:
+    """Area filter on a full (area='total') parse_module result."""
+    if area == "total":
+        return df
+    if "_area" in df.columns:  # Shape A / Shape C / Shape A lookup
+        return cast("pd.DataFrame", df[df["_area"] == area].reset_index(drop=True))
+    area_filter = epoch.area_filter
+    if area_filter is None:
+        raise ParseError(f"Cannot apply area={area!r}: no _area column and no area filter.")
+    values = area_filter.cabecera_values if area == "cabecera" else area_filter.resto_values
+    return cast("pd.DataFrame", df[df[area_filter.column].isin(values)].reset_index(drop=True))
+
+
+def parse_module_cached(
+    zip_path: Path,
+    year: int,
+    month: int,
+    module: str,
+    area: Area,
+    epoch: Epoch,
+    columns: list[str] | None,
+    record: dict[str, Any],
+    cache: bool = True,
+) -> pd.DataFrame:
+    """``parse_module`` with a parquet cache of the full parsed module.
+
+    Carga el módulo desde ``<cache>/parsed/<año>/<mes>/<módulo>_<clave>.parquet``
+    si existe; si no, lo parsea completo (``area='total'``, todas las columnas),
+    lo guarda y aplica el área y las columnas.
+
+    The first load parses every column (to fill the cache) and then selects;
+    later loads read only the needed columns from the parquet. If the frame
+    cannot be written as parquet (e.g. an object column mixing numbers and
+    text), the cache is skipped and the result is the same as
+    ``parse_module``. ``cache=False`` bypasses it and parses only the
+    requested columns. Clear it with ``pulso.cache_clear("parsed")``.
+    """
+    import logging
+
+    import pandas as pd
+
+    from pulso._utils.cache import cache_path
+
+    if not cache:
+        return parse_module(zip_path, year, month, module, area, epoch, columns)
+
+    logger = logging.getLogger(__name__)
+    key = parsed_cache_key(record, module)
+    path = cache_path() / "parsed" / str(year) / f"{month:02d}" / f"{module}_{key}.parquet"
+
+    df: pd.DataFrame | None = None
+    if path.exists():
+        try:
+            read_cols: list[str] | None = None
+            if columns is not None:
+                import pyarrow.parquet as pq
+
+                present = pq.read_schema(path).names
+                wanted = _read_set(columns, epoch, ("CLASE", "_area"))
+                extra = [epoch.area_filter.column] if epoch.area_filter is not None else []
+                read_cols = [c for c in present if _canon_col(c) in (wanted or set()) or c in extra]
+            df = pd.read_parquet(path, columns=read_cols)
+        except Exception as exc:  # corrupt or unreadable cache: re-parse
+            logger.warning("Ignoring unreadable parsed cache %s: %s", path, exc)
+            path.unlink(missing_ok=True)
+            df = None
+
+    if df is None:
+        df = parse_module(zip_path, year, month, module, "total", epoch, None)
+        tmp = path.with_suffix(".parquet.tmp")
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            df.to_parquet(tmp, index=False)
+            tmp.replace(path)
+        except Exception as exc:  # not representable as parquet: no cache
+            logger.debug("Not caching %s %d-%02d as parquet: %s", module, year, month, exc)
+            tmp.unlink(missing_ok=True)
+
+    return _select_columns(_apply_area(df, area, epoch), columns, epoch)

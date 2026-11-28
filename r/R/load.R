@@ -19,6 +19,20 @@
 #'   such periods raise \code{pulso_data_not_validated}.
 #' @param allow_unvalidated Deprecated. Use \code{strict} instead
 #'   (\code{allow_unvalidated = FALSE} is \code{strict = TRUE}).
+#' @param columns Character or NULL. Columns to keep (DANE names, matched
+#'   case-insensitively; \code{FEX_C} also matches \code{fex_c_2011}). Only
+#'   those columns are read from the file (\code{data.table::fread(select =)}).
+#'   The merge keys (\code{DIRECTORIO}, \code{SECUENCIA_P}, \code{ORDEN},
+#'   \code{HOGAR}) are always kept so the result can still be merged.
+#'   Requested columns that the file lacks are skipped with a warning.
+#'   Default NULL (all columns).
+#'
+#' @details When \code{cache = TRUE} and the 'arrow' package is installed,
+#'   the parsed module is also cached as parquet under the pulso cache
+#'   directory, so the next load of the same period and module skips the
+#'   zip and the CSV parsing. The cache key includes the download URL, the
+#'   module, the parser version and the period's catalog entry. Without
+#'   'arrow' nothing changes. Clear it with \code{pulso_clear_cache("parsed")}.
 #'
 #' @return A tibble with the microdata. If metadata = TRUE, the tibble
 #'   has an attribute "pulso_metadata" with structured column info.
@@ -39,11 +53,16 @@ pulso_load <- function(year, month, module,
                        cache = TRUE,
                        metadata = FALSE,
                        strict = FALSE,
-                       allow_unvalidated = NULL) {
+                       allow_unvalidated = NULL,
+                       columns = NULL) {
 
   strict <- .resolve_strict(strict, allow_unvalidated)
 
   .validate_module(module)
+  if (!is.null(columns) && (!is.character(columns) || anyNA(columns) ||
+                              length(columns) == 0)) {
+    abort_validation_error("`columns` must be NULL or a non-empty character vector")
+  }
   .validate_year(year)
   .validate_month(month)
 
@@ -75,7 +94,18 @@ pulso_load <- function(year, month, module,
 
   zip_path <- .download_zip(url, year, month, use_cache = cache)
 
-  df <- .parse_module_csv(zip_path, module_spec, module, year, month)
+  select <- if (is.null(columns)) NULL else .read_select(columns)
+  if (isTRUE(cache) && .has_arrow()) {
+    parquet_path <- .parsed_cache_path(source_info, module, year, month)
+    df <- .read_parsed_cache(parquet_path, select)
+    if (is.null(df)) {
+      df <- .parse_module_csv(zip_path, module_spec, module, year, month)
+      .write_parsed_cache(df, parquet_path)
+    }
+  } else {
+    df <- .parse_module_csv(zip_path, module_spec, module, year, month, select = select)
+  }
+  if (!is.null(columns)) df <- .select_columns(df, columns)
 
   if (harmonize) {
     names(df) <- tolower(gsub("[^[:alnum:]_]", "_", names(df)))
@@ -136,4 +166,32 @@ pulso_load <- function(year, month, module,
     "i" = "Results may differ from official DANE tables. Use {.code strict = TRUE} to refuse unvalidated periods."
   ), class = "pulso_unvalidated_warning")
   invisible(TRUE)
+}
+
+#' Merge keys kept by every `columns =` request
+#' @noRd
+.MERGE_KEY_COLUMNS <- c("DIRECTORIO", "SECUENCIA_P", "ORDEN", "HOGAR")
+
+#' Canonical names to read for a `columns =` request (plus keys and CLASE)
+#' @noRd
+.read_select <- function(columns) {
+  unique(.canon_col(c(columns, .MERGE_KEY_COLUMNS, "CLASE")))
+}
+
+#' Keep the merge keys present plus the requested columns, in that order
+#'
+#' Matches names with .canon_col(); requested columns that are absent are
+#' reported in one warning. Mirrors `_select_columns()` in
+#' python/pulso/_core/parser.py.
+#' @noRd
+.select_columns <- function(df, columns) {
+  canon <- .canon_col(names(df))
+  wanted <- .canon_col(c(.MERGE_KEY_COLUMNS, columns))
+  idx <- match(wanted, canon)
+  idx <- unique(idx[!is.na(idx)])
+  missing <- columns[!(.canon_col(columns) %in% canon)]
+  if (length(missing) > 0) {
+    cli::cli_warn("Requested columns not found and skipped: {.val {missing}}.")
+  }
+  df[, idx, drop = FALSE]
 }
