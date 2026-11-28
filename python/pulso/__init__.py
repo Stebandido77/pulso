@@ -6,6 +6,7 @@ Public API:
 
     pulso.load(year, month, module, ...) -> pd.DataFrame
     pulso.load_merged(year, month, modules, ...) -> pd.DataFrame
+    pulso.load_range(start, end, module, ...) -> pd.DataFrame
     pulso.list_available(year=None) -> pd.DataFrame
     pulso.list_modules() -> pd.DataFrame
     pulso.list_variables() -> pd.DataFrame
@@ -41,6 +42,7 @@ from pulso._core.banrep_tpm import tpm
 from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
+from pulso._core.range import load_range
 from pulso._core.trm import trm
 from pulso._utils.cache import cache_clear, cache_info, cache_path
 from pulso._utils.exceptions import (
@@ -90,6 +92,7 @@ __all__ = [
     "load",
     "load_empalme",
     "load_merged",
+    "load_range",
     "tpm",
     "trm",
     "update_catalog",

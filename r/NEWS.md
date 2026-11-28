@@ -14,6 +14,10 @@
   cambia nada.
 * `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
   (`"parsed"`) o ambos.
+* `pulso_load_range(start, end, module)` carga meses consecutivos con una
+  columna `periodo`. Avisa si el rango mezcla los marcos censales 2005 y 2018.
+  Con `average_weights = TRUE` agrega `peso_expansion_promedio` (factor / número
+  de meses), que reproduce los niveles del trimestre móvil del DANE (#87).
 
 ## Correcciones
 
