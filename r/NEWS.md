@@ -14,6 +14,10 @@
   cambia nada.
 * `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
   (`"parsed"`) o ambos.
+* `pulso_indicadores()` calcula TD, TO y TGP (y los niveles de PET, FT,
+  ocupados y desocupados) por dominio, mensual o de trimestre móvil, con las
+  definiciones del DANE. Coincide con el anexo del DANE. Solo estimación
+  puntual: los microdatos públicos no traen variables de diseño (#88).
 * `pulso_load_range(start, end, module)` carga meses consecutivos con una
   columna `periodo`. Avisa si el rango mezcla los marcos censales 2005 y 2018.
   Con `average_weights = TRUE` agrega `peso_expansion_promedio` (factor / número
