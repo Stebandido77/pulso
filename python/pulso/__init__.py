@@ -7,6 +7,7 @@ Public API:
     pulso.load(year, month, module, ...) -> pd.DataFrame
     pulso.load_merged(year, month, modules, ...) -> pd.DataFrame
     pulso.load_range(start, end, module, ...) -> pd.DataFrame
+    pulso.indicadores(start, end=None, dominio='nacional', ...) -> pd.DataFrame
     pulso.list_available(year=None) -> pd.DataFrame
     pulso.list_modules() -> pd.DataFrame
     pulso.list_variables() -> pd.DataFrame
@@ -41,6 +42,7 @@ from pulso._config.registry import (
 from pulso._core.banrep_tpm import tpm
 from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
+from pulso._core.indicadores import indicadores
 from pulso._core.loader import load, load_merged
 from pulso._core.range import load_range
 from pulso._core.trm import trm
@@ -84,6 +86,7 @@ __all__ = [
     "describe_harmonization",
     "describe_variable",
     "expand",
+    "indicadores",
     "list_available",
     "list_columns_metadata",
     "list_modules",
