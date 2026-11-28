@@ -166,6 +166,10 @@
           "type": "string",
           "description": "Name of a registered Python function in the harmonizer.",
           "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "params": {
+          "type": "object",
+          "description": "Optional parameters read by the custom function (e.g. age thresholds)."
         }
       }
     }

@@ -216,3 +216,13 @@ test_that(".find_shape_c_file tolerates the 2020 filename typos (#75)", {
   # 2020-03/04: DANE did not publish Desocupados or Inactivos.
   expect_null(.find_shape_c_file("3.Marzo/CSV/Ocupados.CSV", "inactivos"))
 })
+
+test_that(".ensure_labor_flag fills the GEIH-1 flags missing in 2007 (#79)", {
+  df <- data.frame(DIRECTORIO = 1:2)
+  expect_equal(.ensure_labor_flag(df, "ocupados")$OCI, c(1L, 1L))
+  expect_equal(.ensure_labor_flag(df, "desocupados")$DSI, c(1L, 1L))
+  expect_equal(.ensure_labor_flag(df, "inactivos")$INI, c(1L, 1L))
+  expect_identical(.ensure_labor_flag(df, "fuerza_de_trabajo"), df)
+  with_flag <- data.frame(DIRECTORIO = 1, OCI = 7L)
+  expect_equal(.ensure_labor_flag(with_flag, "ocupados")$OCI, 7L)
+})

@@ -316,6 +316,23 @@
   fuerza_de_trabajo    = c("Fuerza de trabajo", "Fuerzo de trabajo")
 )
 
+#' DANE labor-force flag of each GEIH-1 condition file
+#'
+#' GEIH-1 ships one file per labor-force condition, so every row of the
+#' Ocupados / Desocupados / Inactivos files is in that condition. The flag
+#' columns (OCI / DSI / INI = 1) are missing in some releases (all three in
+#' 2007-01..11, INI in 2007-12); .ensure_labor_flag() fills them from the
+#' file. Mirrors LABOR_FLAG_GEIH1 in python/pulso/_core/parser.py.
+#' @noRd
+.LABOR_FLAG_GEIH1 <- c(ocupados = "OCI", desocupados = "DSI", inactivos = "INI")
+
+#' @noRd
+.ensure_labor_flag <- function(df, module_name) {
+  flag <- unname(.LABOR_FLAG_GEIH1[module_name])
+  if (length(flag) == 1 && !is.na(flag) && !(flag %in% names(df))) df[[flag]] <- 1L
+  df
+}
+
 #' Locate Cabecera and Resto files for a module inside a Shape A zip
 #'
 #' Mirrors python/pulso/_core/parser.py:62 (find_shape_a_files). Scans
@@ -468,14 +485,14 @@
           df_r[[.col]] <- as.character(df_r[[.col]])
         }
       }
-      return(dplyr::bind_rows(df_c, df_r))
+      return(.ensure_labor_flag(dplyr::bind_rows(df_c, df_r), module_name))
     }
 
     # Shape C fallback: module_spec signals Shape A but zip has no
     # Cabecera/Resto files (COVID periods 2020-06, 2020-12).
     shape_c_file <- .find_shape_c_file(zip_contents, module_name)
     if (!is.null(shape_c_file)) {
-      return(.parse_shape_c(zip_path, shape_c_file))
+      return(.ensure_labor_flag(.parse_shape_c(zip_path, shape_c_file), module_name))
     }
 
     keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
