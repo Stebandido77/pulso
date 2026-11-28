@@ -36,7 +36,7 @@ which artefact contributed:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -188,14 +188,14 @@ def _pick_year_entry(var_entry: dict[str, Any], year: int, epoch_key: str) -> di
         return None
     str_year = str(year)
     if str_year in available:
-        return available[str_year]
+        return cast("dict[str, Any]", available[str_year])
 
     same_epoch_years = sorted(
         (int(y) for y, e in available.items() if e.get("epoch") == epoch_key),
         reverse=True,
     )
     if same_epoch_years:
-        return available[str(same_epoch_years[0])]
+        return cast("dict[str, Any]", available[str(same_epoch_years[0])])
 
     return None
 

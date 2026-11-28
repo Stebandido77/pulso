@@ -9,7 +9,7 @@ Signature for all custom functions:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 import pandas as pd
@@ -47,7 +47,7 @@ def get_custom(name: str) -> Callable[..., pd.Series]:
 def bin_edad_quinquenal(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Cut edad (P6040) into 14 quinquennial bins matching grupo_edad.categories."""
@@ -83,7 +83,7 @@ def bin_edad_quinquenal(
 def merge_labor_status(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Combine OCI (ocupados) and DSI (no_ocupados) into condicion_actividad code.
@@ -125,7 +125,7 @@ def merge_labor_status(
     else:
         result[oci.isna() & (dsi.isna() | dsi.eq(0))] = "3"  # inactivo (heuristic)
 
-    return result
+    return cast("pd.Series", result)
 
 
 def _num(s: pd.Series) -> pd.Series:
@@ -168,7 +168,7 @@ def labor_status_from_flags(
     result[outside.eq(1)] = "3"
     result[unemp.eq(1)] = "2"
     result[occ.eq(1)] = "1"
-    return result
+    return cast("pd.Series", result)
 
 
 @register("labor_force_from_flags")
@@ -186,7 +186,7 @@ def labor_force_from_flags(
     result = pd.Series(pd.NA, index=df.index, dtype="boolean")
     result[outside.eq(1)] = False
     result[occ.eq(1) | unemp.eq(1)] = True
-    return result
+    return cast("pd.Series", result)
 
 
 @register("pet_by_age_zone")
@@ -225,14 +225,14 @@ def pet_by_age_zone(
     threshold[zone.isna()] = np.nan if urban != rural else urban
     result = (age >= threshold).astype("boolean")
     result[age.isna() | threshold.isna()] = pd.NA
-    return result
+    return cast("pd.Series", result)
 
 
 @register("compute_ingreso_total")
 def compute_ingreso_total(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Sum INGLABO + non-labor income components to construct ingreso_total.
@@ -251,4 +251,4 @@ def compute_ingreso_total(
         )
 
     sub = df[available].fillna(0)
-    return sub.sum(axis=1)
+    return cast("pd.Series", sub.sum(axis=1))

@@ -6,7 +6,7 @@ with helpful messages. They do NOT validate JSON files (that's in _config).
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pulso._utils.exceptions import ModuleNotAvailableError, PulsoError
 
@@ -49,7 +49,8 @@ def _normalize_int_arg(
         values = list(value)
     else:
         try:
-            values = sorted({int(v) for v in value})  # type: ignore[arg-type]
+            # Non-iterables raise TypeError here, handled below.
+            values = sorted({int(v) for v in cast("Iterable[Any]", value)})
         except (TypeError, ValueError) as exc:
             raise TypeError(
                 f"{name} must be int, range, or iterable of ints (got {type(value).__name__})."
@@ -122,7 +123,7 @@ def validate_area(area: str) -> Area:
     """
     if area not in VALID_AREAS:
         raise PulsoError(f"Invalid area {area!r}. Must be one of: {', '.join(VALID_AREAS)}.")
-    return area  # type: ignore[return-value]
+    return cast("Area", area)
 
 
 def validate_module(module: str, available_modules: Iterable[str]) -> str:

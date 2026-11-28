@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import jsonschema
 
@@ -259,7 +259,7 @@ def validation_status() -> pd.DataFrame:
     df = pd.DataFrame(rows)
     if not df.empty:
         df = df.sort_values(["year", "month"]).reset_index(drop=True)
-    return df
+    return cast("pd.DataFrame", df)
 
 
 def list_available(year: int | None = None) -> pd.DataFrame:
@@ -290,7 +290,7 @@ def list_available(year: int | None = None) -> pd.DataFrame:
                 "modules_available": list(record["modules"].keys()),
             }
         )
-    return pd.DataFrame(rows)
+    return cast("pd.DataFrame", pd.DataFrame(rows))
 
 
 def list_modules() -> pd.DataFrame:
@@ -315,7 +315,7 @@ def list_modules() -> pd.DataFrame:
                 "available_in": meta["available_in"],
             }
         )
-    return pd.DataFrame(rows)
+    return cast("pd.DataFrame", pd.DataFrame(rows))
 
 
 def list_variables(harmonized: bool = True) -> pd.DataFrame:
@@ -349,7 +349,7 @@ def list_variables(harmonized: bool = True) -> pd.DataFrame:
                 "available_in_epochs": epochs_for_var,
             }
         )
-    return pd.DataFrame(rows)
+    return cast("pd.DataFrame", pd.DataFrame(rows))
 
 
 def describe(
@@ -550,4 +550,4 @@ def describe_harmonization(variable: str) -> pd.DataFrame:
                 "notes": mapping.get("notes"),
             }
         )
-    return pd.DataFrame(rows)
+    return cast("pd.DataFrame", pd.DataFrame(rows))
