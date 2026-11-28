@@ -1,4 +1,4 @@
-      2868  5dbc64eea15e4ee01298f0e1e46bea87591a1c3a2e1227745d7a582bf4431b84  pulso/__init__.py
+      3137  8823f5495c72e05612e401ddb90a9e8c832e5634e42566410b1c6f36d11909e3  pulso/__init__.py
         83  bdd49275fc3e29e8842cec79d17b10bc67d7bb7ff577b11f834a968812e40424  pulso/_config/__init__.py
       4959  ab0d4b71147f1f0d71a4dfc65108adc5b3c5e300172924f5e92e03e7165b2e72  pulso/_config/epochs.py
      19958  661e621e4a33b223d90edae810d3a57ce28f0e0f69a5d0c045cd2fcd969e1376  pulso/_config/registry.py
@@ -14,7 +14,8 @@
      28390  39551b1cb960e0cf28f6985390799673fdc6a8e3dcf3c3588df01819af489876  pulso/_core/loader.py
       5686  9afa25856f0b381b2b409c1a932a00772681b37f44620deec1ad7521813b819a  pulso/_core/merger.py
      34783  075d107013ca1c356f91c0400efde2fc84e7ff429a3373bf3958ad19ba7bb1b5  pulso/_core/parser.py
-      6480  583120251279181092782b8796799d8b54f7985aba62d7384fe1d2c4b91c78c0  pulso/_core/range.py
+      7132  a91a8b95d8d525570f317be2be1d93c54082bf7820179bc2fe36ec074b274028  pulso/_core/range.py
+      5779  80640d65a6f4db76faf24b069f1f615dc786a05cfd77d19cccdba83f3a519ac3  pulso/_core/real_income.py
       5036  2bb92ef21f1a575c4285a568ee56e2318adc991e44d28e7681bd498a972e7925  pulso/_core/trm.py
         58  ae24694bf1b63ebd80885b1c41e8f422c6497f243b04fc3469347f4f7a43b534  pulso/_scripts/__init__.py
       4873  ecc15bdfec6cc461fcae64601f900dc7666c52df6b41ac82b1fa3539ed710b8e  pulso/_scripts/add_month.py
@@ -38,6 +39,8 @@
     342149  9a98003b32eb6b167a6ec8be63e331eeedb7e180c0d4f957a9467f0949a7a8ff  pulso/data/sources.json
      41788  f0f7aa3a964f1bfb37675cbfecacecd0b3adfef85233b8c30944a6bd5075cb96  pulso/data/variable_map.json
       2392  1cfc85808b201ff30358e0ff216fc6235caf7026000b26b5dd5e0848b41ec57a  pulso/data/variable_module_map.json
+      3866  cde76c9586f067efbfd14dece22815bb2fcc5b6dbe9d83352a265f8035490bb2  pulso/ext/ipc_dane_indices_202610.csv
+      2221  ab9ed00a047a21f3efdb0159310663c460e21e0ad872997334bb525163ab683f  pulso/ext/salario_minimo.csv
     179321  5f2e15a3534f8704494d7b5a684bd70f1c54e962fa38f8491d6f11ad060a1f18  pulso/ext/tpm_jdbr_manual_20260422.xlsx
      40676  43a50a7e19199b450565f3011b287d6d5e359aeedded16a00c3f0a46971cb826  pulso/ext/trm_superfinanciera_20261128.csv.gz
       1309  07176f3b12f74a90dfd56c8da4240b6cb5801e805360505cae28ef8fa02d0bae  pulso/metadata/__init__.py
@@ -46,7 +49,7 @@
      10077  ba30b28a8cd39dbd7c12796f5c94c2865217367b884d6046211e9840e4fd7bae  pulso/metadata/parser.py
       1891  eae36fab92f7d6ec512388d743a88df06b8a459a0e45c793daa345089e3841d8  pulso/metadata/schema.py
      28441  230557958c22eaad3e8ebc76ae587e761e441be044a8cb94cd420863f77e8898  pulso_co-1.2.1.dist-info/METADATA
-      4403  bf4c4a20f84055e09c3be273d8addadc459c5b1d9e8aea0039dd57369da3c1cb  pulso_co-1.2.1.dist-info/RECORD
+      4665  4f48b786e77eea00de437922b6d0898e1cfa80d1ecab05d2a25638837cc1dd94  pulso_co-1.2.1.dist-info/RECORD
         87  41c708c5adba6e097513ab8ccb9f1d7865a2fb469e22491a9e01dcc64da459fc  pulso_co-1.2.1.dist-info/WHEEL
        128  9c2e24c820c9b726b7b67083f0a50d3df0843c902ecaa2935101f7a50aef7919  pulso_co-1.2.1.dist-info/entry_points.txt
       1075  1c90481f0e2a8804d417e04478f3333e1e28d2e464ac8e9cb6950cf146a3c2dd  pulso_co-1.2.1.dist-info/licenses/LICENSE
