@@ -1,0 +1,46 @@
+name: Detect relevant changes
+description: >
+  Decides whether a CI job must run its heavy steps. On pull_request it diffs
+  the PR head against its merge base with the base branch and matches the
+  changed paths against an extended regex. Any other event (push already has
+  its own path filter, workflow_dispatch, schedule) always runs.
+  Requires actions/checkout with fetch-depth: 0.
+
+inputs:
+  pattern:
+    description: Extended regex (grep -E) matched against each changed path.
+    required: true
+
+outputs:
+  run:
+    description: "'true' if the heavy steps must run, 'false' otherwise."
+    value: ${{ steps.detect.outputs.run }}
+
+runs:
+  using: composite
+  steps:
+    - id: detect
+      shell: bash
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        PATTERN: ${{ inputs.pattern }}
+      run: |
+        set -euo pipefail
+        if [ "$EVENT_NAME" != "pull_request" ]; then
+          echo "Event '$EVENT_NAME': running every step."
+          echo "run=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        # A failing diff must fail the job, never skip it silently.
+        changed="$(git diff --name-only "$BASE_SHA...$HEAD_SHA")"
+        echo "Changed files in this PR:"
+        echo "$changed"
+        if printf '%s\n' "$changed" | grep -Eq "$PATTERN"; then
+          echo "Relevant changes found: running the heavy steps."
+          echo "run=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "No relevant changes: the job reports success without running the heavy steps."
+          echo "run=false" >> "$GITHUB_OUTPUT"
+        fi

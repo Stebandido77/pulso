@@ -1,7 +1,11 @@
 name: R CI
 
 # Runs R CMD check across OS x R-version matrix.
-# Scoped to changes under r/ or data/ so Python-only PRs don't trigger R CI.
+#
+# pull_request has no `paths:` filter on purpose: "R CMD check (ubuntu-latest
+# R-release)" is a required check on main. Every job always runs; the
+# detect-changes step decides whether the heavy steps run. The `if:` lives on
+# steps, never on jobs (see python-ci.yml).
 
 on:
   push:
@@ -18,11 +22,6 @@ on:
       - ".github/workflows/r-ci.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "r/**"
-      - "data/**"
-      - "scripts/sync_data_to_r.R"
-      - ".github/workflows/r-ci.yml"
 
 concurrency:
   group: r-ci-${{ github.ref }}
@@ -45,15 +44,25 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(r/|data/|scripts/sync_data_to_r\.R$|\.github/workflows/r-ci\.yml$|\.github/actions/)'
 
       - uses: r-lib/actions/setup-r@v2
+        if: steps.changes.outputs.run == 'true'
         with:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v2
+        if: steps.changes.outputs.run == 'true'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        if: steps.changes.outputs.run == 'true'
         with:
           working-directory: r
           extra-packages: |
@@ -62,9 +71,11 @@ jobs:
           needs: check
 
       - name: Sync canonical data into r/inst/extdata/
+        if: steps.changes.outputs.run == 'true'
         run: Rscript scripts/sync_data_to_r.R
 
       - uses: r-lib/actions/check-r-package@v2
+        if: steps.changes.outputs.run == 'true'
         with:
           working-directory: r
           upload-snapshots: true
@@ -80,15 +91,25 @@ jobs:
         r: ["release"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # detect-changes diffs against the merge base
+      - name: Detect relevant changes
+        id: changes
+        uses: ./.github/actions/detect-changes
+        with:
+          pattern: '^(r/|data/|scripts/sync_data_to_r\.R$|\.github/workflows/r-ci\.yml$|\.github/actions/)'
       - uses: r-lib/actions/setup-r@v2
+        if: steps.changes.outputs.run == 'true'
         with:
           r-version: ${{ matrix.r }}
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
+        if: steps.changes.outputs.run == 'true'
         with:
           working-directory: r
           extra-packages: any::lintr, any::styler
       - name: Lint
+        if: steps.changes.outputs.run == 'true'
         working-directory: r
         run: Rscript -e 'lintr::lint_package()'
         # Soft-fail until R sources exist (Agente 5 fills R/).
