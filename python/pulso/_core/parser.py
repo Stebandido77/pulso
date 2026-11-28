@@ -43,13 +43,50 @@ MODULE_KEYWORDS_GEIH1: dict[str, list[str]] = {
         "Caractericas generales",  # 2007 typo: missing 't'
     ],
     "ocupados": ["Ocupados"],
-    "desocupados": ["Desocupados"],
-    "inactivos": ["Inactivos"],
+    # 2020 Shape C typos: "Descupados" (2020-05), "Desoucpados" (2020-09/10).
+    "desocupados": ["Desocupados", "Descupados", "Desoucpados"],
+    # 2020 Shape C typos: "Ianctivos" (2020-07), "Inativos" (2020-10).
+    "inactivos": ["Inactivos", "Ianctivos", "Inativos"],
     "vivienda_hogares": ["Vivienda y Hogares"],
     "otros_ingresos": ["Otros ingresos"],
     "otras_formas_trabajo": ["Otras actividades y ayudas"],
-    "fuerza_de_trabajo": ["Fuerza de trabajo"],
+    # 2020 Shape C typo: "Fuerzo de trabajo" (2020-11).
+    "fuerza_de_trabajo": ["Fuerza de trabajo", "Fuerzo de trabajo"],
 }
+
+
+def _matches_module_keyword(basename_lower: str, keywords: list[str]) -> bool:
+    """True if *basename_lower* contains one of *keywords* as a whole word.
+
+    The word boundary keeps "ocupados" from matching inside "desocupados".
+    Optional trailing digits accept the month suffix DANE appended in
+    2013-04..06 ("Cabecera - Ocupados04.csv"). Mirrors the R pattern in
+    ``r/R/utils-parse.R`` (``\\b\\Qkw\\E\\d*\\b``).
+    """
+    return any(
+        re.search(r"\b" + re.escape(kw.lower()) + r"\d*\b", basename_lower) for kw in keywords
+    )
+
+
+def find_shape_c_file(zip_path: Path, module: str) -> str | None:
+    """Locate the single national CSV for *module* in a Shape C ZIP.
+
+    Shape C (2020-01..12): the epoch declares Cabecera/Resto files, but DANE
+    published one national file per module (``1. Enero/CSV/Ocupados.CSV``)
+    that carries its own CLASE column. Mirrors ``.find_shape_c_file()`` in
+    ``r/R/utils-parse.R``: first ``.csv`` member whose basename contains a
+    module keyword on a word boundary.
+    """
+    keywords = MODULE_KEYWORDS_GEIH1.get(module, [module])
+    with zipfile.ZipFile(zip_path) as zf:
+        names = zf.namelist()
+    for name in names:
+        if name.endswith("/") or not name.lower().endswith(".csv"):
+            continue
+        basename = name.rsplit("/", 1)[-1].lower()
+        if _matches_module_keyword(basename, keywords):
+            return name
+    return None
 
 
 def is_shape_a(zip_path: Path) -> bool:
@@ -93,9 +130,7 @@ def find_shape_a_files(
         else:
             continue
 
-        # Match at least one keyword using word-boundary regex so that e.g.
-        # "ocupados" does NOT match inside "desocupados".
-        if not any(re.search(r"\b" + re.escape(kw.lower()) + r"\b", lower) for kw in keywords):
+        if not _matches_module_keyword(lower, keywords):
             continue
 
         if prefix == "cabecera":
@@ -122,14 +157,33 @@ def _name_key(name: str) -> str:
     return re.sub(r"[\s_]+", " ", base).strip()
 
 
-def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
+# Shape B keyword index (redesigned GEIH, 2022+), matched against
+# _name_key(basename). Last resolution tier, e.g. 2024-03 ships
+# "CSV/No ocupado.CSV" (singular) where sources.json says "No ocupados.CSV".
+# Mirrors .MODULE_KEYWORDS_GEIH2 in r/R/utils-parse.R.
+MODULE_KEYWORDS_GEIH2: dict[str, str] = {
+    "caracteristicas_generales": r"caracteristicas generales",
+    "ocupados": r"^ocupados$",
+    "desocupados": r"^no ocupados?$",
+    "inactivos": r"^no ocupados?$",
+    "vivienda_hogares": r"hogar y la vivienda",
+    "otros_ingresos": r"^otros ingresos",
+    "migracion": r"^migracion$",
+    "otras_formas_trabajo": r"^otras formas de trabajo$",
+    "fuerza_de_trabajo": r"^fuerza de trabajo$",
+}
+
+
+def _resolve_zip_path(zf: zipfile.ZipFile, path: str, module: str | None = None) -> str:
     """Resolve a ZIP member path, tolerating mojibake encoding and DANE filename drift.
 
     Tries in order: (1) exact match, (2) mojibake-fixed path, (3) folded
     basename match (case, accents, NBSP, extension), (4) unique member whose
     folded basename contains the folded target, for renamed files such as
-    2026-04 "Capítulos de características generales ...". Raises KeyError
-    if nothing matches.
+    2026-04 "Capítulos de características generales ...", and (5) when
+    *module* is given, the first ``.csv`` member whose folded basename
+    matches ``MODULE_KEYWORDS_GEIH2[module]``. Raises KeyError if nothing
+    matches.
     """
     names = zf.namelist()
 
@@ -162,6 +216,12 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
         if len(hits) == 1:
             return hits[0]
 
+    pattern = MODULE_KEYWORDS_GEIH2.get(module) if module is not None else None
+    if pattern is not None:
+        for name in files:
+            if name.lower().endswith(".csv") and re.search(pattern, _name_key(name)):
+                return name
+
     raise KeyError(f"No item named {path!r} in the archive")
 
 
@@ -169,58 +229,61 @@ def _resolve_zip_path(zf: zipfile.ZipFile, path: str) -> str:
 # Nested ZIP support
 # ---------------------------------------------------------------------------
 #
-# Some DANE releases (notably 2024-03 and 2024-04 GEIH) wrap the actual data
-# files inside *another* ZIP layer.  The outer archive contains only
-# ``CSV.zip``, ``DTA.zip``, ``SAV.zip`` entries; the user-facing CSVs live
-# inside the matching format-named inner ZIP.  The helper below transparently
-# descends one level so callers don't have to special-case the layout.
+# Some DANE releases wrap the actual data files inside *another* ZIP layer.
+# The outer archive contains only one inner ZIP per format; the user-facing
+# CSVs live inside the CSV one. The inner names drift: ``CSV.zip`` (2024-03),
+# ``CSV 4.zip`` (2022-10), ``CSV 13.zip`` / ``SAV 12.zip`` (2023-09),
+# ``DTA 9.zip`` (2023-04), ``DAT.zip`` (2023-08). The helpers below
+# transparently descend one level so callers don't have to special-case it.
 
-_FORMAT_TO_NESTED_NAME: dict[str, str] = {
-    "csv": "CSV.zip",
-    "dta": "DTA.zip",
-    "sav": "SAV.zip",
+# Basename of an inner format ZIP: format tag, optional " <n>" counter, ".zip".
+_NESTED_WRAPPER_RE = re.compile(r"^(CSV|DTA|DAT|SAV)( \d+)?\.zip$", re.IGNORECASE)
+
+_FORMAT_TO_NESTED_TAGS: dict[str, tuple[str, ...]] = {
+    "csv": ("CSV",),
+    "dta": ("DTA", "DAT"),
+    "sav": ("SAV",),
 }
 
 
 def _is_nested_format_wrapper(zf: zipfile.ZipFile) -> bool:
-    """True when the archive only contains ``CSV.zip``/``DTA.zip``/``SAV.zip`` entries.
+    """True when every file in the archive is an inner format ZIP.
 
-    Used to detect the 2024-03/04 nested layout where DANE wraps each
-    format in its own inner ZIP.
+    Detects the nested layout of 2022-10, 2023-04/08/09 and 2024-03/04,
+    where DANE wraps each format (CSV, DTA/DAT, SAV) in its own inner ZIP.
     """
     names = [n for n in zf.namelist() if not n.endswith("/")]
     if not names:
         return False
-    nested_targets = set(_FORMAT_TO_NESTED_NAME.values())
-    return all(n.rsplit("/", 1)[-1] in nested_targets for n in names)
+    return all(_NESTED_WRAPPER_RE.match(n.rsplit("/", 1)[-1]) for n in names)
 
 
 def _open_nested_zip(zf: zipfile.ZipFile, format_name: str) -> zipfile.ZipFile:
-    """Open the inner format-named ZIP (CSV.zip / DTA.zip / SAV.zip) for ``format_name``.
+    """Open the inner format ZIP (``CSV.zip``, ``CSV 4.zip``, ...) for ``format_name``.
 
-    Reads the nested ZIP fully into memory (DANE inner ZIPs are small,
-    ~5-10 MB) and wraps it in a new ``ZipFile`` so the caller can use the
-    full ``zipfile`` API (resolution, ``.open(...)`` member streaming).
+    Reads the nested ZIP fully into memory (DANE inner ZIPs are ~5-70 MB)
+    and wraps it in a new ``ZipFile`` so the caller can use the full
+    ``zipfile`` API (resolution, ``.open(...)`` member streaming).
     The caller is responsible for closing the returned object.
     """
-    target = _FORMAT_TO_NESTED_NAME.get(format_name.lower())
-    if target is None:
+    tags = _FORMAT_TO_NESTED_TAGS.get(format_name.lower())
+    if tags is None:
         raise KeyError(
             f"No known nested wrapper for file_format={format_name!r}; "
-            f"expected one of {sorted(_FORMAT_TO_NESTED_NAME)}."
+            f"expected one of {sorted(_FORMAT_TO_NESTED_TAGS)}."
         )
 
     # Outer ZIP entries may live at the root or under a subfolder.
-    # Match by basename (case-sensitive — DANE consistently uses uppercase).
     inner_member: str | None = None
     for name in zf.namelist():
         if name.endswith("/"):
             continue
-        if name.rsplit("/", 1)[-1] == target:
+        match = _NESTED_WRAPPER_RE.match(name.rsplit("/", 1)[-1])
+        if match and match.group(1).upper() in tags:
             inner_member = name
             break
     if inner_member is None:
-        raise KeyError(f"Nested ZIP {target!r} not found in outer archive.")
+        raise KeyError(f"Nested ZIP for format {format_name!r} not found in outer archive.")
 
     with zf.open(inner_member) as fh:
         inner_bytes = fh.read()
@@ -355,11 +418,63 @@ def parse_shape_a_module(
     return dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
 
 
+def _parse_shape_c_module(
+    zip_path: Path,
+    module: str,
+    area: Area,
+    epoch: Epoch,
+    columns: list[str] | None,
+    key: str,
+) -> pd.DataFrame:
+    """Load *module* from a Shape C ZIP (one national CSV with its own CLASE).
+
+    The area split uses the file's CLASE column (1 = cabecera, 2 = resto),
+    and ``_area`` is added as in the Shape A path.
+
+    Raises:
+        ParseError: If no keyword-matching CSV exists, if it cannot be
+            parsed, or if an area other than ``total`` is requested and the
+            file has no CLASE column.
+    """
+    inner = find_shape_c_file(zip_path, module)
+    if inner is None:
+        with zipfile.ZipFile(zip_path) as _zf:
+            sample = _zf.namelist()[:8]
+        raise ParseError(
+            f"Module {module!r}: no Cabecera/Resto pair and no single national "
+            f"CSV found in {zip_path.name} ({key}). First entries in ZIP: {sample}"
+        )
+    try:
+        with zipfile.ZipFile(zip_path) as zf, zf.open(inner) as fh:
+            raw = fh.read()
+        df = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
+    except Exception as exc:
+        raise ParseError(f"Failed to parse {inner!r} in {zip_path.name}: {exc}") from exc
+
+    if "CLASE" in df.columns:
+        clase = df["CLASE"].astype("string").str.strip()
+        df["_area"] = clase.map({"1": "cabecera", "2": "resto"})
+        if area == "cabecera":
+            df = df[clase == "1"].reset_index(drop=True)
+        elif area == "resto":
+            df = df[clase == "2"].reset_index(drop=True)
+    elif area != "total":
+        raise ParseError(
+            f"Module {module!r} ({key}): {inner!r} has no CLASE column, "
+            f"so area={area!r} cannot be applied."
+        )
+
+    if columns is not None:
+        df = df[[c for c in columns if c in df.columns]]
+    return df
+
+
 def _parse_csv(
     zip_path: Path,
     inner_path: str,
     epoch: Epoch,
     columns: list[str] | None,
+    module: str | None = None,
 ) -> pd.DataFrame:
     """Stream-read a CSV from inside a ZIP without extracting to disk.
 
@@ -369,8 +484,11 @@ def _parse_csv(
         - Direct: outer ZIP contains the CSV at ``inner_path`` (with optional
           subfolder prefix and case variation, resolved by ``_resolve_zip_path``).
         - Nested wrapper: outer ZIP contains only ``CSV.zip``/``DTA.zip``/``SAV.zip``
-          (DANE 2024-03 / 2024-04 layout). In that case the matching inner
-          format-named ZIP is opened and the CSV is resolved inside it.
+          (and the numbered variants, see ``_NESTED_WRAPPER_RE``). In that
+          case the inner CSV ZIP is opened and the CSV is resolved inside it.
+
+    *module* enables the last resolution tier of ``_resolve_zip_path``
+    (``MODULE_KEYWORDS_GEIH2``).
 
     Raises:
         ParseError: If the inner file is missing or malformed.
@@ -380,11 +498,11 @@ def _parse_csv(
         with zipfile.ZipFile(zip_path) as zf:
             if _is_nested_format_wrapper(zf):
                 with _open_nested_zip(zf, "csv") as inner_zf:
-                    resolved = _resolve_zip_path(inner_zf, inner_path)
+                    resolved = _resolve_zip_path(inner_zf, inner_path, module)
                     with inner_zf.open(resolved) as fh:
                         raw_bytes = fh.read()
             else:
-                resolved = _resolve_zip_path(zf, inner_path)
+                resolved = _resolve_zip_path(zf, inner_path, module)
                 with zf.open(resolved) as fh:
                     raw_bytes = fh.read()
     except KeyError as exc:
@@ -472,6 +590,13 @@ def parse_module(
     record = sources["data"][key]
     module_files = record["modules"][module]
 
+    # ── Shape C: Cabecera/Resto declared, single national file shipped ───────
+    # 2020-01..12: no member starts with "Cabecera" (checked above), so the
+    # declared paths cannot resolve. Mirrors the Shape C fallback of
+    # .parse_module_csv() in r/R/utils-parse.R.
+    if "file" not in module_files and ("cabecera" in module_files or "resto" in module_files):
+        return _parse_shape_c_module(zip_path, module, area, epoch, columns, key)
+
     if epoch.file_format == "csv":
         _parse_fn = _parse_csv
     elif epoch.file_format in ("sav", "dta"):
@@ -485,13 +610,13 @@ def parse_module(
             inner = module_files["cabecera"]
             if inner is None:
                 raise ParseError(f"Module {module!r} has no cabecera file for {key}.")
-            return _parse_fn(zip_path, inner, epoch, columns)
+            return _parse_fn(zip_path, inner, epoch, columns, module)
 
         if area == "resto":
             inner = module_files["resto"]
             if inner is None:
                 raise ParseError(f"Module {module!r} has no resto file for {key}.")
-            return _parse_fn(zip_path, inner, epoch, columns)
+            return _parse_fn(zip_path, inner, epoch, columns, module)
 
         # area == "total": parse both and concatenate
         frames: list[pd.DataFrame] = []
@@ -499,7 +624,7 @@ def parse_module(
             inner = module_files.get(path_key)
             if inner is None:
                 continue
-            part = _parse_fn(zip_path, inner, epoch, columns)
+            part = _parse_fn(zip_path, inner, epoch, columns, module)
             part["_area"] = label
             frames.append(part)
 
@@ -514,7 +639,7 @@ def parse_module(
     area_filter = epoch.area_filter
 
     # Read all columns so filter columns are available before selection
-    df = _parse_fn(zip_path, inner_path, epoch, None)
+    df = _parse_fn(zip_path, inner_path, epoch, None, module)
 
     if row_filter_def is not None:
         df = df[df[row_filter_def["column"]].isin(row_filter_def["values"])]

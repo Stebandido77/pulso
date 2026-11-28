@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
 ### Corregido
+- Python carga las estructuras de zip que antes solo resolvía R, o ninguno de los dos (#75):
+  - 2013-04..06: nombres con el mes como sufijo (`Cabecera - Ocupados04.csv`).
+  - 2020 (Shape C): un archivo nacional por módulo con su propia columna `CLASE`, aunque el catálogo declare Cabecera/Resto. El filtro de área usa `CLASE`.
+  - Errores de tipeo del DANE en 2020, en R y Python: `Descupados`, `Desoucpados`, `Ianctivos`, `Inativos` y `Fuerzo de trabajo`.
+  - Zips anidados con nombres variantes, en R y Python: `CSV 4.zip` (2022-10), `DTA 9.zip` y carpeta `CVS/` (2023-04), `DAT.zip` (2023-08), `CSV 13.zip` (2023-09).
+  - 2024-03: `No ocupado.CSV` en singular, con el índice de palabras clave de la GEIH rediseñada que ya tenía R.
+- En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
 - Referencia de validación de 2020: los microdatos de 2020 (catálogo 780 del DANE) vienen con factores retroproyectados al CNPV 2018, así que `fetch_dane_reference.py` toma 2020-01..2020-12 del anexo vigente y no del anexo del marco 2005. Se reemplazaron solo esas 12 filas de `data/reference/dane_labor_indicators.csv`. `docs/caveats.md` advierte que 2020 no es comparable con 2019 ni con 2021.
 
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
