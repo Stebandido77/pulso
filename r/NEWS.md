@@ -11,16 +11,10 @@
   cambia nada.
 * `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
   (`"parsed"`) o ambos.
-
-## Datos
-
-* 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
-  193). Diferencia máxima: 0,004595 pp (2011-07). Faltan 2020-03 y 2020-04: el
-  DANE no publicó los módulos de desocupados ni de inactivos de esos meses.
-* 2008 y 2011 se descargan ahora de los `Mes_txt.zip` del DANE. Los CSV que se
-  usaban traían el factor de expansión sin punto decimal (#74).
-* Los microdatos de 2020 vienen con factores retroproyectados al censo 2018:
-  no son comparables con 2019 ni con 2021.
+* `pulso_load_range(start, end, module)` carga meses consecutivos con una
+  columna `periodo`. Avisa si el rango mezcla los marcos censales 2005 y 2018.
+  Con `average_weights = TRUE` agrega `peso_expansion_promedio` (factor / número
+  de meses), que reproduce los niveles del trimestre móvil del DANE (#87).
 
 ## Correcciones
 
@@ -31,6 +25,16 @@
 * Los archivos nacionales de 2020 (Shape C) con errores de tipeo del DANE ya
   se encuentran: `Descupados`, `Desoucpados`, `Ianctivos`, `Inativos` y
   `Fuerzo de trabajo` (#75).
+
+## Datos
+
+* 235 de los 237 periodos del catálogo quedan validados contra el DANE (antes
+  193). Diferencia máxima: 0,004595 pp (2011-07). Faltan 2020-03 y 2020-04: el
+  DANE no publicó los módulos de desocupados ni de inactivos de esos meses.
+* 2008 y 2011 se descargan ahora de los `Mes_txt.zip` del DANE. Los CSV que se
+  usaban traían el factor de expansión sin punto decimal (#74).
+* Los microdatos de 2020 vienen con factores retroproyectados al censo 2018:
+  no son comparables con 2019 ni con 2021.
 
 # pulso 0.2.1
 
