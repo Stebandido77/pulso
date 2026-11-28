@@ -252,7 +252,7 @@ def load(
     from pulso._config.epochs import epoch_for_month
     from pulso._config.registry import _load_sources
     from pulso._core.downloader import download_zip
-    from pulso._core.parser import parse_module
+    from pulso._core.parser import parse_module_cached
     from pulso._utils.validation import validate_area, validate_module, validate_year_month
 
     strict_flag = _resolve_strict(strict, allow_unvalidated)
@@ -322,7 +322,9 @@ def load(
                 show_progress=show_progress,
                 allow_unvalidated=not strict_flag,
             )
-            df = parse_module(zip_path, y, m, module, validated_area, epoch, columns)
+            df = parse_module_cached(
+                zip_path, y, m, module, validated_area, epoch, columns, record, cache=cache
+            )
 
             if harmonize:
                 from pulso._core.harmonizer import harmonize_dataframe

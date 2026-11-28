@@ -17,7 +17,7 @@ from __future__ import annotations
 import io
 import re
 import zipfile
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from pulso._config.registry import _load_sources
 from pulso._utils.columns import _normalize_dane_columns
@@ -484,8 +484,13 @@ def parse_shape_a_module(
 
 
 def _merge_key_names(epoch: Epoch) -> list[str]:
+    """Merge keys kept by every ``columns=`` request (epoch keys plus HOGAR).
+
+    HOGAR is kept even where the epoch's household key does not use it, so
+    the result matches R's ``.MERGE_KEY_COLUMNS`` in r/R/load.R.
+    """
     keys: list[str] = []
-    for k in [*epoch.merge_keys_persona, *epoch.merge_keys_hogar]:
+    for k in [*epoch.merge_keys_persona, *epoch.merge_keys_hogar, "HOGAR"]:
         if k not in keys:
             keys.append(k)
     return keys
@@ -770,3 +775,120 @@ def parse_module(
 
     df = df.reset_index(drop=True)
     return _select_columns(df, columns, epoch)
+
+
+# ---------------------------------------------------------------------------
+# Parsed-module cache (parquet)
+# ---------------------------------------------------------------------------
+#
+# Bump PARSER_VERSION whenever a change in this module alters what
+# parse_module returns for the same zip (columns, dtypes, rows): every cached
+# parquet written by an older version is then ignored.
+PARSER_VERSION = "3.0"
+
+# Validation bookkeeping changes without changing the zip or its parse.
+_VOLATILE_RECORD_FIELDS = ("validated", "validated_by", "validated_at", "notes", "scraped_at")
+
+
+def parsed_cache_key(record: dict[str, Any], module: str) -> str:
+    """Cache key: download URL, module, PARSER_VERSION and the period's sources.json entry.
+
+    Validation bookkeeping fields (``_VOLATILE_RECORD_FIELDS``) are left out
+    of the hash so that validating a period does not throw its cache away.
+    """
+    import hashlib
+    import json
+
+    entry = {k: v for k, v in record.items() if k not in _VOLATILE_RECORD_FIELDS}
+    payload = json.dumps(
+        {
+            "url": str(record.get("download_url", "")).strip(),
+            "module": module,
+            "parser_version": PARSER_VERSION,
+            "entry": entry,
+        },
+        sort_keys=True,
+        ensure_ascii=True,
+    )
+    return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def _apply_area(df: pd.DataFrame, area: Area, epoch: Epoch) -> pd.DataFrame:
+    """Area filter on a full (area='total') parse_module result."""
+    if area == "total":
+        return df
+    if "_area" in df.columns:  # Shape A / Shape C / Shape A lookup
+        return df[df["_area"] == area].reset_index(drop=True)
+    area_filter = epoch.area_filter
+    if area_filter is None:
+        raise ParseError(f"Cannot apply area={area!r}: no _area column and no area filter.")
+    values = area_filter.cabecera_values if area == "cabecera" else area_filter.resto_values
+    return df[df[area_filter.column].isin(values)].reset_index(drop=True)
+
+
+def parse_module_cached(
+    zip_path: Path,
+    year: int,
+    month: int,
+    module: str,
+    area: Area,
+    epoch: Epoch,
+    columns: list[str] | None,
+    record: dict[str, Any],
+    cache: bool = True,
+) -> pd.DataFrame:
+    """``parse_module`` with a parquet cache of the full parsed module.
+
+    Carga el módulo desde ``<cache>/parsed/<año>/<mes>/<módulo>_<clave>.parquet``
+    si existe; si no, lo parsea completo (``area='total'``, todas las columnas),
+    lo guarda y aplica el área y las columnas.
+
+    The first load parses every column (to fill the cache) and then selects;
+    later loads read only the needed columns from the parquet. If the frame
+    cannot be written as parquet (e.g. an object column mixing numbers and
+    text), the cache is skipped and the result is the same as
+    ``parse_module``. ``cache=False`` bypasses it and parses only the
+    requested columns. Clear it with ``pulso.cache_clear("parsed")``.
+    """
+    import logging
+
+    import pandas as pd
+
+    from pulso._utils.cache import cache_path
+
+    if not cache:
+        return parse_module(zip_path, year, month, module, area, epoch, columns)
+
+    logger = logging.getLogger(__name__)
+    key = parsed_cache_key(record, module)
+    path = cache_path() / "parsed" / str(year) / f"{month:02d}" / f"{module}_{key}.parquet"
+
+    df: pd.DataFrame | None = None
+    if path.exists():
+        try:
+            read_cols: list[str] | None = None
+            if columns is not None:
+                import pyarrow.parquet as pq
+
+                present = pq.read_schema(path).names
+                wanted = _read_set(columns, epoch, ("CLASE", "_area"))
+                extra = [epoch.area_filter.column] if epoch.area_filter is not None else []
+                read_cols = [c for c in present if _canon_col(c) in (wanted or set()) or c in extra]
+            df = pd.read_parquet(path, columns=read_cols)
+        except Exception as exc:  # corrupt or unreadable cache: re-parse
+            logger.warning("Ignoring unreadable parsed cache %s: %s", path, exc)
+            path.unlink(missing_ok=True)
+            df = None
+
+    if df is None:
+        df = parse_module(zip_path, year, month, module, "total", epoch, None)
+        tmp = path.with_suffix(".parquet.tmp")
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            df.to_parquet(tmp, index=False)
+            tmp.replace(path)
+        except Exception as exc:  # not representable as parquet: no cache
+            logger.debug("Not caching %s %d-%02d as parquet: %s", module, year, month, exc)
+            tmp.unlink(missing_ok=True)
+
+    return _select_columns(_apply_area(df, area, epoch), columns, epoch)

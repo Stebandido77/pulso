@@ -188,7 +188,7 @@
 #' sniffed (DANE ships Latin-1, a few releases ship UTF-8) and the decimal
 #' mark follows the separator: DANE ';'-separated files use ',' decimals.
 #' @noRd
-.read_zip_member <- function(zip_path, member, label = member) {
+.read_zip_member <- function(zip_path, member, label = member, select = NULL) {
   tmp <- tempfile("pulso_", fileext = ".csv")
   on.exit(unlink(tmp), add = TRUE)
 
@@ -232,6 +232,16 @@
   }
   dec <- .sniff_decimal(sample_chr, sep)
 
+  keep <- NULL
+  if (!is.null(select)) {
+    header <- names(data.table::fread(
+      file = tmp, sep = sep, header = TRUE, nrows = 0, encoding = encoding,
+      showProgress = FALSE
+    ))
+    keep <- header[.canon_col(header) %in% select]
+    if (length(keep) == 0) keep <- NULL
+  }
+
   df <- data.table::fread(
     file         = tmp,
     sep          = sep,
@@ -239,7 +249,8 @@
     header       = TRUE,
     encoding     = encoding,
     data.table   = FALSE,
-    showProgress = FALSE
+    showProgress = FALSE,
+    select       = keep
   )
 
   names(df) <- sub("^\ufeff", "", enc2utf8(names(df)))
@@ -249,6 +260,17 @@
     }
   }
   df
+}
+
+#' Comparison key for a column name: no BOM, upper case, FEX_C_2011 -> FEX_C
+#'
+#' Used to match `columns =` requests against raw DANE headers. Mirrors
+#' `_canon_col()` in python/pulso/_core/parser.py.
+#' @noRd
+.canon_col <- function(x) {
+  x <- gsub("\ufeff", "", as.character(x), fixed = TRUE)
+  x <- toupper(trimws(x))
+  sub("^FEX_C_[0-9]{4}$", "FEX_C", x)
 }
 
 #' Infer the decimal mark of a DANE CSV from its first data lines
@@ -272,7 +294,8 @@
 
 #' Read a single CSV from inside a zip
 #' @noRd
-.read_single_csv_from_zip <- function(zip_path, inner_path, module_name = NULL) {
+.read_single_csv_from_zip <- function(zip_path, inner_path, module_name = NULL,
+                                      select = NULL) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
 
   resolved <- .resolve_zip_path(zip_contents, inner_path, module_name)
@@ -286,7 +309,7 @@
     ))
   }
 
-  .read_zip_member(zip_path, resolved, label = inner_path)
+  .read_zip_member(zip_path, resolved, label = inner_path, select = select)
 }
 
 #' Shape A module keyword index (GEIH-1 era, 2007-2020)
@@ -393,8 +416,8 @@
 #' Shape C occurs in 2020-06 and 2020-12 where DANE published a single CSV
 #' for modules that normally have Cabecera/Resto pairs (Shape A).
 #' @noRd
-.parse_shape_c <- function(zip_path, csv_name) {
-  .read_zip_member(zip_path, csv_name)
+.parse_shape_c <- function(zip_path, csv_name, select = NULL) {
+  .read_zip_member(zip_path, csv_name, select = select)
 }
 
 #' Locate a single keyword-matching CSV in the zip (Shape C fallback)
@@ -454,7 +477,8 @@
 #'
 #' @return data.frame with the CSV contents.
 #' @noRd
-.parse_module_csv <- function(zip_path, module_spec, module_name, year, month) {
+.parse_module_csv <- function(zip_path, module_spec, module_name, year, month,
+                              select = NULL) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
 
   if (.is_nested_zip_wrapper(zip_contents)) {
@@ -463,7 +487,7 @@
   }
 
   if (!is.null(module_spec$file)) {
-    return(.read_single_csv_from_zip(zip_path, module_spec$file, module_name))
+    return(.read_single_csv_from_zip(zip_path, module_spec$file, module_name, select))
   }
 
   if (!is.null(module_spec$cabecera) && !is.null(module_spec$resto)) {
@@ -471,9 +495,9 @@
 
     if (!is.null(files$cabecera) && !is.null(files$resto)) {
       # Shape A: Cabecera + Resto pair found
-      df_c <- .read_single_csv_from_zip(zip_path, files$cabecera)
+      df_c <- .read_single_csv_from_zip(zip_path, files$cabecera, select = select)
       if (!any(toupper(names(df_c)) == "CLASE")) df_c$CLASE <- 1L
-      df_r <- .read_single_csv_from_zip(zip_path, files$resto)
+      df_r <- .read_single_csv_from_zip(zip_path, files$resto, select = select)
       if (!any(toupper(names(df_r)) == "CLASE")) df_r$CLASE <- 2L
       # DANE CSVs sometimes encode the same column as different types across
       # Cabecera/Resto files (e.g. RAMA4DP8 as integer vs character).
@@ -492,7 +516,7 @@
     # Cabecera/Resto files (COVID periods 2020-06, 2020-12).
     shape_c_file <- .find_shape_c_file(zip_contents, module_name)
     if (!is.null(shape_c_file)) {
-      return(.ensure_labor_flag(.parse_shape_c(zip_path, shape_c_file), module_name))
+      return(.ensure_labor_flag(.parse_shape_c(zip_path, shape_c_file, select), module_name))
     }
 
     keywords <- .MODULE_KEYWORDS_GEIH1[[module_name]]
