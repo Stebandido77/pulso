@@ -168,7 +168,7 @@ def labor_status_from_flags(
     result[outside.eq(1)] = "3"
     result[unemp.eq(1)] = "2"
     result[occ.eq(1)] = "1"
-    return result
+    return cast("pd.Series", result)
 
 
 @register("labor_force_from_flags")
@@ -186,7 +186,7 @@ def labor_force_from_flags(
     result = pd.Series(pd.NA, index=df.index, dtype="boolean")
     result[outside.eq(1)] = False
     result[occ.eq(1) | unemp.eq(1)] = True
-    return result
+    return cast("pd.Series", result)
 
 
 @register("pet_by_age_zone")
@@ -225,7 +225,7 @@ def pet_by_age_zone(
     threshold[zone.isna()] = np.nan if urban != rural else urban
     result = (age >= threshold).astype("boolean")
     result[age.isna() | threshold.isna()] = pd.NA
-    return result
+    return cast("pd.Series", result)
 
 
 @register("compute_ingreso_total")
