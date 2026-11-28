@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 from xml.etree import ElementTree as ET
 
 if TYPE_CHECKING:
@@ -114,7 +114,10 @@ def _tpm_from_fixture(
     valor_col = raw.iloc[:, 1]  # "Tasa de politica monetaria(Dato diario)"
 
     fecha = pd.to_datetime(fecha_col, format="%d/%m/%Y", errors="coerce")
-    valor = valor_col.str.replace(",", ".", regex=False).replace("-", float("nan")).astype(float)
+    # pandas-stubs types ``.str.replace`` as ``Series[str]``, whose ``replace``
+    # overloads reject a float value; at runtime this is a plain object Series.
+    valor_str = cast("pd.Series", valor_col.str.replace(",", ".", regex=False))
+    valor = valor_str.replace("-", float("nan")).astype(float)
 
     df = pd.DataFrame({"fecha": fecha, "valor": valor, "serie": "tpm"})
     df = df.dropna(subset=["fecha", "valor"]).reset_index(drop=True)
@@ -124,7 +127,7 @@ def _tpm_from_fixture(
     if end:
         df = df[df["fecha"].dt.date <= end]
 
-    return df.reset_index(drop=True)
+    return cast("pd.DataFrame", df.reset_index(drop=True))
 
 
 def _tpm_from_api(
@@ -149,7 +152,7 @@ def _tpm_from_api(
     if end:
         df = df[df["fecha"].dt.date <= end]
 
-    return df.reset_index(drop=True)
+    return cast("pd.DataFrame", df.reset_index(drop=True))
 
 
 def _parse_sdmx_xml(xml_bytes: bytes, serie_name: str) -> pd.DataFrame:
@@ -161,15 +164,19 @@ def _parse_sdmx_xml(xml_bytes: bytes, serie_name: str) -> pd.DataFrame:
         val = obs.find("g:ObsValue", _SDMX_NS)
         if dim is None or val is None:
             continue
+        raw_value = val.attrib.get("value")
+        if raw_value is None:
+            # Same error ``float(None)`` raised before this guard existed.
+            raise TypeError("float() argument must be a string or a real number, not 'NoneType'")
         records.append(
             {
                 "fecha": dim.attrib.get("value"),
-                "valor": float(val.attrib.get("value")),
+                "valor": float(raw_value),
             }
         )
     df = pd.DataFrame(records)
     if df.empty:
-        return pd.DataFrame(columns=["fecha", "valor", "serie"])
+        return cast("pd.DataFrame", pd.DataFrame(columns=["fecha", "valor", "serie"]))
     df["fecha"] = pd.to_datetime(df["fecha"], format="%Y%m%d")
     df["serie"] = serie_name
-    return df
+    return cast("pd.DataFrame", df)

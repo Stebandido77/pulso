@@ -7,7 +7,7 @@ This module provides a convenience wrapper for descriptive statistics only.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from pulso._utils.exceptions import ConfigError
 
@@ -80,4 +80,4 @@ def expand(
     result = df.copy()
     result["_weight"] = result[weight]
     result.attrs["weight"] = weight
-    return result
+    return cast("pd.DataFrame", result)

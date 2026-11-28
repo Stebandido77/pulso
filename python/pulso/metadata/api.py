@@ -22,7 +22,7 @@ Two known limitations of ``df.attrs``:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -189,7 +189,10 @@ def list_columns_metadata(df: pd.DataFrame) -> pd.DataFrame:
                 "has_categories": bool(meta.get("categories")),
             }
         )
-    return pd.DataFrame(
-        rows,
-        columns=["column", "label", "type", "module", "source", "has_categories"],
+    return cast(
+        "pd.DataFrame",
+        pd.DataFrame(
+            rows,
+            columns=["column", "label", "type", "module", "source", "has_categories"],
+        ),
     )

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 import warnings
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -380,7 +380,7 @@ def load(
     if metadata:
         _attach_metadata_for_load(result, periods, module)
 
-    return result
+    return cast("pd.DataFrame", result)
 
 
 def _attach_metadata_for_load(
@@ -670,7 +670,7 @@ def load_merged(
     if metadata:
         _attach_metadata_for_load_merged(result, periods, used_modules)
 
-    return result
+    return cast("pd.DataFrame", result)
 
 
 def _attach_metadata_for_load_merged(

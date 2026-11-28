@@ -12,7 +12,7 @@ Supported transforms (from variable_map.schema.json):
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import pandas as pd
 
@@ -117,7 +117,9 @@ def _apply_recode(
                 f"{unmapped_values}. Extend mapping in variable_map.json or set 'default'."
             )
         return str_source.map(mapping)
-    return str_source.map(mapping).fillna(default).where(str_source.notna(), other=pd.NA)
+    return cast(
+        "pd.Series", str_source.map(mapping).fillna(default).where(str_source.notna(), other=pd.NA)
+    )
 
 
 def _apply_cast(source: pd.Series, to: str, canonical_name: str) -> pd.Series:
@@ -204,7 +206,7 @@ def _apply_compute(
 
     sub_df = df[source_vars] if source_vars else df
     try:
-        result: pd.Series = sub_df.eval(expr, engine="python")
+        result = cast("pd.Series", sub_df.eval(expr, engine="python"))
     except Exception as exc:
         raise HarmonizationError(
             f"Variable {canonical_name!r}: compute expression {expr!r} failed: {exc}"
@@ -221,7 +223,7 @@ def _apply_coalesce(sub_df: pd.DataFrame, canonical_name: str) -> pd.Series:
     result = sub_df.iloc[:, 0].copy()
     for col in sub_df.columns[1:]:
         result = result.fillna(sub_df[col])
-    return result
+    return cast("pd.Series", result)
 
 
 def _validate_categorical_domain(
@@ -356,7 +358,7 @@ def harmonize_variable(
         result = _to_canonical_string(result)
         _validate_categorical_domain(result, variable_entry, canonical_name)
 
-    return result.rename(canonical_name)
+    return cast("pd.Series", result.rename(canonical_name))
 
 
 def harmonize_dataframe(
@@ -412,4 +414,4 @@ def harmonize_dataframe(
     # this key before returning to the user.
     if skipped:
         result.attrs["_skipped_variables"] = list(skipped)
-    return result
+    return cast("pd.DataFrame", result)

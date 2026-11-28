@@ -16,7 +16,7 @@ import re
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 import requests
 
@@ -63,14 +63,15 @@ _SPANISH_MONTHS: dict[str, int] = {
 # ── Registry helpers ─────────────────────────────────────────────────────────
 
 
-def _load_empalme_registry() -> dict:
+def _load_empalme_registry() -> dict[str, Any]:
     """Load empalme_sources.json from the package data directory."""
     data = importlib.resources.files("pulso") / "data" / "empalme_sources.json"
     with data.open("r", encoding="utf-8") as fh:
-        return json.load(fh)
+        registry: dict[str, Any] = json.load(fh)
+    return registry
 
 
-def _get_empalme_entry(year: int) -> dict:
+def _get_empalme_entry(year: int) -> dict[str, Any]:
     """Return the registry entry for *year*, validating range and downloadable status.
 
     Raises:
@@ -83,7 +84,7 @@ def _get_empalme_entry(year: int) -> dict:
             f"Got {year}."
         )
     registry = _load_empalme_registry()
-    entry = registry["data"][str(year)]
+    entry: dict[str, Any] = registry["data"][str(year)]
     if not entry["downloadable"]:
         raise DataNotAvailableError(
             year,
@@ -266,9 +267,9 @@ def _apply_area_filter(df: pd.DataFrame, area: str) -> pd.DataFrame:
         logger.debug("CLASE column not found in empalme DataFrame; area filter '%s' skipped.", area)
         return df
     if area == "cabecera":
-        return df[df["CLASE"] == 1].reset_index(drop=True)
+        return cast("pd.DataFrame", df[df["CLASE"] == 1].reset_index(drop=True))
     if area == "resto":
-        return df[df["CLASE"].isin([2, 3])].reset_index(drop=True)
+        return cast("pd.DataFrame", df[df["CLASE"].isin([2, 3])].reset_index(drop=True))
     return df
 
 
@@ -445,7 +446,7 @@ def _load_empalme_single_year(
         frames.append(df.assign(year=year, month=detected_month))
 
     if not frames:
-        return pd.DataFrame()
+        return cast("pd.DataFrame", pd.DataFrame())
     return pd.concat(frames, ignore_index=True)
 
 
@@ -486,7 +487,10 @@ def load_empalme(
     # the rc1 contract documented in ``test_load_empalme_invalid_year_raises``.
     if isinstance(year, bool):
         raise TypeError(f"year must be int, range, or iterable, not bool (got {year!r}).")
-    if isinstance(year, str):
+    # ``str`` is outside the annotated type but callers can still pass it at
+    # runtime; check it through ``object`` so mypy does not flag it unreachable.
+    raw_year: object = year
+    if isinstance(raw_year, str):
         raise TypeError(f"year must be int, range, or iterable of ints, not str (got {year!r}).")
     if isinstance(year, int):
         years = [year]
@@ -516,7 +520,7 @@ def load_empalme(
             frames.append(df)
 
     if not frames:
-        return pd.DataFrame()
+        return cast("pd.DataFrame", pd.DataFrame())
     if len(frames) == 1:
         return frames[0]
     return pd.concat(frames, ignore_index=True)

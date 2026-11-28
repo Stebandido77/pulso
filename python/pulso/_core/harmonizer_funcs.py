@@ -9,7 +9,7 @@ Signature for all custom functions:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 import pandas as pd
@@ -47,7 +47,7 @@ def get_custom(name: str) -> Callable[..., pd.Series]:
 def bin_edad_quinquenal(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Cut edad (P6040) into 14 quinquennial bins matching grupo_edad.categories."""
@@ -83,7 +83,7 @@ def bin_edad_quinquenal(
 def merge_labor_status(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Combine OCI (ocupados) and DSI (no_ocupados) into condicion_actividad code.
@@ -119,14 +119,14 @@ def merge_labor_status(
     result[oci.isna() & dsi.eq(1)] = "2"  # desocupado
     result[oci.isna() & (dsi.isna() | dsi.eq(0))] = "3"  # inactivo (heuristic)
 
-    return result
+    return cast("pd.Series", result)
 
 
 @register("compute_ingreso_total")
 def compute_ingreso_total(
     df: pd.DataFrame,
     source_var: str | list[str],
-    _variable_entry: dict,
+    _variable_entry: dict[str, Any],
     _epoch: Epoch,
 ) -> pd.Series:
     """Sum INGLABO + non-labor income components to construct ingreso_total.
@@ -145,4 +145,4 @@ def compute_ingreso_total(
         )
 
     sub = df[available].fillna(0)
-    return sub.sum(axis=1)
+    return cast("pd.Series", sub.sum(axis=1))

@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING, Any
 from lxml import etree
 
 if TYPE_CHECKING:
-    from pulso.metadata.schema import Variable, YearEntry
+    from pulso.metadata.schema import ValueRange, Variable, VariableType, YearEntry
 
 DDI_NS = "http://www.icpsr.umich.edu/DDI"
 NS = {"ddi": DDI_NS}
@@ -118,7 +118,7 @@ def _parse_var(var_elem: etree._Element) -> tuple[str, Variable, YearEntry]:
             categories[value] = cat_label or ""
 
     # Type inference: presence of categories wins; else use varFormat type.
-    var_type: str
+    var_type: VariableType
     if categories:
         var_type = "categorical"
     elif fmt_type == "numeric":
@@ -137,14 +137,16 @@ def _parse_var(var_elem: etree._Element) -> tuple[str, Variable, YearEntry]:
     response_unit = _text(var_elem.find(_TAG_RESP_UNIT))
 
     # Value range
-    value_range = None
+    value_range: ValueRange | None = None
     valrng = var_elem.find(_TAG_VALRNG)
     if valrng is not None:
         rng = valrng.find(_TAG_RANGE)
         if rng is not None:
             try:
-                vmin = float(rng.get("min")) if rng.get("min") is not None else None
-                vmax = float(rng.get("max")) if rng.get("max") is not None else None
+                min_attr = rng.get("min")
+                max_attr = rng.get("max")
+                vmin = float(min_attr) if min_attr is not None else None
+                vmax = float(max_attr) if max_attr is not None else None
                 if vmin is not None and vmax is not None:
                     value_range = {"min": vmin, "max": vmax}
             except (TypeError, ValueError):
@@ -156,21 +158,21 @@ def _parse_var(var_elem: etree._Element) -> tuple[str, Variable, YearEntry]:
     notes = "\n\n".join(notes_parts) if notes_parts else None
 
     # Year-level record (subset of fields per the schema).
-    year_record: YearEntry = {  # type: ignore[typeddict-item]
+    year_record: YearEntry = {
         "epoch": "",  # filled in by caller
         "file_id_in_year": var_elem.get("files"),
         "var_id_in_year": var_elem.get("ID"),
         "label": label,
-        "type": var_type,  # type: ignore[typeddict-item]
+        "type": var_type,
         "question_text": question_text,
         "categories": categories,
         "value_range": value_range,
     }
 
-    top_record: Variable = {  # type: ignore[typeddict-item]
+    top_record: Variable = {
         "code": code,
         "label": label or code,
-        "type": var_type,  # type: ignore[typeddict-item]
+        "type": var_type,
         "question_text": question_text,
         "universe": universe,
         "response_unit": response_unit,
@@ -258,7 +260,7 @@ def parse_ddi(path: str | Path, *, year: int | None = None) -> dict[str, Any]:
     if data_dscr is None:
         raise DDIParseError(f"No <dataDscr> element in {p}; not a valid GEIH codeBook.")
 
-    variables: dict[str, dict[str, Any]] = {}
+    variables: dict[str, Variable] = {}
     for var_elem in data_dscr.findall(f"{{{DDI_NS}}}var"):
         code, top_record, year_record = _parse_var(var_elem)
         year_record["epoch"] = epoch
