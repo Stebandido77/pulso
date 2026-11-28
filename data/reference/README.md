@@ -38,12 +38,17 @@ Texto de los boletines: "la tasa de desempleo fue 8,2 %", "La tasa global de par
 
 TGP = FT / PET, TO = OC / PET, TD = DS / FT, ponderados con el factor de expansión de `variable_map.json` (`peso_expansion`: `FEX_C` en la época 2005, `FEX_C18` en la 2018).
 
-Faltan mapeos en `variable_map.json` ([#79](https://github.com/Stebandido77/pulso/issues/79)). El script los reporta en `notes` en vez de improvisarlos:
+Desde W2 (#85, #79), todo sale de `variable_map.json`, por el mismo camino que usa cualquier usuario: `pulso.load_merged(año, mes, modules=["caracteristicas_generales", ...módulos de fuerza de trabajo], harmonize=True, variables=["pet", "fuerza_trabajo", "condicion_actividad", "peso_expansion"])`.
 
-- No hay PET ni FT. PET se define como la unión de los módulos de fuerza de trabajo, que el DANE solo aplica a la PET; FT = OC + DS.
-- En `geih_2006_2020`, `condicion_actividad` solo mapea `OCI`. La condición sale de la pertenencia al módulo (Ocupados / Desocupados / Inactivos son archivos separados).
-- En `geih_2021_present` se reutiliza `merge_labor_status(OCI, DSI)` del paquete.
-- En la época 2018, `FEX_C18` llega como texto ([#77](https://github.com/Stebandido77/pulso/issues/77)). El script lo convierte y lo anota como `weight_coerced_from_text`.
+| Variable | Marco 2005 (`geih_2006_2020`) | Marco 2018 (`geih_2021_present`, y 2020) | Fuente |
+|---|---|---|---|
+| `pet` | `P6040` ≥ 12 en cabecera (`CLASE` = 1) y ≥ 10 en centro poblado y rural disperso (`CLASE` 2 o 3) | `P6040` ≥ 15 | [DANE, boletín de educación 2018](https://www.dane.gov.co/files/investigaciones/boletines/especiales/educacion/Bol_edu_2018.pdf); [DANE, boletín GEIH 2024](https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHFLE-2024.pdf) |
+| `condicion_actividad` | `OCI` / `DSI` / `INI` = 1 en Ocupados / Desocupados / Inactivos | `OCI` = 1 en Ocupados; `DSI` = 1 y `FFT` = 1 en No ocupados | diccionarios GEIH |
+| `fuerza_trabajo` | ocupado o desocupado (mismas banderas) | ídem | DANE: FT = OC + DS |
+
+Verificación de la regla de la PET con microdatos: coincide exactamente (0 discrepancias) con la pertenencia al módulo Fuerza de trabajo, que el DANE solo aplica a la PET. La regla 12/10 da 0 discrepancias en 2015-06 y 2021-06; la de 15+, 0 en 2020-06, 2024-06 y 2026-09. Por eso **2020 usa 15+** aunque su época sea `geih_2006_2020` (`frame_2018_periods` en el mapeo).
+
+El script cuenta las inconsistencias entre definiciones (personas en FT fuera de la PET, personas de la PET sin condición de actividad) y las escribe en `notes`. En la época 2018, `FEX_C18` puede llegar como texto ([#77](https://github.com/Stebandido77/pulso/issues/77)): el script lo convierte y lo anota como `weight_coerced_from_text`.
 
 Tolerancia: máx. |pulso − DANE| ≤ 0,1 pp en los tres indicadores es `pass`; ≤ 0,5 pp es `review`; más es `fail`. `error` significa que el periodo no cargó.
 

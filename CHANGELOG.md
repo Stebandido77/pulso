@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
+### Agregado
+- Variables canónicas `pet` (población en edad de trabajar) y `fuerza_trabajo` (FT) en `variable_map.json`, para las dos épocas, con la definición del DANE citada (#79):
+  - PET: 12+ en cabecera y 10+ en centro poblado y rural disperso en el marco 2005; 15+ en el marco 2018. 2020 usa 15+ porque sus microdatos están en el marco 2018.
+  - FT: ocupados + desocupados, a partir de las banderas de cada módulo.
+- Funciones de armonización `labor_status_from_flags`, `labor_force_from_flags` y `pet_by_age_zone`. Los transforms `custom` aceptan `params` en el esquema de `variable_map`.
+
+### Cambiado
+- La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
+- El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
+- `condicion_actividad` en el marco 2005 usa `OCI`/`DSI`/`INI` en vez de solo `OCI`, que dejaba sin código a desocupados e inactivos (#79). Requiere cargar juntos los módulos de fuerza de trabajo con `load_merged()`.
+- `merge_labor_status` (marco 2018) usa `FFT` cuando la tabla lo trae. Los menores de 15 que solo están en Características generales quedan NA en vez de "inactivo" (#79).
+- `validate_periods.py` calcula PET, FT, OC y DS con esas variables a través de `load_merged(..., harmonize=True)`, en vez de la pertenencia a los módulos.
+
 ### Corregido
 - Python carga las estructuras de zip que antes solo resolvía R, o ninguno de los dos (#75):
   - 2013-04..06: nombres con el mes como sufijo (`Cabecera - Ocupados04.csv`).
@@ -16,10 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 2024-03: `No ocupado.CSV` en singular, con el índice de palabras clave de la GEIH rediseñada que ya tenía R.
 - En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
 - Referencia de validación de 2020: los microdatos de 2020 (catálogo 780 del DANE) vienen con factores retroproyectados al CNPV 2018, así que `fetch_dane_reference.py` toma 2020-01..2020-12 del anexo vigente y no del anexo del marco 2005. Se reemplazaron solo esas 12 filas de `data/reference/dane_labor_indicators.csv`. `docs/caveats.md` advierte que 2020 no es comparable con 2019 ni con 2021.
-
-### Cambiado
-- La clave de caché de los zips sin checksum incluye un hash corto de la URL (`<año>-<mes>_<sha1[:10]>.zip`), como en R. Si el catálogo apunta un periodo a otro archivo del DANE, ya no se reutiliza el zip viejo. Los zips cacheados con el nombre anterior (`unvalidated_<año>-<mes>.zip`) se vuelven a descargar una vez.
-- El separador se decide por el encabezado antes de deducir la marca decimal: un archivo tabulado en una época que declara `;` (los `Mes_txt.zip` de 2008 y 2011, #74) ya no queda con los decimales como texto.
 
 ### Datos
 - 235 de 237 periodos con `validated: true` (antes 193), validados con `validate_periods.py` contra el DANE: diferencia máxima de 0,004595 pp (2011-07) y ninguna regresión. Faltan 2020-03 y 2020-04, para los que el DANE no publicó desocupados ni inactivos.

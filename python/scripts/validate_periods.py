@@ -10,20 +10,23 @@ Definitions (DANE):
 
 How each piece is resolved
 --------------------------
-* Weight: ``variable_map.json`` -> ``peso_expansion`` mapping of the epoch
-  (``FEX_C`` on the 2005 frame, normalized by the parser; ``FEX_C18`` on the
-  2018 frame).
-* Labor status: ``variable_map.json`` -> ``condicion_actividad``. On
-  ``geih_2021_present`` this is ``merge_labor_status(OCI, DSI)`` and the
-  package's own implementation is reused. On ``geih_2006_2020`` the map only
-  declares ``OCI`` (identity), which codes employed persons but not the
-  unemployed or the inactive: that is a mapping gap, reported in ``notes``.
-  For that epoch the status falls back to module membership, which is
-  unambiguous because DANE ships Ocupados / Desocupados / Inactivos as
-  separate files.
-* PET: ``variable_map.json`` has no PET or FT variable (gap, reported in
-  ``notes``). PET is the union of the labor-force modules, which DANE only
-  administers to the working-age population; FT = OC + DS.
+Every piece comes from ``variable_map.json``, through the same path a user
+takes: ``pulso.load_merged(year, month, modules, harmonize=True,
+variables=[...])`` with Características generales plus the labor modules.
+
+* ``pet``: DANE's working-age population. 12+ in cabeceras and 10+ in
+  centros poblados / rural disperso on the 2005 frame; 15+ on the 2018 frame
+  (2022+, and 2020, whose microdata are retro-projected to the 2018 frame).
+* ``condicion_actividad``: DANE's per-module flags. ``OCI``/``DSI``/``INI`` on
+  the 2005 frame; ``OCI``/``DSI``/``FFT`` on the 2018 frame.
+* ``fuerza_trabajo``: employed or unemployed (same flags).
+* ``peso_expansion``: ``FEX_C`` on the 2005 frame (``fex_c_2011``, normalized
+  by the parser), ``FEX_C18`` on the 2018 frame.
+
+PET = sum of weights with ``pet``; FT = with ``fuerza_trabajo``; OC and DS
+with ``condicion_actividad`` 1 and 2. Inconsistencies between the
+definitions (labor-force members outside the PET, PET members without a
+labor status) are counted and written to ``notes``.
 
 Status: max |pulso - DANE| <= 0.1 pp -> ``pass``; <= 0.5 pp -> ``review``;
 otherwise ``fail``. ``pending`` means no official figure for that month;
@@ -58,7 +61,6 @@ DEFAULT_OUTPUT = REPO_ROOT / "data" / "reference" / "validation_results.csv"
 PASS_PP = 0.1
 REVIEW_PP = 0.5
 LABOR_MODULES = ("ocupados", "desocupados", "inactivos")
-MEMBERSHIP_CODE = {"ocupados": "1", "desocupados": "2", "inactivos": "3"}
 FINAL_STATUSES = {"pass", "review", "fail", "pending"}
 
 FIELDS = [
@@ -104,129 +106,71 @@ def resolve_weight(var_map: dict[str, Any], epoch: str) -> str:
     return src
 
 
-def labor_status_mapping(var_map: dict[str, Any], epoch: str) -> dict[str, Any]:
-    try:
-        return dict(var_map["variables"]["condicion_actividad"]["mappings"][epoch])
-    except KeyError as exc:
-        raise MappingGapError(
-            f"variable_map: condicion_actividad has no mapping for {epoch}"
-        ) from exc
+HARMONIZED_VARIABLES = ["pet", "fuerza_trabajo", "condicion_actividad", "peso_expansion"]
 
 
-def _numeric_weight(df: pd.DataFrame, wcol: str, module: str) -> pd.Series:
-    if wcol not in df.columns:
-        raise MappingGapError(f"weight column {wcol!r} missing from module {module!r}")
-    w = df[wcol]
+def _numeric_weight(w: pd.Series) -> tuple[pd.Series, str | None]:
+    coerced = None
     if not pd.api.types.is_numeric_dtype(w):
-        # pulso (Python) still returns FEX_C18 as text on the 2018 frame: the
-        # CSVs use '.' decimals while the epoch declares ','. Coerce here and
-        # report it in notes (see compute_indicators) instead of hiding it.
+        # Report it in notes instead of hiding it (see #77).
+        coerced = str(w.dtype)
         w = pd.to_numeric(w.astype("string").str.replace(",", ".", regex=False), errors="coerce")
-        w.attrs["coerced_from"] = str(df[wcol].dtype)
-    if w.isna().any():
-        raise ValueError(f"{int(w.isna().sum())} non-numeric {wcol} values in {module!r}")
-    return w.astype(float)
+    return w.astype(float), coerced
 
 
-def compute_indicators(
-    frames: dict[str, pd.DataFrame],
-    epoch: str,
-    var_map: dict[str, Any],
-    merge_keys: tuple[str, ...],
-    shared_file: bool,
-) -> tuple[dict[str, float], list[str]]:
-    """Compute TD/TO/TGP (in %) from the labor-force module frames.
+def compute_indicators(df: pd.DataFrame) -> tuple[dict[str, float], list[str]]:
+    """Compute TD/TO/TGP (in %) from a harmonized, merged person-level frame.
 
-    Args:
-        frames: module name -> DataFrame for ``ocupados``, ``desocupados``,
-            ``inactivos``. When ``shared_file`` is True, ``desocupados`` and
-            ``inactivos`` are the same "No ocupados" file and only
-            ``ocupados`` + ``desocupados`` are used.
-        epoch: epoch key (``geih_2006_2020`` / ``geih_2021_present``).
-        var_map: parsed ``variable_map.json``.
-        merge_keys: person-level keys of the epoch.
-        shared_file: whether desocupados and inactivos come from one file.
+    ``df`` must carry the canonical columns of ``HARMONIZED_VARIABLES`` (the
+    output of ``pulso.load_merged(..., harmonize=True)``).
 
     Returns:
-        ({"td","to","tgp","oc","ds","fft"}, notes)
+        ({"td","to","tgp","pet","ft","oc","ds"}, notes)
     """
-    from pulso._core.harmonizer_funcs import merge_labor_status
+    missing = [c for c in HARMONIZED_VARIABLES if c not in df.columns]
+    if missing:
+        raise MappingGapError(f"variable_map no resolvio {missing} para este periodo")
+    notes: list[str] = ["definiciones=variable_map(pet, fuerza_trabajo, condicion_actividad)"]
 
-    notes: list[str] = []
-    wcol = resolve_weight(var_map, epoch)
-    mapping = labor_status_mapping(var_map, epoch)
-    transform = mapping.get("transform")
-    src = mapping.get("source_variable")
-    modules = ("ocupados", "desocupados") if shared_file else LABOR_MODULES
-
-    parts = []
-    coerced: list[str] = []
-    for mod in modules:
-        df = frames[mod]
-        weight = _numeric_weight(df, wcol, mod)
-        if "coerced_from" in weight.attrs:
-            coerced.append(f"{mod}:{weight.attrs['coerced_from']}")
-        part = pd.DataFrame({"_w": weight, "_module": mod})
-        for k in merge_keys:
-            part[k] = df[k].to_numpy() if k in df.columns else pd.NA
-        cols = src if isinstance(src, list) else [src]
-        for c in cols:
-            if c in df.columns:
-                part[c] = pd.to_numeric(df[c], errors="coerce").to_numpy()
-        parts.append(part)
-    universe = pd.concat(parts, ignore_index=True)
-
-    if isinstance(transform, dict) and transform.get("name") == "merge_labor_status":
-        for c in src:
-            if c not in universe.columns:
-                universe[c] = pd.NA
-        status = merge_labor_status(universe, src, {}, None)  # type: ignore[arg-type]
-        notes.append(f"labor_status=variable_map:merge_labor_status({','.join(src)})")
-    elif shared_file:
-        raise MappingGapError(
-            f"variable_map: condicion_actividad[{epoch}] cannot split unemployed from "
-            "inactive inside a shared 'No ocupados' file"
-        )
-    else:
-        status = universe["_module"].map(MEMBERSHIP_CODE)
-        notes.append(
-            f"labor_status=module_membership (gap: variable_map condicion_actividad[{epoch}] "
-            f"solo mapea {src})"
-        )
-        if isinstance(src, str) and src in universe.columns:
-            oc_rows = universe["_module"].eq("ocupados")
-            bad = int((~universe.loc[oc_rows, src].eq(1)).sum())
-            if bad:
-                notes.append(f"{bad} filas de ocupados con {src}!=1")
-    notes.append("pet=labor_module_union (gap: variable_map no define PET/FT)")
-    notes.append(f"weight={wcol}")
+    w, coerced = _numeric_weight(df["peso_expansion"])
     if coerced:
-        notes.append(f"weight_coerced_from_text ({', '.join(coerced)})")
+        notes.append(f"weight_coerced_from_text ({coerced})")
+    pet = df["pet"].astype("boolean")
+    ft = df["fuerza_trabajo"].astype("boolean")
+    status = df["condicion_actividad"].astype("string")
 
-    present_keys = [k for k in merge_keys if universe[k].notna().all()]
-    if present_keys:
-        dup = int(universe.duplicated(subset=present_keys).sum())
-        if dup:
-            notes.append(f"{dup} personas repetidas entre modulos")
+    in_pet = pet.fillna(False).astype(bool)
+    in_ft = ft.fillna(False).astype(bool)
+    if w[in_pet].isna().any():
+        raise ValueError(
+            f"{int(w[in_pet].isna().sum())} personas de la PET sin factor de expansion"
+        )
 
-    if status.isna().any():
-        raise ValueError(f"{int(status.isna().sum())} persons without labor status")
-    w = universe["_w"]
-    oc = float(w[status.eq("1")].sum())
-    ds = float(w[status.eq("2")].sum())
-    fft = float(w[status.eq("3")].sum())
-    ft = oc + ds
-    pet = ft + fft
-    if pet <= 0 or ft <= 0:
-        raise ValueError(f"degenerate totals: PET={pet}, FT={ft}")
+    ft_outside_pet = int((in_ft & ~in_pet).sum())
+    pet_without_status = int((in_pet & status.isna()).sum())
+    status_outside_pet = int((~in_pet & status.notna()).sum())
+    if ft_outside_pet:
+        notes.append(f"{ft_outside_pet} personas en FT fuera de la PET")
+    if pet_without_status:
+        notes.append(f"{pet_without_status} personas de la PET sin condicion_actividad")
+    if status_outside_pet:
+        notes.append(f"{status_outside_pet} personas con condicion_actividad fuera de la PET")
+
+    pet_w = float(w[in_pet].sum())
+    ft_w = float(w[in_ft].sum())
+    oc = float(w[status.eq("1").fillna(False).astype(bool)].sum())
+    ds = float(w[status.eq("2").fillna(False).astype(bool)].sum())
+    if pet_w <= 0 or ft_w <= 0:
+        raise ValueError(f"degenerate totals: PET={pet_w}, FT={ft_w}")
     return (
         {
-            "td": 100.0 * ds / ft,
-            "to": 100.0 * oc / pet,
-            "tgp": 100.0 * ft / pet,
+            "td": 100.0 * ds / ft_w,
+            "to": 100.0 * oc / pet_w,
+            "tgp": 100.0 * ft_w / pet_w,
+            "pet": pet_w,
+            "ft": ft_w,
             "oc": oc,
             "ds": ds,
-            "fft": fft,
         },
         notes,
     )
@@ -297,38 +241,40 @@ def _module_file_key(entry: dict[str, Any], module: str) -> str:
 
 
 class LoadFailedError(RuntimeError):
-    """pulso.load skipped the period (strict=False) and returned an empty frame."""
+    """pulso skipped a module (strict=False) and the period cannot be computed."""
 
 
-def _load_module(pulso: Any, year: int, month: int, module: str) -> pd.DataFrame:
-    """``pulso.load`` with ``strict=False`` (the catalog is mostly unvalidated).
+def _load_merged(pulso: Any, year: int, month: int, modules: list[str]) -> pd.DataFrame:
+    """``pulso.load_merged`` with ``strict=False``; surface skipped modules as errors.
 
-    Under ``strict=False`` a parse failure is not raised: the loader skips the
-    month, returns an empty DataFrame and only reports the cause in a
-    UserWarning. Surface that cause as an exception so it lands in the CSV.
+    Under ``strict=False`` a parse failure is not raised: the loader skips it
+    and only reports the cause in a UserWarning. A period with a missing
+    module cannot be computed, so the cause is raised and lands in the CSV.
     """
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        df = pulso.load(year, month, module, harmonize=False, show_progress=False, strict=False)
-    if df.empty:
-        msgs = [str(w.message) for w in caught if "failed to load" in str(w.message)]
-        detail = msgs[0] if msgs else "pulso.load returned an empty DataFrame"
+        df = pulso.load_merged(
+            year,
+            month,
+            modules=modules,
+            harmonize=True,
+            variables=HARMONIZED_VARIABLES,
+            show_progress=False,
+            strict=False,
+        )
+    failed = [str(w.message) for w in caught if "failed to load" in str(w.message)]
+    if df.empty or failed:
+        detail = failed[0] if failed else "pulso.load_merged returned an empty DataFrame"
         marker = "(e.g., "
         if marker in detail:
             detail = detail.split(marker, 2)[-1].split("). Pass strict=True")[0]
-        raise LoadFailedError(f"{module}: {detail}")
-    if "DIRECTORIO" not in df.columns:
-        raise LoadFailedError(
-            f"{module}: no DIRECTORIO column; the file has no recognizable header "
-            f"(first columns read: {list(df.columns[:4])})"
-        )
+        raise LoadFailedError(detail)
     return df
 
 
 def validate_one(period: str, dane: dict[str, float] | None) -> dict[str, Any]:
     """Load one period with pulso and build its result row (runs in a worker)."""
     import pulso
-    from pulso._config.epochs import get_epoch
 
     warnings.simplefilter("ignore")
     sources = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
@@ -343,12 +289,11 @@ def validate_one(period: str, dane: dict[str, float] | None) -> dict[str, Any]:
         if missing:
             raise MappingGapError(f"sources.json sin modulos {missing}")
         shared = _module_file_key(entry, "desocupados") == _module_file_key(entry, "inactivos")
-        epoch = get_epoch(epoch_key)
-        mods = ("ocupados", "desocupados") if shared else LABOR_MODULES
-        frames = {m: _load_module(pulso, year, month, m) for m in mods}
-        vals, notes = compute_indicators(
-            frames, epoch_key, var_map, tuple(epoch.merge_keys_persona), shared
-        )
+        labor = ["ocupados", "desocupados"] if shared else list(LABOR_MODULES)
+        df = _load_merged(pulso, year, month, ["caracteristicas_generales", *labor])
+        vals, notes = compute_indicators(df)
+        wcol = resolve_weight(var_map, epoch_key)
+        notes.append(f"weight={wcol}")
         row = compare(vals, dane)
         diff_note = row.pop("_diff_note", None)
         if diff_note:

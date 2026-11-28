@@ -327,7 +327,10 @@ def load(
             if harmonize:
                 from pulso._core.harmonizer import harmonize_dataframe
 
+                # Period-dependent transforms (pet_by_age_zone) read it.
+                df.attrs["pulso_period"] = f"{y}-{m:02d}"
                 df = harmonize_dataframe(df, epoch, modules=[module])
+                df.attrs.pop("pulso_period", None)
                 period_skipped = _drain_skipped_variables(df)
                 if period_skipped:
                     skipped_per_period.append(period_skipped)
@@ -622,9 +625,11 @@ def load_merged(
                 # can filter canonicals to only those whose applicability
                 # intersects this set.
                 merged_modules = list(module_dfs.keys())
+                merged.attrs["pulso_period"] = f"{y}-{mo:02d}"
                 merged = harmonize_dataframe(
                     merged, epoch, variables=variables, modules=merged_modules
                 )
+                merged.attrs.pop("pulso_period", None)
                 period_skipped = _drain_skipped_variables(merged)
                 if period_skipped:
                     skipped_per_period.append(period_skipped)

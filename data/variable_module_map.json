@@ -17,6 +17,8 @@
     "asiste_educ": ["caracteristicas_generales"],
     "alfabetiza": ["caracteristicas_generales"],
     "condicion_actividad": ["caracteristicas_generales"],
+    "pet": ["caracteristicas_generales"],
+    "fuerza_trabajo": ["caracteristicas_generales"],
     "tipo_desocupacion": ["desocupados"],
     "busco_trabajo": ["desocupados"],
     "disponible": ["desocupados"],
