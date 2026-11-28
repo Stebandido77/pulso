@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
+
+### Corregido
+- Python carga las estructuras de zip que antes solo resolvía R, o ninguno de los dos (#75):
+  - 2013-04..06: nombres con el mes como sufijo (`Cabecera - Ocupados04.csv`).
+  - 2020 (Shape C): un archivo nacional por módulo con su propia columna `CLASE`, aunque el catálogo declare Cabecera/Resto. El filtro de área usa `CLASE`.
+  - Errores de tipeo del DANE en 2020, en R y Python: `Descupados`, `Desoucpados`, `Ianctivos`, `Inativos` y `Fuerzo de trabajo`.
+  - Zips anidados con nombres variantes, en R y Python: `CSV 4.zip` (2022-10), `DTA 9.zip` y carpeta `CVS/` (2023-04), `DAT.zip` (2023-08), `CSV 13.zip` (2023-09).
+  - 2024-03: `No ocupado.CSV` en singular, con el índice de palabras clave de la GEIH rediseñada que ya tenía R.
+- En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
+
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado

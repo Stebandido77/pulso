@@ -66,23 +66,33 @@
   x
 }
 
-#' Detect DANE nested-zip wrapper layout (2024-03, 2024-04)
+#' Basename of an inner format zip in a nested DANE wrapper: format tag,
+#' optional " <n>" counter, ".zip". Seen: CSV.zip (2024-03), CSV 4.zip
+#' (2022-10), CSV 13.zip / SAV 12.zip (2023-09), DTA 9.zip (2023-04),
+#' DAT.zip (2023-08). Mirrors _NESTED_WRAPPER_RE in python/pulso/_core/parser.py.
+#' @noRd
+.NESTED_WRAPPER_RE <- "(?i)^(CSV|DTA|DAT|SAV)( [0-9]+)?\\.zip$"
+
+#' Detect DANE nested-zip wrapper layout (2022-10, 2023-04/08/09, 2024-03/04)
 #'
-#' Some DANE releases wrap data files inside a second zip layer; the outer
-#' archive contains only CSV.zip / DTA.zip / SAV.zip entries.
+#' Some DANE releases wrap data files inside a second zip layer; every
+#' entry of the outer archive is an inner format zip (see .NESTED_WRAPPER_RE).
 #' @noRd
 .is_nested_zip_wrapper <- function(zip_contents) {
   zip_contents <- .normalize_zip_names(zip_contents)
   entries <- zip_contents[!grepl("/$", zip_contents)]
   if (length(entries) == 0) return(FALSE)
-  all(vapply(entries, .base_name, character(1), USE.NAMES = FALSE) %in% c("CSV.zip", "DTA.zip", "SAV.zip"))
+  bases <- vapply(entries, .base_name, character(1), USE.NAMES = FALSE)
+  all(grepl(.NESTED_WRAPPER_RE, bases, perl = TRUE))
 }
 
-#' Extract the inner CSV.zip of a nested DANE wrapper (cached next to it)
+#' Extract the inner CSV zip of a nested DANE wrapper (cached next to it)
 #' @noRd
 .unwrap_nested_zip <- function(zip_path) {
   zip_contents <- suppressWarnings(utils::unzip(zip_path, list = TRUE)$Name)
-  inner <- zip_contents[vapply(zip_contents, .base_name, character(1), USE.NAMES = FALSE) == "CSV.zip"]
+  bases <- vapply(zip_contents, .base_name, character(1), USE.NAMES = FALSE)
+  inner <- zip_contents[grepl(.NESTED_WRAPPER_RE, bases, perl = TRUE) &
+                          grepl("(?i)^CSV", bases, perl = TRUE)]
   if (length(inner) == 0) {
     abort_parse_error(sprintf(
       "Nested zip %s has no CSV.zip member", basename(zip_path)
@@ -94,7 +104,7 @@
     dir.create(exdir)
     on.exit(unlink(exdir, recursive = TRUE), add = TRUE)
     utils::unzip(zip_path, files = inner[1], exdir = exdir, junkpaths = TRUE)
-    ok <- file.copy(file.path(exdir, "CSV.zip"), target, overwrite = TRUE)
+    ok <- file.copy(file.path(exdir, .base_name(inner[1])), target, overwrite = TRUE)
     if (!ok) {
       abort_parse_error(sprintf(
         "Could not extract CSV.zip from %s", basename(zip_path)
@@ -295,12 +305,15 @@
     "Caractericas generales"
   ),
   ocupados             = "Ocupados",
-  desocupados          = "Desocupados",
-  inactivos            = "Inactivos",
+  # 2020 Shape C typos: "Descupados" (2020-05), "Desoucpados" (2020-09/10).
+  desocupados          = c("Desocupados", "Descupados", "Desoucpados"),
+  # 2020 Shape C typos: "Ianctivos" (2020-07), "Inativos" (2020-10).
+  inactivos            = c("Inactivos", "Ianctivos", "Inativos"),
   vivienda_hogares     = "Vivienda y Hogares",
   otros_ingresos       = "Otros ingresos",
   otras_formas_trabajo = "Otras actividades y ayudas",
-  fuerza_de_trabajo    = "Fuerza de trabajo"
+  # 2020 Shape C typo: "Fuerzo de trabajo" (2020-11).
+  fuerza_de_trabajo    = c("Fuerza de trabajo", "Fuerzo de trabajo")
 )
 
 #' Locate Cabecera and Resto files for a module inside a Shape A zip
