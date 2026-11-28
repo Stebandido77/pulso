@@ -39,15 +39,20 @@
 .read_parsed_cache <- function(path, select = NULL) {
   if (!file.exists(path)) return(NULL)
   tryCatch({
+    # mmap = FALSE and an explicitly closed file handle: on Windows a
+    # memory-mapped or still-open parquet cannot be replaced or deleted.
     cols <- NULL
     if (!is.null(select)) {
-      present <- arrow::ParquetFileReader$create(path)$GetSchema()$names
+      fh <- arrow::ReadableFile$create(path)
+      present <- tryCatch(arrow::ParquetFileReader$create(fh)$GetSchema()$names,
+                          finally = fh$close())
       cols <- present[.canon_col(present) %in% select]
     }
     df <- if (is.null(cols)) {
-      arrow::read_parquet(path, as_data_frame = TRUE)
+      arrow::read_parquet(path, as_data_frame = TRUE, mmap = FALSE)
     } else {
-      arrow::read_parquet(path, col_select = dplyr::all_of(cols), as_data_frame = TRUE)
+      arrow::read_parquet(path, col_select = dplyr::all_of(cols), as_data_frame = TRUE,
+                          mmap = FALSE)
     }
     as.data.frame(df)
   }, error = function(e) {
