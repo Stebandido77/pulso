@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
+## [1.3.0] — sin publicar  (Python pulso-co) / R pulso 0.3.0
 
 ### Agregado
 - `pulso.trm()` / `pulso_trm()` (#90): TRM (pesos por dólar) certificada por la Superintendencia Financiera (dataset `32sa-8pi3` de datos.gov.co), un registro por día, con la interfaz de `tpm()`: snapshot incluido (`trm_superfinanciera_20261128.csv.gz`, 2006–2026-11-30, 40 KB) y llamada en vivo con fallback. **IBR pendiente**: la API SDMX del Banco de la República (la única fuente del IBR) estaba en mantenimiento y no se pudo verificar el identificador del flujo.
@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 235 de 237 periodos con `validated: true` (antes 193), validados con `validate_periods.py` contra el DANE: diferencia máxima de 0,004595 pp (2011-07) y ninguna regresión. Faltan 2020-03 y 2020-04, para los que el DANE no publicó desocupados ni inactivos.
 - 2008-01..12 y 2011-01..12 apuntan a los `Mes_txt.zip` del DANE (tabulados y con encabezado). Los CSV anteriores traían `fex_c_2011` sin punto decimal en todas las filas (#74).
 
-## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
+## [1.2.1] — 2026-11-28  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado
 - `python/scripts/fetch_dane_reference.py`: descarga los anexos oficiales de mercado laboral de la GEIH y extrae la serie mensual del Total Nacional (TD, TO, TGP) a `data/reference/dane_labor_indicators.csv`. Usa un anexo por época porque el anexo vigente retroproyecta 2001–2020 al marco 2018 (PET 15+): `anexo_empleo_dic_21.xlsx` (marco 2005) para 2006-01..2021-12 y el `anex-GEIH-<mes><año>.xlsx` más reciente para 2022-01 en adelante.
