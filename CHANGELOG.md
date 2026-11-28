@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `validate_periods.py` calcula PET, FT, OC y DS con esas variables a través de `load_merged(..., harmonize=True)`, en vez de la pertenencia a los módulos.
 
 ### Corregido
+- `hatch_build.py` y `scripts/sync_data.py` ya no fallan en Windows al borrar `python/pulso/data`: copian sin el atributo de solo lectura, reintentan con permiso de escritura los archivos de solo lectura y reutilizan el directorio si quedó vacío pero bloqueado. Si aun así no pueden borrarlo, el error nombra el archivo y cómo resolverlo.
 - Python carga las estructuras de zip que antes solo resolvía R, o ninguno de los dos (#75):
   - 2013-04..06: nombres con el mes como sufijo (`Cabecera - Ocupados04.csv`).
   - 2020 (Shape C): un archivo nacional por módulo con su propia columna `CLASE`, aunque el catálogo declare Cabecera/Resto. El filtro de área usa `CLASE`.
@@ -29,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 2024-03: `No ocupado.CSV` en singular, con el índice de palabras clave de la GEIH rediseñada que ya tenía R.
 - En 2020-03 y 2020-04 el DANE no publicó los módulos `desocupados` ni `inactivos`. Pedirlos da un `ParseError` que lo dice.
 - Referencia de validación de 2020: los microdatos de 2020 (catálogo 780 del DANE) vienen con factores retroproyectados al CNPV 2018, así que `fetch_dane_reference.py` toma 2020-01..2020-12 del anexo vigente y no del anexo del marco 2005. Se reemplazaron solo esas 12 filas de `data/reference/dane_labor_indicators.csv`. `docs/caveats.md` advierte que 2020 no es comparable con 2019 ni con 2021.
+
+### Mantenimiento
+- Mantenimiento de CI: las actions que corrían en Node 20 pasan a versiones en Node 24 (`checkout@v7`, `setup-python@v7`, `upload-artifact@v7`, `download-artifact@v8`, `cache@v6`, `codecov-action@v7`, `create-pull-request@v8`). Las de `r-lib/actions@v2` ya estaban en Node 24.
+- `r/inst/doc/` sale del repositorio (lo genera `R CMD build`) y queda en `.gitignore`.
 
 ### Datos
 - 235 de 237 periodos con `validated: true` (antes 193), validados con `validate_periods.py` contra el DANE: diferencia máxima de 0,004595 pp (2011-07) y ninguna regresión. Faltan 2020-03 y 2020-04, para los que el DANE no publicó desocupados ni inactivos.

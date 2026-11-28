@@ -213,3 +213,46 @@ def test_aggregated_warning_includes_both_unvalidated_and_failures(  # type: ign
     msg = str(user_warnings[0].message)
     assert "checksum-validated" in msg
     assert "failed to load" in msg
+
+
+def test_parse_error_in_one_month_does_not_abort_the_range(  # type: ignore[no-untyped-def]
+    setup_partial, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#53: a ParseError (corrupted CSV) in ONE month of a range must not abort it.
+
+    Every other month is still loaded and concatenated, and the failure is
+    reported in the single aggregated warning. Guards the per-iteration
+    try/except in ``load()`` against a refactor that would abort on the first
+    error.
+    """
+    import pulso
+    import pulso._core.parser as parser_mod
+    from pulso._utils.exceptions import ParseError
+
+    setup_partial(
+        missing_keys=[],
+        present_keys=["2024-01", "2024-02", "2024-03", "2024-04"],
+    )
+    sentinel = pd.DataFrame({"DIRECTORIO": ["1"], "SECUENCIA_P": ["1"], "ORDEN": ["1"]})
+
+    def parse_with_one_failure(zip_path, year, month, *args, **kwargs):  # type: ignore[no-untyped-def]
+        if (year, month) == (2024, 3):
+            raise ParseError("simulated CSV corruption")
+        return sentinel.copy()
+
+    monkeypatch.setattr(parser_mod, "parse_module", parse_with_one_failure)
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        df = pulso.load(year=2024, month=range(1, 5), module="ocupados", harmonize=False)
+
+    assert sorted(df["month"].tolist()) == [1, 2, 4]
+    assert df["year"].unique().tolist() == [2024]
+    user_warnings = [w for w in caught if issubclass(w.category, UserWarning)]
+    assert len(user_warnings) == 1
+    msg = str(user_warnings[0].message)
+    assert "1 months failed to load" in msg
+    assert "2024-03" in msg
+
+    with pytest.raises(ParseError, match="simulated CSV corruption"):
+        pulso.load(year=2024, month=range(1, 5), module="ocupados", harmonize=False, strict=True)

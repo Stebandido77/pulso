@@ -42,7 +42,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Resolve period
         id: period
@@ -56,7 +56,7 @@ jobs:
           echo "Periodo: $value"
 
       # ---------------------------------------------------------------- Python
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: matrix.lang == 'python'
         with:
           python-version: "3.11"
@@ -136,9 +136,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 

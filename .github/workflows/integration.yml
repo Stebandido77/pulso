@@ -33,9 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -49,7 +49,7 @@ jobs:
       # Cache the downloaded ZIPs across runs so the suite is not a
       # repeat-offender against the DANE download endpoint.
       - name: Restore pulso ZIP cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pulso
           key: pulso-cache-${{ hashFiles('data/sources.json') }}
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload pulso cache for debugging (failure only)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pulso-cache-debug
           path: ~/.cache/pulso/
