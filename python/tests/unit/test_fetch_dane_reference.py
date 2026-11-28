@@ -148,3 +148,47 @@ def test_build_reference_keeps_each_annex_inside_its_epoch() -> None:
     assert by["2022-01"]["td"] == 22.0
     assert by["2022-01"]["source_url"] == "cur"
     assert by["2022-01"]["retrieved_at"] == "2026-11-26T00:00:00Z"
+
+
+def test_build_reference_takes_2020_from_the_2018_frame_annex() -> None:
+    """2020 microdata are retro-projected to the 2018 frame (catalog 780)."""
+    openpyxl = pytest.importorskip("openpyxl")
+
+    def workbook(sheet: str, labels: tuple[str, str, str], td: float) -> bytes:
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = sheet
+        for r in _rows(labels, [2019, 2020, 2021]):
+            ws.append(list(r))
+        for row in ws.iter_rows():
+            if row[0].value == labels[2]:
+                for c in row[1:]:
+                    c.value = td
+                break
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+
+    files = {
+        "hist": workbook("Tnal mensual", ("TGP", "TO", "TD"), td=11.0),
+        "cur": workbook(
+            "Total nacional",
+            (
+                "Tasa Global de Participación (TGP)",
+                "Tasa de Ocupación (TO)",
+                "Tasa de Desocupación (TD)",
+            ),
+            td=22.0,
+        ),
+    }
+    specs = [
+        AnnexSpec("geih_2006_2020", "hist", "Tnal mensual"),
+        AnnexSpec("geih_2021_present", "cur", "Total nacional"),
+    ]
+    ranges = {"geih_2006_2020": ("2006-01", "2021-12"), "geih_2021_present": ("2022-01", None)}
+    by = {r["period"]: r for r in build_reference(specs, ranges, fetch=files.__getitem__)}
+    assert len(by) == 36
+    assert by["2019-12"]["source_url"] == "hist"
+    assert all(by[f"2020-{m:02d}"]["source_url"] == "cur" for m in range(1, 13))
+    assert by["2020-06"]["td"] == 22.0
+    assert by["2021-01"]["source_url"] == "hist"

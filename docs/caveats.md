@@ -35,6 +35,8 @@ For valid inference (CIs, hypothesis tests, regression standard errors):
 The `notes` field in each `sources.json` entry flags non-standard months:
 
 - **2020-04 to 2020-07**: pandemic, partial telephone-based collection
+- **2020-01 to 2020-12**: the microdata DANE serves for 2020 (catalog 780) carry expansion factors retro-projected to the 2018 census frame, although pulso files them under the 2005-frame epoch (`geih_2006_2020`). National TD/TO/TGP computed from them match DANE's *current* annex, not the 2005-frame series published up to January 2022. Comparing 2020 with 2019 or 2021 mixes two population frames.
+- **2020-03 and 2020-04**: DANE published only *Características generales*, *Fuerza de trabajo* and *Ocupados*. There are no `desocupados` or `inactivos` files for those months.
 - **Specific months with reweighting**: when DANE republishes weights after a population update
 - Other one-offs: any time DANE issues an erratum, the `validated_at` and `notes` fields are updated
 

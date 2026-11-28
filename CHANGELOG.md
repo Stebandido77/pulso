@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
+
+### Corregido
+- Referencia de validación de 2020: los microdatos de 2020 (catálogo 780 del DANE) vienen con factores retroproyectados al CNPV 2018, así que `fetch_dane_reference.py` toma 2020-01..2020-12 del anexo vigente y no del anexo del marco 2005. Se reemplazaron solo esas 12 filas de `data/reference/dane_labor_indicators.csv`. `docs/caveats.md` advierte que 2020 no es comparable con 2019 ni con 2021.
+
 ## [1.2.1] — sin publicar  (Python pulso-co) / R pulso 0.2.1
 
 ### Agregado
