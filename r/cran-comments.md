@@ -18,8 +18,11 @@ It is to be submitted no earlier than 2026-12-28, one month after 0.2.1.
 
 ## R CMD check results
 
-* GitHub Actions `r-check.yml` (`R CMD check --as-cran`, ubuntu-latest,
-  R-release): see the release pull request for the run and its result.
+* GitHub Actions `r-check.yml` (`R CMD check --as-cran`, 2026-11-28, run
+  46132821189): ubuntu-latest (R-release and R-devel), windows-latest and
+  macos-latest: 0 errors | 0 warnings | 1 note. The note is "Days since
+  last update: 0" (0.2.1 was accepted the same day); it goes away once the
+  one-month wait has passed.
 * Local `--as-cran` check: not run on the maintainer's current machine
   (an application-control policy blocks loading compiled packages there);
   to be run locally and on win-builder (R-release and R-devel) before
