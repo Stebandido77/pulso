@@ -51,8 +51,14 @@ test_that("pulso_validation_status values are sensible for known period", {
 })
 
 test_that("pulso_validation_status NA fields are NA for unvalidated period", {
-  # 2008-01 stays unvalidated: Python cannot parse its header-less .txt (#74).
-  result <- pulso_validation_status(2008, 1)
+  # Pick the period from the catalog: periods get validated over time.
+  sources <- .load_sources()$data
+  unvalidated <- names(sources)[!vapply(sources, function(x) isTRUE(x$validated), logical(1))]
+  skip_if(length(unvalidated) == 0, "every period is validated")
+  period <- unvalidated[1]
+  result <- pulso_validation_status(
+    as.integer(substr(period, 1, 4)), as.integer(substr(period, 6, 7))
+  )
   expect_false(result$validated)
   expect_true(is.na(result$validated_by))
   expect_true(is.na(result$validated_at))

@@ -186,10 +186,18 @@ test_that("BUG-018: 2020 COVID Shape C variant loads", {
 })
 
 test_that("BUG-006: strict = TRUE refuses unvalidated periods", {
-  # 2024-03 stays validated=FALSE in sources.json (singular "No ocupado.CSV", #75).
+  # Pick the period from the catalog: periods get validated over time.
   # Guard fires before any download so no skip_if_offline() needed.
+  sources <- .load_sources()$data
+  unvalidated <- names(sources)[!vapply(sources, function(x) isTRUE(x$validated), logical(1))]
+  skip_if(length(unvalidated) == 0, "every period is validated")
+  period <- unvalidated[1]
   expect_error(
-    pulso_load(year = 2024, month = 3, module = "ocupados", strict = TRUE),
+    pulso_load(
+      year = as.integer(substr(period, 1, 4)),
+      month = as.integer(substr(period, 6, 7)),
+      module = "ocupados", strict = TRUE
+    ),
     class = "pulso_data_not_validated"
   )
 })
@@ -199,11 +207,11 @@ test_that("BUG-006: unvalidated periods load by default with a warning", {
   skip_if_offline()
   # Pick an unvalidated period from the catalog instead of hard-coding one:
   # periods get validated over time (2026-09 was, after #76) and this test
-  # broke every time. 2024-03 is preferred because R reads its nested zip.
+  # broke every time.
   sources <- .load_sources()$data
   unvalidated <- names(sources)[!vapply(sources, function(x) isTRUE(x$validated), logical(1))]
   skip_if(length(unvalidated) == 0, "every period is validated")
-  period <- if ("2024-03" %in% unvalidated) "2024-03" else max(unvalidated)
+  period <- max(unvalidated)
   yr <- as.integer(substr(period, 1, 4))
   mo <- as.integer(substr(period, 6, 7))
   # The warning fires once per period per session; reset so test order
