@@ -1,3 +1,15 @@
+# pulso (development version)
+
+## Correcciones
+
+* `pulso_load()` detecta los zips anidados del DANE con nombres variantes:
+  `CSV 4.zip` (2022-10), `DTA 9.zip` (2023-04), `DAT.zip` (2023-08) y
+  `CSV 13.zip` (2023-09). Antes solo reconocía `CSV.zip`, `DTA.zip` y
+  `SAV.zip` (#75).
+* Los archivos nacionales de 2020 (Shape C) con errores de tipeo del DANE ya
+  se encuentran: `Descupados`, `Desoucpados`, `Ianctivos`, `Inativos` y
+  `Fuerzo de trabajo` (#75).
+
 # pulso 0.2.1
 
 ## Datos

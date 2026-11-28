@@ -163,3 +163,56 @@ test_that(".parse_module_csv raises on unknown shape", {
     regexp = "unknown shape"
   )
 })
+
+test_that(".is_nested_zip_wrapper accepts numbered and variant inner names (#75)", {
+  # 2022-10, 2023-04, 2023-08 and 2023-09 layouts.
+  expect_true(.is_nested_zip_wrapper(c(
+    "GEIH_Octubre_Marco_2018/CSV 4.zip", "GEIH_Octubre_Marco_2018/DTA 4.zip",
+    "GEIH_Octubre_Marco_2018/SAV 4.zip"
+  )))
+  expect_true(.is_nested_zip_wrapper(c("Abril/CSV.zip", "Abril/DTA 9.zip", "Abril/SAV 9.zip")))
+  expect_true(.is_nested_zip_wrapper(c("Agosto/CSV.zip", "Agosto/DAT.zip", "Agosto/SAV.zip")))
+  expect_true(.is_nested_zip_wrapper(c("Septiembre/CSV 13.zip", "Septiembre/SAV 12.zip")))
+  expect_false(.is_nested_zip_wrapper(c("CSV.zip", "CSVX.zip")))
+  expect_false(.is_nested_zip_wrapper(c("CSV.zip", "CSV 4.csv")))
+})
+
+test_that(".parse_module_csv unwraps a numbered inner zip with a CVS/ folder (#75)", {
+  tmp_dir <- tempfile()
+  fs::dir_create(fs::path(tmp_dir, "inner", "CVS"))
+  fs::dir_create(fs::path(tmp_dir, "outer", "Abril"))
+  on.exit(fs::dir_delete(tmp_dir), add = TRUE)
+
+  writeLines(c("DIRECTORIO;CLASE;FEX_C18", "1;1;10.5", "2;2;20.5"),
+             fs::path(tmp_dir, "inner", "CVS", "Ocupados.CSV"))
+  old_wd <- setwd(fs::path(tmp_dir, "inner"))
+  utils::zip(fs::path(tmp_dir, "outer", "Abril", "CSV 13.zip"), "CVS/Ocupados.CSV",
+             flags = "-r9X")
+  writeLines("stub", fs::path(tmp_dir, "outer", "Abril", "DTA 9.zip"))
+  setwd(fs::path(tmp_dir, "outer"))
+  zip_path <- fs::path(tmp_dir, "wrapper.zip")
+  utils::zip(zip_path, c("Abril/CSV 13.zip", "Abril/DTA 9.zip"), flags = "-r9X")
+  setwd(old_wd)
+
+  df <- .parse_module_csv(zip_path, list(file = "CSV/Ocupados.CSV"), "ocupados", 2023L, 9L)
+  expect_equal(nrow(df), 2)
+  expect_equal(df$FEX_C18, c(10.5, 20.5))
+})
+
+test_that(".find_shape_c_file tolerates the 2020 filename typos (#75)", {
+  contents <- c(
+    "5.Mayo/CSV/Ocupados.CSV", "5.Mayo/CSV/Descupados.CSV",
+    "7.Julio/CSV/Ianctivos.CSV", "10.Octubre/CSV/Inativos.CSV",
+    "9.Septiembre/CSV/Desoucpados.CSV", "11.Noviembre/CSV/Fuerzo de trabajo.CSV"
+  )
+  expect_equal(.find_shape_c_file(contents, "ocupados"), "5.Mayo/CSV/Ocupados.CSV")
+  expect_equal(.find_shape_c_file(contents, "desocupados"), "5.Mayo/CSV/Descupados.CSV")
+  expect_equal(.find_shape_c_file(contents[-2], "desocupados"),
+               "9.Septiembre/CSV/Desoucpados.CSV")
+  expect_equal(.find_shape_c_file(contents, "inactivos"), "7.Julio/CSV/Ianctivos.CSV")
+  expect_equal(.find_shape_c_file(contents[-3], "inactivos"), "10.Octubre/CSV/Inativos.CSV")
+  expect_equal(.find_shape_c_file(contents, "fuerza_de_trabajo"),
+               "11.Noviembre/CSV/Fuerzo de trabajo.CSV")
+  # 2020-03/04: DANE did not publish Desocupados or Inactivos.
+  expect_null(.find_shape_c_file("3.Marzo/CSV/Ocupados.CSV", "inactivos"))
+})
