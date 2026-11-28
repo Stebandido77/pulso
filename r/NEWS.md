@@ -14,6 +14,10 @@
   cambia nada.
 * `pulso_clear_cache()` borra la caché: los zips (`"raw"`), los parquet
   (`"parsed"`) o ambos.
+* `pulso_ipc()`, `pulso_salario_minimo()` y `pulso_deflactar()`: IPC del DANE,
+  salario mínimo por año con su decreto, y conversión a pesos de un mes de
+  referencia. `pulso_load_range(deflate_to = "2026-09")` agrega ingresos
+  reales (#89).
 * `pulso_indicadores()` calcula TD, TO y TGP (y los niveles de PET, FT,
   ocupados y desocupados) por dominio, mensual o de trimestre móvil, con las
   definiciones del DANE. Coincide con el anexo del DANE. Solo estimación

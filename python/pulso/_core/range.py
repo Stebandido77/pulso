@@ -83,6 +83,8 @@ def load_range(
     show_progress: bool = True,
     strict: bool | None = None,
     average_weights: bool = False,
+    deflate_to: str | None = None,
+    income_columns: list[str] | None = None,
 ) -> pd.DataFrame:
     """Load consecutive months of one module, stacked with a ``periodo`` column.
 
@@ -103,6 +105,10 @@ def load_range(
             the monthly levels (the "Total nacional Trim" sheet of
             ``anex-GEIH-<mes><año>.xlsx``), i.e. factor / 3. Rates (TD, TO,
             TGP) are the same with either factor.
+        deflate_to: If given ('YYYY-MM'), add ``<col>_real`` columns in pesos
+            of that month with DANE's IPC (:func:`pulso.deflactar`).
+        income_columns: Columns to deflate. Default: the ones present among
+            ``ingreso_laboral``, ``ingreso_total`` (canonical) and ``INGLABO``.
 
     Returns:
         DataFrame with ``periodo`` ('YYYY-MM'), ``year`` and ``month`` columns.
@@ -171,4 +177,11 @@ def load_range(
             wcol = _weight_column(out, y, m)
             pooled[mask] = pd.to_numeric(out.loc[mask, wcol], errors="coerce") / n_months
         out[POOLED_WEIGHT] = pooled
+    if deflate_to is not None:
+        from pulso._core.real_income import deflactar
+
+        cols = income_columns or [
+            c for c in ("ingreso_laboral", "ingreso_total", "INGLABO") if c in out.columns
+        ]
+        out = deflactar(out, cols, deflate_to)
     return out

@@ -23,6 +23,9 @@ Public API:
     pulso.data_version() -> str
     pulso.tpm(start=None, end=None, use_fixture=None) -> pd.DataFrame
     pulso.trm(start=None, end=None, use_fixture=None) -> pd.DataFrame
+    pulso.ipc(use_fixture=None) -> pd.DataFrame
+    pulso.salario_minimo() -> pd.DataFrame
+    pulso.deflactar(df, columns, deflate_to) -> pd.DataFrame
 """
 
 from __future__ import annotations
@@ -45,6 +48,7 @@ from pulso._core.expander import expand
 from pulso._core.indicadores import indicadores
 from pulso._core.loader import load, load_merged
 from pulso._core.range import load_range
+from pulso._core.real_income import deflactar, ipc, salario_minimo
 from pulso._core.trm import trm
 from pulso._utils.cache import cache_clear, cache_info, cache_path
 from pulso._utils.exceptions import (
@@ -81,12 +85,14 @@ __all__ = [
     "cache_info",
     "cache_path",
     "data_version",
+    "deflactar",
     "describe",
     "describe_column",
     "describe_harmonization",
     "describe_variable",
     "expand",
     "indicadores",
+    "ipc",
     "list_available",
     "list_columns_metadata",
     "list_modules",
@@ -96,6 +102,7 @@ __all__ = [
     "load_empalme",
     "load_merged",
     "load_range",
+    "salario_minimo",
     "tpm",
     "trm",
     "update_catalog",
