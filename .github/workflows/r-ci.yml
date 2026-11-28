@@ -43,7 +43,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -90,7 +90,7 @@ jobs:
       matrix:
         r: ["release"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes

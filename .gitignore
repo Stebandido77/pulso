@@ -129,6 +129,8 @@ python/*.egg-info/
 # it exceeds CRAN's 5 MB package size limit.
 r/inst/extdata/dane_codebook.json
 r/.Rcheck/
+# Viñetas compiladas: las genera R CMD build / devtools::build_vignettes().
+r/inst/doc/
 r/*.tar.gz
 
 # R package build artifacts (root-level, from R CMD build/check)

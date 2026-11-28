@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
+### Mantenimiento
+- Mantenimiento de CI: las actions que corrían en Node 20 pasan a versiones en Node 24 (`checkout@v7`, `setup-python@v7`, `upload-artifact@v7`, `download-artifact@v8`, `cache@v6`, `codecov-action@v7`, `create-pull-request@v8`). Las de `r-lib/actions@v2` ya estaban en Node 24.
+- `r/inst/doc/` sale del repositorio (lo genera `R CMD build`) y queda en `.gitignore`.
+
 ### Corregido
+- `hatch_build.py` y `scripts/sync_data.py` ya no fallan en Windows al borrar `python/pulso/data`: copian sin el atributo de solo lectura, reintentan con permiso de escritura los archivos de solo lectura y reutilizan el directorio si quedó vacío pero bloqueado. Si aun así no pueden borrarlo, el error nombra el archivo y cómo resolverlo.
 - Python carga las estructuras de zip que antes solo resolvía R, o ninguno de los dos (#75):
   - 2013-04..06: nombres con el mes como sufijo (`Cabecera - Ocupados04.csv`).
   - 2020 (Shape C): un archivo nacional por módulo con su propia columna `CLASE`, aunque el catálogo declare Cabecera/Resto. El filtro de área usa `CLASE`.

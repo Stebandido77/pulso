@@ -38,7 +38,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -46,7 +46,7 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
@@ -68,7 +68,7 @@ jobs:
     name: Type check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -76,7 +76,7 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
@@ -100,7 +100,7 @@ jobs:
       matrix:
         python: ["3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -108,7 +108,7 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.changes.outputs.run == 'true'
         with:
           python-version: ${{ matrix.python }}
@@ -124,7 +124,7 @@ jobs:
         run: pytest -v --cov=pulso --cov-report=xml
       - name: Upload coverage
         if: steps.changes.outputs.run == 'true' && matrix.python == '3.11'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           files: python/coverage.xml
         continue-on-error: true
@@ -133,7 +133,7 @@ jobs:
     name: Validate JSON data files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -141,7 +141,7 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
@@ -160,7 +160,7 @@ jobs:
     name: Wheel content identity gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # detect-changes diffs against the merge base
       - name: Detect relevant changes
@@ -168,7 +168,7 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           pattern: '^(python/|data/|scripts/sync_data\.py$|scripts/wheel_inventory\.py$|\.github/workflows/python-ci\.yml$|\.github/actions/|docs/internal/r-port/wheel_reference_inventory\.txt$)'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.11"
