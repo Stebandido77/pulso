@@ -2,6 +2,9 @@
 
 ## Novedades
 
+* `pulso_trm()`: TRM certificada por la Superintendencia Financiera, un
+  registro por día, con la misma interfaz de `pulso_tpm()` (snapshot incluido
+  hasta 2026-11-30 y llamada en vivo con fallback) (#90).
 * `pulso_load()` acepta `columns =`: lee solo esas columnas del archivo
   (`data.table::fread(select =)`) y conserva siempre las llaves de merge
   (#86).

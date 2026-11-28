@@ -21,6 +21,7 @@ Public API:
     pulso.cache_path() -> Path
     pulso.data_version() -> str
     pulso.tpm(start=None, end=None, use_fixture=None) -> pd.DataFrame
+    pulso.trm(start=None, end=None, use_fixture=None) -> pd.DataFrame
 """
 
 from __future__ import annotations
@@ -42,6 +43,7 @@ from pulso._core.empalme import load_empalme
 from pulso._core.expander import expand
 from pulso._core.loader import load, load_merged
 from pulso._core.range import load_range
+from pulso._core.trm import trm
 from pulso._utils.cache import cache_clear, cache_info, cache_path
 from pulso._utils.exceptions import (
     CacheError,
@@ -92,6 +94,7 @@ __all__ = [
     "load_merged",
     "load_range",
     "tpm",
+    "trm",
     "update_catalog",
     "validation_status",
 ]

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Sin publicar] — pulso-co 1.3.0 / R pulso 0.3.0
 
 ### Agregado
+- `pulso.trm()` / `pulso_trm()` (#90): TRM (pesos por dólar) certificada por la Superintendencia Financiera (dataset `32sa-8pi3` de datos.gov.co), un registro por día, con la interfaz de `tpm()`: snapshot incluido (`trm_superfinanciera_20261128.csv.gz`, 2006–2026-11-30, 40 KB) y llamada en vivo con fallback. **IBR pendiente**: la API SDMX del Banco de la República (la única fuente del IBR) estaba en mantenimiento y no se pudo verificar el identificador del flujo.
 - Caché del módulo ya parseado en parquet (#86): `pulso.load()` guarda el módulo completo en `<caché>/parsed/<año>/<mes>/<módulo>_<clave>.parquet`. La clave combina la URL de descarga, el módulo, `PARSER_VERSION` y la entrada de `sources.json` del periodo, sin los campos de validación. Las cargas siguientes no vuelven a abrir el zip y leen solo las columnas pedidas. `pulso.cache_clear("parsed")` la borra y `cache=False` la evita. En R, con `arrow` instalado (Suggests), igual: `pulso_clear_cache()` es nueva. Sin `arrow`, R no usa caché parquet.
 - `pulso_load(columns =)` en R (antes solo existía en Python): lee solo esas columnas con `fread(select =)`.
 - `python/scripts/benchmark_load.py`: tiempo y memoria pico de `pulso.load` en primera y segunda carga.
