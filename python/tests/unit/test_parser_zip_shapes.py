@@ -271,3 +271,34 @@ def test_tab_separated_txt_reads_dot_decimals_in_semicolon_epoch() -> None:
     assert list(df.columns) == ["DIRECTORIO", "SECUENCIA_P", "ORDEN", "P6440", "fex_c_2011"]
     assert df["fex_c_2011"].dtype.kind == "f"
     assert df["fex_c_2011"].tolist() == [730.787704198798, 826.888476521864]
+
+
+# ---------------------------------------------------------------------------
+# GEIH-1 labor flags missing in 2007 (#79)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(("module", "flag"), [("ocupados", "OCI"), ("inactivos", "INI")])
+def test_shape_a_fills_missing_labor_flag(tmp_path: Path, module: str, flag: str) -> None:
+    from pulso._core.parser import parse_shape_a_module
+
+    name = "Ocupados" if module == "ocupados" else "Inactivos"
+    zip_path = _zip(
+        tmp_path / "2007-01.zip",
+        {f"Cabecera - {name}.csv": GEIH1_CSV, f"Resto - {name}.csv": GEIH1_CSV},
+    )
+    df = parse_shape_a_module(zip_path, module, get_epoch("geih_2006_2020"))
+    assert df[flag].tolist() == [1] * 6
+
+
+def test_shape_a_keeps_existing_labor_flag(tmp_path: Path) -> None:
+    from pulso._core.parser import parse_shape_a_module
+
+    csv_with_flag = "DIRECTORIO;SECUENCIA_P;ORDEN;OCI;FEX_C\n1;1;1;1;10,5\n"
+    zip_path = _zip(tmp_path / "z.zip", {"Cabecera - Ocupados.csv": csv_with_flag})
+    df = parse_shape_a_module(zip_path, "ocupados", get_epoch("geih_2006_2020"))
+    assert df["OCI"].tolist() == [1]
+    # Modules other than the three condition files get no flag.
+    zip_path = _zip(tmp_path / "v.zip", {"Cabecera - Fuerza de trabajo.csv": GEIH1_CSV})
+    df = parse_shape_a_module(zip_path, "fuerza_de_trabajo", get_epoch("geih_2006_2020"))
+    assert not {"OCI", "DSI", "INI"} & set(df.columns)

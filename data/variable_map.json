@@ -366,13 +366,20 @@
         "2": "Desocupado",
         "3": "Inactivo"
       },
-      "comparability_warning": "En GEIH-1, OCI es una variable unificada por persona. En GEIH-2, no existe un indicador OCI único para toda la población: OCI=1 aparece en ocupados.CSV; para no ocupados, DSI en no_ocupados.CSV distingue desocupados (1) de inactivos (NaN hasta 2026-07; 0 desde 2026-08). Se requiere join entre módulos.",
+      "comparability_warning": "Requiere cargar juntos los módulos de fuerza de trabajo con load_merged(). Marco 2005: OCI, DSI e INI valen 1 en los archivos Ocupados, Desocupados e Inactivos. Marco 2018: OCI en Ocupados.CSV; en No ocupados.CSV, DSI = 1 marca desocupados y FFT = 1 marca a los que están fuera de la fuerza de trabajo. Quien no está en ningún módulo (fuera de la PET) queda NA. La PET cambia entre marcos (12+ urbano / 10+ rural contra 15+), así que las tasas no son comparables entre marcos.",
       "mappings": {
         "geih_2006_2020": {
-          "source_variable": "OCI",
-          "transform": "identity",
-          "source_doc": "Diccionario GEIH (marco 2005). OCI: 1=Ocupado, 2=Desocupado, 3=Inactivo.",
-          "notes": "En GEIH-1, OCI probablemente disponible en módulo Fuerza de trabajo o Características generales. Requiere verificación con datos reales de algún año 2006-2020."
+          "source_variable": [
+            "OCI",
+            "DSI",
+            "INI"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "labor_status_from_flags"
+          },
+          "source_doc": "Diccionario GEIH (marco 2005): OCI = 1 en Ocupados, DSI = 1 en Desocupados, INI = 1 en Inactivos (verificado con 2015-06: 30.136, 3.231 y 19.035 registros, todos = 1).",
+          "notes": "Antes se mapeaba solo OCI (identity), lo que dejaba sin código a desocupados e inactivos (#79)."
         },
         "geih_2021_present": {
           "source_variable": [
@@ -383,8 +390,90 @@
             "op": "custom",
             "name": "merge_labor_status"
           },
-          "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en ocupados.CSV (todos = 1); DSI en no_ocupados.CSV (1=desocupado, NaN o 0=inactivo; 0 desde 2026-08).",
-          "notes": "Función merge_labor_status: para registros en ocupados → condicion=1; para registros en no_ocupados con DSI=1 → condicion=2; DSI=NaN o DSI=0 (codificación desde 2026-08) → condicion=3."
+          "source_doc": "DANE Ficha Técnica GEIH 2024. OCI en Ocupados.CSV (todos = 1); en No ocupados.CSV, DSI = 1 desocupado y FFT = 1 fuera de la fuerza de trabajo (DSI vale 0/1 desde 2026-08).",
+          "notes": "merge_labor_status: OCI = 1 -> 1; DSI = 1 -> 2; FFT = 1 -> 3. Si la tabla no trae FFT, cae a la heurística anterior (DSI vacío o 0 -> 3). Con FFT, los menores de 15 que solo aparecen en Características generales quedan NA (#79)."
+        }
+      }
+    },
+    "pet": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Población en edad de trabajar (PET), según la definición del DANE para el marco de cada periodo.",
+      "description_en": "Working-age population (PET), as defined by DANE for each period's sampling frame.",
+      "comparability_warning": "El umbral cambia con el marco: 12+ en cabeceras y 10+ en centros poblados y rural disperso en el marco 2005; 15+ en el marco 2018. Los microdatos de 2020 (catálogo 780) ya están en el marco 2018 y usan 15+ aunque su época sea geih_2006_2020. Verificado con microdatos (2026-11-28): la regla coincide exactamente (0 discrepancias) con la pertenencia al módulo Fuerza de trabajo, que el DANE solo aplica a la PET, en 2015-06 y 2021-06 (12/10), 2020-06 (15+) y 2024-06 y 2026-09 (15+).",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": [
+            "P6040",
+            "CLASE"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "pet_by_age_zone",
+            "params": {
+              "min_age_urban": 12,
+              "min_age_rural": 10,
+              "frame_2018_periods": [
+                [
+                  "2020-01",
+                  "2020-12"
+                ]
+              ],
+              "frame_2018_min_age": 15
+            }
+          },
+          "source_doc": "DANE, Boletín técnico de educación 2018 (GEIH): \"La Población en Edad de Trabajar (PET) se define como las personas de 12 años o más en cabeceras municipales y 10 años o más en centros poblados y zona rural dispersa\" (https://www.dane.gov.co/files/investigaciones/boletines/especiales/educacion/Bol_edu_2018.pdf).",
+          "notes": "CLASE = 1 cabecera; CLASE 2 o 3 centro poblado y rural disperso. 2020-01..2020-12 usan 15+ (microdatos retroproyectados al CNPV 2018, ver docs/caveats.md)."
+        },
+        "geih_2021_present": {
+          "source_variable": [
+            "P6040",
+            "CLASE"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "pet_by_age_zone",
+            "params": {
+              "min_age_urban": 15,
+              "min_age_rural": 15
+            }
+          },
+          "source_doc": "DANE, Boletín técnico GEIH 2024: la PET corresponde a la población de 15 años y más (https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHFLE-2024.pdf); criterio OIT adoptado con el rediseño sobre el marco 2018."
+        }
+      }
+    },
+    "fuerza_trabajo": {
+      "type": "boolean",
+      "level": "persona",
+      "module": "caracteristicas_generales",
+      "description_es": "Fuerza de trabajo (FT, antes PEA): ocupados más desocupados. False para los inactivos; NA fuera de la PET.",
+      "description_en": "Labor force (FT): employed plus unemployed. False for the inactive; NA outside the working-age population.",
+      "comparability_warning": "Requiere cargar juntos los módulos de fuerza de trabajo con load_merged(). Hereda el cambio de PET entre marcos.",
+      "mappings": {
+        "geih_2006_2020": {
+          "source_variable": [
+            "OCI",
+            "DSI",
+            "INI"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "labor_force_from_flags"
+          },
+          "source_doc": "DANE: FT = ocupados + desocupados; TGP = FT / PET, TD = DS / FT. Banderas por módulo como en condicion_actividad."
+        },
+        "geih_2021_present": {
+          "source_variable": [
+            "OCI",
+            "DSI",
+            "FFT"
+          ],
+          "transform": {
+            "op": "custom",
+            "name": "labor_force_from_flags"
+          },
+          "source_doc": "DANE: FT = ocupados + desocupados. FFT = 1 en No ocupados.CSV marca a quienes están fuera de la fuerza de trabajo."
         }
       }
     },

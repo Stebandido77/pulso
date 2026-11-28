@@ -9,7 +9,7 @@ Signature for all custom functions:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
@@ -111,14 +111,120 @@ def merge_labor_status(
             "Did you forget to merge ocupados and no_ocupados modules?"
         )
 
-    oci = df[oci_col]
-    dsi = df[dsi_col]
+    oci = _num(df[oci_col])
+    dsi = _num(df[dsi_col])
 
     result = pd.Series(pd.NA, index=df.index, dtype="string")
     result[oci.eq(1)] = "1"  # ocupado
     result[oci.isna() & dsi.eq(1)] = "2"  # desocupado
-    result[oci.isna() & (dsi.isna() | dsi.eq(0))] = "3"  # inactivo (heuristic)
+    if "FFT" in df.columns:
+        # DANE's own flag: FFT == 1 marks persons outside the labor force in
+        # No ocupados.CSV. Persons that are in neither module (under 15, not
+        # in the PET) stay NA instead of being coded inactive (#79).
+        result[oci.isna() & ~dsi.eq(1) & _num(df["FFT"]).eq(1)] = "3"
+    else:
+        result[oci.isna() & (dsi.isna() | dsi.eq(0))] = "3"  # inactivo (heuristic)
 
+    return result
+
+
+def _num(s: pd.Series) -> pd.Series:
+    """Numeric view of a DANE flag column (blank/text -> NaN)."""
+    return pd.to_numeric(s, errors="coerce")
+
+
+def _flag_columns(source_var: str | list[str], name: str, df: pd.DataFrame) -> list[pd.Series]:
+    if not isinstance(source_var, list) or len(source_var) != 3:
+        raise ConfigError(
+            f"{name} requires source_variable as a list of three flags "
+            "[employed, unemployed, outside_labor_force]."
+        )
+    missing = [c for c in source_var if c not in df.columns]
+    if missing:
+        raise HarmonizationError(
+            f"{name}: columns {missing} not found in DataFrame. "
+            "Load the labor modules together with load_merged()."
+        )
+    return [_num(df[c]) for c in source_var]
+
+
+@register("labor_status_from_flags")
+def labor_status_from_flags(
+    df: pd.DataFrame,
+    source_var: str | list[str],
+    _variable_entry: dict[str, Any],
+    _epoch: Epoch,
+) -> pd.Series:
+    """condicion_actividad from DANE's per-module flags.
+
+    ``source_var`` = [employed, unemployed, outside] flags, each 1 for the
+    persons of its module: ``[OCI, DSI, INI]`` on the 2005 frame (Ocupados,
+    Desocupados, Inactivos files) and ``[OCI, DSI, FFT]`` on the 2018 frame
+    (Ocupados and No ocupados files). Coding: "1" ocupado, "2" desocupado,
+    "3" inactivo, NA for persons in none of the modules (outside the PET).
+    """
+    occ, unemp, outside = _flag_columns(source_var, "labor_status_from_flags", df)
+    result = pd.Series(pd.NA, index=df.index, dtype="string")
+    result[outside.eq(1)] = "3"
+    result[unemp.eq(1)] = "2"
+    result[occ.eq(1)] = "1"
+    return result
+
+
+@register("labor_force_from_flags")
+def labor_force_from_flags(
+    df: pd.DataFrame,
+    source_var: str | list[str],
+    _variable_entry: dict[str, Any],
+    _epoch: Epoch,
+) -> pd.Series:
+    """fuerza_trabajo (FT): True for employed or unemployed, False for inactive.
+
+    Same flags as ``labor_status_from_flags``; NA outside the PET.
+    """
+    occ, unemp, outside = _flag_columns(source_var, "labor_force_from_flags", df)
+    result = pd.Series(pd.NA, index=df.index, dtype="boolean")
+    result[outside.eq(1)] = False
+    result[occ.eq(1) | unemp.eq(1)] = True
+    return result
+
+
+@register("pet_by_age_zone")
+def pet_by_age_zone(
+    df: pd.DataFrame,
+    source_var: str | list[str],
+    variable_entry: dict[str, Any],
+    epoch: Epoch,
+) -> pd.Series:
+    """pet: True if the person is in the working-age population (PET).
+
+    ``source_var`` = [age, CLASE]. Thresholds come from the mapping's
+    ``transform.params``: ``min_age_urban`` (CLASE == 1) and
+    ``min_age_rural`` (CLASE 2 or 3). ``frame_2018_periods`` lists
+    ``[start, end]`` month ranges of this epoch whose microdata are on the
+    2018 frame (2020, see docs/caveats.md); for those, ``frame_2018_min_age``
+    applies to everyone. The period is read from ``df.attrs["pulso_period"]``
+    ("YYYY-MM"), which ``load()`` and ``load_merged()`` set.
+    """
+    if not isinstance(source_var, list) or len(source_var) != 2:
+        raise ConfigError("pet_by_age_zone requires source_variable [age, CLASE].")
+    age_col, zone_col = source_var
+    params = variable_entry["mappings"][epoch.key]["transform"].get("params", {})
+    urban = params["min_age_urban"]
+    rural = params["min_age_rural"]
+    period = df.attrs.get("pulso_period")
+    if period is not None:
+        for lo, hi in params.get("frame_2018_periods", []):
+            if lo <= period <= hi:
+                urban = rural = params["frame_2018_min_age"]
+                break
+
+    age = _num(df[age_col])
+    zone = _num(df[zone_col])
+    threshold = pd.Series(np.where(zone.eq(1), urban, rural), index=df.index, dtype="float")
+    threshold[zone.isna()] = np.nan if urban != rural else urban
+    result = (age >= threshold).astype("boolean")
+    result[age.isna() | threshold.isna()] = pd.NA
     return result
 
 

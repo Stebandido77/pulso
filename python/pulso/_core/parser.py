@@ -384,6 +384,22 @@ def _read_csv_with_fallback(raw_bytes: bytes, epoch: Epoch) -> pd.DataFrame:
     return df
 
 
+# GEIH-1 ships one file per labor-force condition, so every row of the
+# Ocupados / Desocupados / Inactivos files is in that condition. DANE's flag
+# columns (OCI / DSI / INI = 1) are missing in some releases (all three in
+# 2007-01..11, INI in 2007-12); they are filled from the file so that
+# condicion_actividad can be harmonized (#79). Mirrors .LABOR_FLAG_GEIH1 in
+# r/R/utils-parse.R.
+LABOR_FLAG_GEIH1: dict[str, str] = {"ocupados": "OCI", "desocupados": "DSI", "inactivos": "INI"}
+
+
+def _ensure_labor_flag(df: pd.DataFrame, module: str) -> pd.DataFrame:
+    flag = LABOR_FLAG_GEIH1.get(module)
+    if flag is not None and flag not in df.columns:
+        df[flag] = 1
+    return df
+
+
 def parse_shape_a_module(
     zip_path: Path,
     module: str,
@@ -435,7 +451,8 @@ def parse_shape_a_module(
             df_resto["CLASE"] = 2
             dfs.append(df_resto)
 
-    return dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
+    out = dfs[0] if len(dfs) == 1 else pd.concat(dfs, axis=0, ignore_index=True)
+    return _ensure_labor_flag(out, module)
 
 
 def _parse_shape_c_module(
@@ -470,6 +487,7 @@ def _parse_shape_c_module(
         df = _normalize_dane_columns(_read_csv_with_fallback(raw, epoch))
     except Exception as exc:
         raise ParseError(f"Failed to parse {inner!r} in {zip_path.name}: {exc}") from exc
+    df = _ensure_labor_flag(df, module)
 
     if "CLASE" in df.columns:
         clase = df["CLASE"].astype("string").str.strip()
