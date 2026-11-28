@@ -63,3 +63,4 @@ If you set `allow_unvalidated=True`, you're acknowledging that you're loading da
 ## 8. This is research software
 
 Bugs exist. Test your conclusions against published DANE statistics for at least one period before using `pulso` outputs for high-stakes work. Open issues when something looks off.
+
